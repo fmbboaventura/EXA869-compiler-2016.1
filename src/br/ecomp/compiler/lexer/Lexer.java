@@ -2,6 +2,7 @@ package br.ecomp.compiler.lexer;
 
 import java.io.*;
 import java.util.LinkedList;
+import java.util.regex.Pattern;
 
 /**
  * @author Filipe Boaventura
@@ -88,4 +89,44 @@ public class Lexer {
                 (c == '"') ||
                 (c == '\''));
     }
+    
+    /* Este metodo recebe uma string e verifica se o token
+	 * eh um identificador
+	 */
+	public static boolean isTokenId(String input){
+		//regex para identificadores
+		Pattern p = Pattern.compile("^[a-z|A-Z ][\\w]*");
+		boolean matches = Pattern.matches(p.pattern(), input);
+		return matches;
+	}
+	
+	/* Este metodo recebe uma string e verifica se o token
+	 * eh um numero
+	 */
+	public static boolean isTokenNumber(String input){
+		//regex para numeros
+		Pattern p = Pattern.compile("^-?[0-9]*\\.?[0-9]*");
+		boolean matches = Pattern.matches(p.pattern(), input);
+		return matches;
+	}
+	
+	/* Este metodo recebe uma string e verifica se o token
+	 * eh uma cadeia de caractere
+	 */
+	public static boolean isTokenString(String input){
+		//regex para cadeia de caracteres
+		Pattern p = Pattern.compile("^\"[a-z|A-Z ][a-z|A-Z|\\d| ]*\"");
+		boolean matches = Pattern.matches(p.pattern(), input);
+		return matches;
+	}
+	
+	/* Este metodo recebe uma string e verifica se o token
+	 * eh um comentario
+	 */
+	public static boolean isTokenComment(String input){
+		//regex para cadeia de caracteres
+		Pattern p = Pattern.compile("\\{[^\\}]*\\}");
+		boolean matches = Pattern.matches(p.pattern(), input);
+		return matches;
+	}
 }
