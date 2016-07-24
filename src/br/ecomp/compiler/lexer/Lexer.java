@@ -10,66 +10,67 @@ import java.util.regex.Pattern;
  */
 public class Lexer {
 
+    private BufferedReader reader;
+    private int lineCount, colCount;
+    private final char eof;
+
+    public Lexer () {
+        lineCount = 1;
+        colCount = 1;
+        eof = (char)-1;
+    }
+
     public void createTokens(File input) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(input));
+        reader = new BufferedReader(new FileReader(input));
         LinkedList<String> lexemeList = new LinkedList<>();
-        boolean readingString = false;
-        String lexeme = "";
 
         char c;
-        int i;
-        while ((i = reader.read()) != -1) {
-            c = (char) i;
+        while ((c = lookAheadChar()) != eof) {
 
-            if(isLexDelimiter(c, readingString)){
-                if (!lexeme.isEmpty() && !readingString) {
-                    lexemeList.add(lexeme);
-                    lexeme = Character.isWhitespace(c) ? "" : Character.toString(c);
-                }
+            if (Character.isWhitespace(c)){
+                nextChar();
+            } else if (c == '>' || c == '<') {
+                lexemeList.add(buildRelopLexeme());
+            } else if (c == '{') {
 
-                switch (c){
-                    case '"':
-                        if(readingString) {
-                            lexeme += c;
-                            lexemeList.add(lexeme);
-                            lexeme = "";
-                        }
-                        readingString = !readingString;
-                        break;
-                    case '>':
-                        reader.mark(1);
-                        c = (char) reader.read();
-                        if (c == '=') lexeme += c;
-                        else reader.reset();
-                        lexemeList.add(lexeme);
-                        lexeme = "";
-                        break;
-                    case '<':
-                        reader.mark(1);
-                        c = (char) reader.read();
-                        if (c == '=' || c == '>') lexeme += c;
-                        else reader.reset();
-                        lexemeList.add(lexeme);
-                        lexeme = "";
-                        break;
-                    case '-':
-                        reader.mark(1);
-                        c = (char) reader.read();
-                        if (Character.isDigit(c)) lexeme += c;
-                        else reader.reset();
-                        lexemeList.add(lexeme);
-                        lexeme = "";
-                        break;
-                }
+            } else if (c == '"') {
 
-                continue;
             }
-
-            lexeme += c;
         }
-        for (String s :
-                lexemeList) {
-            System.out.println(s);
+        
+        lexemeList.forEach(System.out::println);
+        reader.close();
+    }
+
+    public String buildRelopLexeme() throws IOException {
+        String lexeme = "";
+        int state = 0;
+        char c;
+
+        while (true) {
+            switch (state) {
+                case 0: // Estado 0: não leu nada
+                    c = nextChar();
+                    if (c == '<') state = 1;
+                    else if (c == '>') state = 2;
+                    lexeme += c;
+                    break;
+                case 1: // Estado 1: leu <
+                    c = lookAheadChar(); // olha um caractere a frente
+                    if (c == '=' || c == '>') state = 3;
+                    else state = 4;
+                    break;
+                case 2: // Estado 2: leu >
+                    c = lookAheadChar(); // olha um caractere a frente
+                    if (c == '=') state = 3;
+                    else state = 4;
+                    break;
+                case 3: // Estado 3: leu < ou > e outro caractere que forma lexema com eles
+                    lexeme += nextChar(); // É sabido que o proximo char deve ser concatenado
+                    return lexeme;
+                case 4: // > ou < sozinhos
+                    return lexeme;
+            }
         }
     }
 
@@ -77,7 +78,7 @@ public class Lexer {
      * Retorna se o caractere é um delimitador de lexema.
      */
     private boolean isLexDelimiter(char c, boolean readingString) {
-        if (readingString) return (c == '"') || (c == '\n') || (c == '\r');
+        if (readingString) return (c == '"') || isNewline(c);
         return (Character.isWhitespace(c) ||
                 (c == '<') ||
                 (c == '>') ||
@@ -89,7 +90,11 @@ public class Lexer {
                 (c == '"') ||
                 (c == '\''));
     }
-    
+
+    private boolean isNewline(char c) {
+        return (c == '\n') || (c == '\r');
+    }
+
     /* Este metodo recebe uma string e verifica se o token
 	 * eh um identificador
 	 */
@@ -129,4 +134,40 @@ public class Lexer {
 		boolean matches = Pattern.matches(p.pattern(), input);
 		return matches;
 	}
+
+    /**
+     * Retorna o proximo caractere do stream.
+     * @throws IOException
+     */
+	private char nextChar() throws IOException {
+	    char c = (char)reader.read();
+
+        if (isNewline(c)) {
+            lineCount++;
+            colCount = 1;
+        } else colCount++;
+	    return c;
+    }
+
+    /**
+     * Le o proximo caractere sem mover o ponteiro de leitura.
+     * Usa {@link Reader#mark(int)} para marcar a posição atual
+     * do ponteiro e {@link Reader#reset()} para retornar para
+     * a posição marcada, uma vez que a leitura foi realizada.
+     * @return
+     * @throws IOException
+     */
+    private char lookAheadChar() throws IOException {
+        char c;
+        reader.mark(1);
+        c = (char) reader.read();
+        reader.reset();
+        return c;
+    }
+
+    private void reset() throws IOException {
+        reader.close();
+        lineCount = 1;
+        colCount = 1;
+    }
 }
