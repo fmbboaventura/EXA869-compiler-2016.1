@@ -29,7 +29,7 @@ public class Lexer {
 
             if (Character.isWhitespace(c)){
                 nextChar();
-            } else if (c == '>' || c == '<') {
+            } else if (c == '>' || c == '<' || c == '=') {
                 lexemeList.add(buildRelopLexeme());
             } else if (c == '{') {
 
@@ -37,11 +37,16 @@ public class Lexer {
 
             }
         }
-        
+
         lexemeList.forEach(System.out::println);
         reader.close();
     }
 
+    /**
+     * Constrói os lexemas dos operadores relacionais.
+     * @return O lexema construido
+     * @throws IOException - caso ocorra algum erro na leitura do arquivo de entrada
+     */
     public String buildRelopLexeme() throws IOException {
         String lexeme = "";
         int state = 0;
@@ -53,6 +58,7 @@ public class Lexer {
                     c = nextChar();
                     if (c == '<') state = 1;
                     else if (c == '>') state = 2;
+                    else if (c == '=') state = 4;
                     lexeme += c;
                     break;
                 case 1: // Estado 1: leu <
@@ -68,7 +74,7 @@ public class Lexer {
                 case 3: // Estado 3: leu < ou > e outro caractere que forma lexema com eles
                     lexeme += nextChar(); // É sabido que o proximo char deve ser concatenado
                     return lexeme;
-                case 4: // > ou < sozinhos
+                case 4: // > ou < sozinhos ou =
                     return lexeme;
             }
         }
