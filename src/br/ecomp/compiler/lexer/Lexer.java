@@ -34,7 +34,7 @@ public class Lexer {
             } else if (c == '{') {
 
             } else if (c == '"') {
-
+                lexemeList.add(buildStringLexeme());
             }
         }
 
@@ -75,6 +75,37 @@ public class Lexer {
                     lexeme += nextChar(); // É sabido que o proximo char deve ser concatenado
                     return lexeme;
                 case 4: // > ou < sozinhos ou =
+                    return lexeme;
+            }
+        }
+    }
+
+    /**
+     * Constrói um lexema que começa com ("). Os lexemas devem
+     * ser validados antes de formar os tokens.
+     * @return O lexema construído. Uma string que termina no próximo
+     * (") ou numa quebra de linha.
+     * @throws IOException caso ocorra algum erro de leitura no arquivo
+     */
+    private String buildStringLexeme () throws IOException {
+        String lexeme = "";
+        int state = 0;
+        char c;
+
+        while (true) {
+            switch (state) {
+                case 0: // Estado 0: nada foi lido
+                    lexeme += nextChar();
+                    state = 1;
+                    break;
+                case 1: // Estado 1: leu o primeiro "
+                    c = lookAheadChar();
+                    if (c == '"') state = 2;
+                    else if (isNewline(c) || c == eof) return lexeme;
+                    else lexeme += nextChar();
+                    break;
+                case 2:
+                    lexeme += nextChar();
                     return lexeme;
             }
         }
