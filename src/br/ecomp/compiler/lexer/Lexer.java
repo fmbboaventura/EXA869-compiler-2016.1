@@ -21,6 +21,16 @@ public class Lexer {
     }
 
     public void createTokens(File input) throws IOException {
+        if (input.isDirectory()) {
+            File[] files = input.listFiles();
+            if ((files != null) && (files.length > 0))
+                for (File f :
+                        files) {
+                    createTokens(f);
+                }
+            return;
+        }
+
         reader = new BufferedReader(new FileReader(input));
         LinkedList<String> lexemeList = new LinkedList<>();
 
@@ -47,7 +57,7 @@ public class Lexer {
      * @return O lexema construido
      * @throws IOException - caso ocorra algum erro na leitura do arquivo de entrada
      */
-    public String buildRelopLexeme() throws IOException {
+    private String buildRelopLexeme() throws IOException {
         String lexeme = "";
         int state = 0;
         char c;

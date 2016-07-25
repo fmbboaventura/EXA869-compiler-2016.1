@@ -18,12 +18,6 @@ public class Main {
         else input = new File("input");
 
         Lexer lexer = new Lexer();
-
-        if (input.isDirectory())
-            for (File file : input.listFiles()) {
-                // Chamar o lexer para cada arquivo da pasta
-                System.out.println(file.getName());
-                lexer.createTokens(file);
-            }
+        lexer.createTokens(input);
     }
 }
