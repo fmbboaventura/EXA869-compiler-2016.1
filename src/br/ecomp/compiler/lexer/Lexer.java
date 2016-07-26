@@ -120,6 +120,29 @@ public class Lexer {
             }
         }
     }
+    
+    /**
+     * Constrói um lexema que começa com ({). Os lexemas devem
+     * ser validados antes de formar os tokens.
+     * @return O lexema construído. Uma string que termina no próximo
+     * (}) ou no final do arquivo. 
+     * @throws IOException caso ocorra algum erro de leitura no arquivo
+     */
+    private String buildCommentLexema() throws IOException{
+		String lexema = "";
+		char c;
+		c = nextChar();
+		
+		//se leu '{' significa que e o inicio de um comentario
+		if(c == '{'){
+			while (c != '}' || c!= eof){
+				lexema += c;
+				c = nextChar();
+			}
+			lexema += c;
+		}
+		return lexema;
+	}
 
     /**
      * Retorna se o caractere é um delimitador de lexema.
