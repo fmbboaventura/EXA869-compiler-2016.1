@@ -1,6 +1,7 @@
 package br.ecomp.compiler.lexer;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
@@ -45,10 +46,14 @@ public class Lexer {
                 lexemeList.add(buildCommentLexema());
             } else if (c == '"') {
                 lexemeList.add(buildStringLexeme());
+            } else if (c == '-' || Character.isDigit(c)) {
+            	lexemeList.add(buildNumberLexeme());
             }
         }
 
         lexemeList.forEach(System.out::println);
+
+        reset();
         reader.close();
     }
 
@@ -91,6 +96,38 @@ public class Lexer {
     }
 
     /**
+	 * Constroi os lexemas de numeros.
+	 * @return O lexema de um numero ou o lexema do sinal de subtracao.
+	 * @throws IOException 
+	 */
+	private String buildNumberLexeme() throws IOException {
+		String lexeme = "";
+	    int state = 0;
+	    char c;
+	    
+	    while (true) {
+	    	switch (state) {
+	    		case 0:
+	    			c = nextChar();
+	    			if (c == '-') state = 1;
+	    			else state = 2;
+	    			lexeme += c;
+	    			break;
+	    		case 1: // Estado 1: leu um -
+	    			c = lookAheadChar();
+	    			if (Character.isDigit(c)) state = 2;
+	    			else return lexeme;
+	    			break;
+	    		case 2: // Estado 2: leu - e um digito
+	    			lexeme += nextChar();
+	    			if (isLexDelimiter(lookAheadChar())) return lexeme;
+	    			state = 2;
+	    			break;
+	    	}
+	    }
+	}
+
+	/**
      * Constrói um lexema que começa com ("). Os lexemas devem
      * ser validados antes de formar os tokens.
      * @return O lexema construído. Uma string que termina no próximo
@@ -145,8 +182,7 @@ public class Lexer {
     /**
      * Retorna se o caractere é um delimitador de lexema.
      */
-    private boolean isLexDelimiter(char c, boolean readingString) {
-        if (readingString) return (c == '"') || isNewline(c);
+    private boolean isLexDelimiter(char c) {
         return (Character.isWhitespace(c) ||
                 (c == '<') ||
                 (c == '>') ||
@@ -163,40 +199,40 @@ public class Lexer {
         return (c == '\n') || (c == '\r');
     }
 
-    /* Este metodo recebe uma string e verifica se o token
+    /** Este metodo recebe uma string e verifica se o token
 	 * eh um identificador
 	 */
-	public static boolean isTokenId(String input){
+	public boolean isTokenId(String input){
 		//regex para identificadores
 		Pattern p = Pattern.compile("^[a-z|A-Z ][\\w]*");
 		boolean matches = Pattern.matches(p.pattern(), input);
 		return matches;
 	}
 	
-	/* Este metodo recebe uma string e verifica se o token
+	/** Este metodo recebe uma string e verifica se o token
 	 * eh um numero
 	 */
-	public static boolean isTokenNumber(String input){
+	public boolean isTokenNumber(String input){
 		//regex para numeros
 		Pattern p = Pattern.compile("^-?[0-9]*\\.?[0-9]*");
 		boolean matches = Pattern.matches(p.pattern(), input);
 		return matches;
 	}
 	
-	/* Este metodo recebe uma string e verifica se o token
+	/** Este metodo recebe uma string e verifica se o token
 	 * eh uma cadeia de caractere
 	 */
-	public static boolean isTokenString(String input){
+	public boolean isTokenString(String input){
 		//regex para cadeia de caracteres
 		Pattern p = Pattern.compile("^\"[a-z|A-Z ][a-z|A-Z|\\d| ]*\"");
 		boolean matches = Pattern.matches(p.pattern(), input);
 		return matches;
 	}
 	
-	/* Este metodo recebe uma string e verifica se o token
+	/** Este metodo recebe uma string e verifica se o token
 	 * eh um comentario
 	 */
-	public static boolean isTokenComment(String input){
+	public boolean isTokenComment(String input){
 		//regex para cadeia de caracteres
 		Pattern p = Pattern.compile("\\{[^\\}]*\\}");
 		boolean matches = Pattern.matches(p.pattern(), input);
