@@ -53,6 +53,8 @@ public class Lexer {
             	lexemeList.add(buildNumberLexeme());
             } else if (Character.isLetter(c)){
             	lexemeList.add(buildIdLexeme());
+            } else if (isLexDelimiter(c)) {
+            	lexemeList.add(Character.toString(nextChar()));
             }
         }
 
@@ -208,7 +210,10 @@ public class Lexer {
                 (c == ';') ||
                 (c == '"') ||
                 (c == eof) ||
-                (c == '\''));
+                (c == '\'') ||
+                (c == '(') ||
+                (c == ')') ||
+                (c == '}') );
     }
 
     private boolean isNewline(char c) {
