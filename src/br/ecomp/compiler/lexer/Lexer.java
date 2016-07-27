@@ -1,7 +1,10 @@
 package br.ecomp.compiler.lexer;
 
-import java.io.*;
-import java.util.Collection;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
@@ -48,6 +51,8 @@ public class Lexer {
                 lexemeList.add(buildStringLexeme());
             } else if (c == '-' || Character.isDigit(c)) {
             	lexemeList.add(buildNumberLexeme());
+            } else if (Character.isLetter(c)){
+            	lexemeList.add(buildIdLexeme());
             }
         }
 
@@ -57,7 +62,17 @@ public class Lexer {
         reader.close();
     }
 
-    /**
+    private String buildIdLexeme() throws IOException {
+    	String lexeme = Character.toString(nextChar());
+    	
+        //enquanto o proximo nao for delimitador
+        while (!isLexDelimiter(lookAheadChar())){
+        	lexeme+= nextChar(); 	
+        }
+		return lexeme;
+	}
+
+	/**
      * Constrói os lexemas dos operadores relacionais.
      * @return O lexema construido
      * @throws IOException - caso ocorra algum erro na leitura do arquivo de entrada
@@ -192,6 +207,7 @@ public class Lexer {
                 (c == '/') ||
                 (c == ';') ||
                 (c == '"') ||
+                (c == eof) ||
                 (c == '\''));
     }
 
