@@ -55,6 +55,8 @@ public class Lexer {
             	lexemeList.add(buildIdLexeme());
             } else if (isLexDelimiter(c)) {
             	lexemeList.add(Character.toString(nextChar()));
+            } else {
+            	lexemeList.add(Character.toString(nextChar()));
             }
         }
 
