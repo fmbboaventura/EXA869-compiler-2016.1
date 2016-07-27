@@ -46,7 +46,7 @@ public class Lexer {
             } else if (c == '>' || c == '<' || c == '=') {
                 lexemeList.add(buildRelopLexeme());
             } else if (c == '{') {
-                lexemeList.add(buildCommentLexema());
+                lexemeList.add(buildCommentLexeme());
             } else if (c == '"') {
                 lexemeList.add(buildStringLexeme());
             } else if (c == '-' || Character.isDigit(c)) {
@@ -182,18 +182,18 @@ public class Lexer {
      * (}) ou no final do arquivo. 
      * @throws IOException caso ocorra algum erro de leitura no arquivo
      */
-    private String buildCommentLexema() throws IOException{
+    private String buildCommentLexeme() throws IOException{
         // Se chegou aqui, é sabido que o caractere lido é o {
-		String lexema = Character.toString(nextChar());
+		String lexeme = Character.toString(nextChar());
 		char c;
 
         // Checa se o proximo char é o fim de arquivo
         while (lookAheadChar() != eof) {
             c = nextChar(); // Se não, lê o próximo char
-            lexema += c;    // Concatena ao lexema
+            lexeme += c;    // Concatena ao lexema
             if (c == '}') break; // Se o char lido foi o }, cai fora do loop
         }
-        return lexema;
+        return lexeme;
 	}
 
     /**
