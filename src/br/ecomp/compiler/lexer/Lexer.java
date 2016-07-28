@@ -36,7 +36,8 @@ public class Lexer {
         }
 
         reader = new BufferedReader(new FileReader(input));
-        LinkedList<String> lexemeList = new LinkedList<>();
+        LinkedList<Token> tokenList = new LinkedList<>();
+        LinkedList<Token> faultyTokenList = new LinkedList<>();
 
         char c;
         while ((c = lookAheadChar()) != eof) {
@@ -44,46 +45,52 @@ public class Lexer {
             if (Character.isWhitespace(c)){
                 nextChar();
             } else if (c == '>' || c == '<' || c == '=') {
-                lexemeList.add(buildRelopLexeme());
+                tokenList.add(buildRelopToken());
             } else if (c == '{') {
-                lexemeList.add(buildCommentLexeme());
+                tokenList.add(buildCommentLexeme());
             } else if (c == '"') {
-                lexemeList.add(buildStringLexeme());
+                tokenList.add(buildStringLexeme());
             } else if (c == '-' || Character.isDigit(c)) {
-            	lexemeList.add(buildNumberLexeme());
+            	tokenList.add(buildNumberLexeme());
             } else if (Character.isLetter(c)){
-            	lexemeList.add(buildIdLexeme());
+            	tokenList.add(buildIdLexeme());
             } else if (isLexDelimiter(c)) {
-            	lexemeList.add(Character.toString(nextChar()));
+            	tokenList.add(new Token(lineCount,
+                        Character.toString(nextChar())));
             } else {
-            	lexemeList.add(Character.toString(nextChar()));
+            	faultyTokenList.add(new Token(lineCount,
+                        Character.toString(nextChar()),
+                        Token.TokenType.INVALID));
             }
         }
 
-        lexemeList.forEach(System.out::println);
+        tokenList.forEach(System.out::println);
+        faultyTokenList.forEach(System.out::println);
 
         reset();
         reader.close();
     }
 
-    private String buildIdLexeme() throws IOException {
+    private Token buildIdLexeme() throws IOException {
+        int line = lineCount;
     	String lexeme = Character.toString(nextChar());
     	
         //enquanto o proximo nao for delimitador
         while (!isLexDelimiter(lookAheadChar())){
         	lexeme+= nextChar(); 	
         }
-		return lexeme;
+		return new Token(line, lexeme);
 	}
 
 	/**
-     * Constrói os lexemas dos operadores relacionais.
-     * @return O lexema construido
+     * Constrói os tokens dos operadores relacionais.
+     * @return O tokens construido
      * @throws IOException - caso ocorra algum erro na leitura do arquivo de entrada
      */
-    private String buildRelopLexeme() throws IOException {
+    private Token buildRelopToken() throws IOException {
         String lexeme = "";
         int state = 0;
+        int line = lineCount;
         char c;
 
         while (true) {
@@ -107,21 +114,24 @@ public class Lexer {
                     break;
                 case 3: // Estado 3: leu < ou > e outro caractere que forma lexema com eles
                     lexeme += nextChar(); // É sabido que o proximo char deve ser concatenado
-                    return lexeme;
+                    return new Token(line, lexeme, Token.TokenType.OPERATOR);
                 case 4: // > ou < sozinhos ou =
-                    return lexeme;
+                    return new Token(line, lexeme, Token.TokenType.OPERATOR);
             }
         }
     }
 
     /**
-	 * Constroi os lexemas de numeros.
-	 * @return O lexema de um numero ou o lexema do sinal de subtracao.
-	 * @throws IOException 
+	 * Constroi os {@link Token}s de numeros ou o token do sinal de subtração.
+	 * @return O lexema de um numero contido numa stancia de {@link Token}, que
+     * deve ser validada, ou o token do sinal de subtracao, que não precisa de
+     * validação.
+	 * @throws IOException - Caso ocorra um erro de leitura no arquivo.
 	 */
-	private String buildNumberLexeme() throws IOException {
+	private Token buildNumberLexeme() throws IOException {
 		String lexeme = "";
 	    int state = 0;
+        int line = lineCount;
 	    char c;
 	    
 	    while (true) {
@@ -135,11 +145,11 @@ public class Lexer {
 	    		case 1: // Estado 1: leu um -
 	    			c = lookAheadChar();
 	    			if (Character.isDigit(c)) state = 2;
-	    			else return lexeme;
+	    			else return new Token(line, lexeme, Token.TokenType.OPERATOR);
 	    			break;
 	    		case 2: // Estado 2: leu - e um digito
 	    			lexeme += nextChar();
-	    			if (isLexDelimiter(lookAheadChar())) return lexeme;
+	    			if (isLexDelimiter(lookAheadChar())) return new Token(line, lexeme);
 	    			state = 2;
 	    			break;
 	    	}
@@ -147,16 +157,18 @@ public class Lexer {
 	}
 
 	/**
-     * Constrói um lexema que começa com ("). Os lexemas devem
-     * ser validados antes de formar os tokens.
-     * @return O lexema construído. Uma string que termina no próximo
-     * (") ou numa quebra de linha.
+     * Constrói um lexema que começa com (") e o armazena num {@link Token}.
+     * Os lexemas devem ser validados pare que o token possa receber um
+     * {@link Token.TokenType} válido.
+     * @return O Token construído. O lexema consiste de uma string que termina
+     * no próximo (") ou numa quebra de linha.
      * @throws IOException caso ocorra algum erro de leitura no arquivo
      */
-    private String buildStringLexeme () throws IOException {
+    private Token buildStringLexeme () throws IOException {
         String lexeme = "";
         int state = 0;
         char c;
+        int line = lineCount;
 
         while (true) {
             switch (state) {
@@ -167,25 +179,28 @@ public class Lexer {
                 case 1: // Estado 1: leu o primeiro "
                     c = lookAheadChar();
                     if (c == '"') state = 2;
-                    else if (isNewline(c) || c == eof) return lexeme;
+                    else if (isNewline(c) || c == eof)return new Token(line, lexeme);
                     else lexeme += nextChar();
                     break;
                 case 2:
                     lexeme += nextChar();
-                    return lexeme;
+                   return new Token(line, lexeme);
             }
         }
     }
     
     /**
-     * Constrói um lexema que começa com ({). Os lexemas devem
-     * ser validados antes de formar os tokens.
-     * @return O lexema construído. Uma string que termina no próximo
-     * (}) ou no final do arquivo. 
+     * Constrói um lexema que começa com ({) e o armazena num token.
+     * O lexema devem ser validado para que o token seja considerado
+     * valido e possa receber seu {@link Token.TokenType}.
+     * @return O um {@link Token} contendo o lexema construído e com o
+     * {@link Token.TokenType} a sr confimado. O lexema é uma string
+     * que termina no próximo(}) ou no final do arquivo.
      * @throws IOException caso ocorra algum erro de leitura no arquivo
      */
-    private String buildCommentLexeme() throws IOException{
+    private Token buildCommentLexeme() throws IOException{
         // Se chegou aqui, é sabido que o caractere lido é o {
+        int line = lineCount;
 		String lexeme = Character.toString(nextChar());
 		char c;
 
@@ -195,7 +210,7 @@ public class Lexer {
             lexeme += c;    // Concatena ao lexema
             if (c == '}') break; // Se o char lido foi o }, cai fora do loop
         }
-        return lexeme;
+        return new Token(line, lexeme);
 	}
 
     /**
@@ -218,8 +233,10 @@ public class Lexer {
                 (c == '}') );
     }
 
-    private boolean isNewline(char c) {
-        return (c == '\n') || (c == '\r');
+    private boolean isNewline(char c) throws IOException {
+        boolean newLineFound = (c == '\n') || (c == '\r');
+        if (c == '\r' && lookAheadChar() == '\n') reader.read();
+        return newLineFound;
     }
 
     /** Este metodo recebe uma string e verifica se o token
