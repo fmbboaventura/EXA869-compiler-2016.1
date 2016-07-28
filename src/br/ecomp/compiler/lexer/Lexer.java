@@ -50,6 +50,8 @@ public class Lexer {
                 tokenList.add(buildCommentLexeme());
             } else if (c == '"') {
                 tokenList.add(buildStringLexeme());
+            } else if (c == '\'') {
+                tokenList.add(buildCharacterLexeme());
             } else if (c == '-' || Character.isDigit(c)) {
             	tokenList.add(buildNumberLexeme());
             } else if (Character.isLetter(c)){
@@ -185,6 +187,39 @@ public class Lexer {
                 case 2:
                     lexeme += nextChar();
                    return new Token(line, lexeme);
+            }
+        }
+    }
+
+    /**
+     * Constrói um lexema que começa com (') e o armazena num {@link Token}.
+     * Os lexemas devem ser validados pare que o token possa receber um
+     * {@link Token.TokenType} válido.
+     * @return O Token construído. O lexema consiste de uma string que termina
+     * no próximo (') ou numa quebra de linha.
+     * @throws IOException caso ocorra algum erro de leitura no arquivo
+     */
+    private Token buildCharacterLexeme () throws IOException {
+        String lexeme = "";
+        int state = 0;
+        char c;
+        int line = lineCount;
+
+        while (true) {
+            switch (state) {
+                case 0: // Estado 0: nada foi lido
+                    lexeme += nextChar();
+                    state = 1;
+                    break;
+                case 1: // Estado 1: leu o primeiro '
+                    c = lookAheadChar();
+                    if (c == '\'') state = 2;
+                    else if (Character.isWhitespace(c) || c == eof)return new Token(line, lexeme);
+                    else lexeme += nextChar();
+                    break;
+                case 2:
+                    lexeme += nextChar();
+                    return new Token(line, lexeme);
             }
         }
     }
