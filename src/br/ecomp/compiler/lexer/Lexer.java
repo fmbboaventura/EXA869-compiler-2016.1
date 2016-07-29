@@ -313,6 +313,20 @@ public class Lexer {
 		boolean matches = Pattern.matches(p.pattern(), input);
 		return matches;
 	}
+	
+	/**
+	 * Esse metodo recebe uma string e verifica se o lexema 
+	 * eh um char valido
+	 * @param input
+	 * @return retorna verdadeiro caso o token seja valido
+	 * ou falso caso invalido
+	 */
+	public boolean isTokenChar(String input){
+		//regex para cadeia de caracteres
+		Pattern p = Pattern.compile("^'[a-z|A-Z|\\d]*'");
+		boolean matches = Pattern.matches(p.pattern(), input);
+		return matches;
+	}
 
     /**
      * Retorna o proximo caractere do stream.
