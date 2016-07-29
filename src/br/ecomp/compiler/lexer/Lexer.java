@@ -386,7 +386,7 @@ public class Lexer {
 	 */
 	public boolean isTokenChar(String input){
 		//regex para cadeia de caracteres
-		Pattern p = Pattern.compile("^'[a-z|A-Z|\\d]*'");
+		Pattern p = Pattern.compile("^'[a-z|A-Z|\\d]'");
 		boolean matches = Pattern.matches(p.pattern(), input);
 		return matches;
 	}
