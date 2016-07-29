@@ -68,8 +68,13 @@ public class Lexer {
                 }
             } else if (c == '\'') {
                 t = buildCharacterLexeme();
-                // TODO: 28/07/2016  CRIAR REGEX DO CARACTERE
-                tokenList.add(t);
+                if (isTokenChar(t.getLexeme())) {
+                    t.setType(Token.TokenType.CHARACTER);
+                    tokenList.add(t);
+                } else {
+                    t.setType(Token.TokenType.INVALID_CHARACTER);
+                    faultyTokenList.add(t);
+                }
             } else if (c == '-' || Character.isDigit(c)) {
                 t = buildNumberLexeme();
                 if (!t.getType().equals(Token.TokenType.OPERATOR)) {

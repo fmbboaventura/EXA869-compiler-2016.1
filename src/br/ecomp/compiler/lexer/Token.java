@@ -8,6 +8,8 @@ public class Token {
 
     protected enum TokenType {
         KEYWORD("Palavra Reservada"),
+        CHARACTER("Caractere"),
+        INVALID_CHARACTER("Caractere Mal formado"),
         IDENTIFIER("Identificador"),
         INVALID_IDENTIFIER("Identificador Mal Formado"),
         NUMBER("Numero"),
