@@ -5,13 +5,21 @@ package br.ecomp.compiler.lexer;
  * @since 27/07/2016.
  */
 public class Token {
+
     protected enum TokenType {
-        KEYWORD("palavra_reservada"),
-        IDENTIFIER("id"),
-        NUMBER("num"),
-        OPERATOR("operador"),
-        DELIMITER("delimitador"),
-        INVALID("token_invalido");
+        KEYWORD("Palavra Reservada"),
+        IDENTIFIER("Identificador"),
+        INVALID_IDENTIFIER("Identificador Mal Formado"),
+        NUMBER("Numero"),
+        INVALID_NUMBER("Numero Mal Formado"),
+        OPERATOR("Operador"),
+        DELIMITER("Delimitador"),
+        INVALID_CHAR_STRING("Cadeia de Caracteres Mal Formada"),
+        CHAR_STRING("Cadeia de Caracteres"),
+        COMMENT("Comentario"),
+        INVALID_COMMENT("Comentario Mal Formado"),
+        INVALID_SYMBOL("Simbolo Invalido"),
+        INVALID("Token Invalido");
 
         private final String name;
 
@@ -43,8 +51,16 @@ public class Token {
         this.type = type;
     }
 
+    protected TokenType getType() {
+        return type;
+    }
+
+    protected String getLexeme() {
+        return lexeme;
+    }
+
     @Override
     public String toString() {
-        return String.format("%02d %s %s", line, lexeme, type.toString());
+        return String.format("%02d %s %s", line, getLexeme(), type.toString());
     }
 }
