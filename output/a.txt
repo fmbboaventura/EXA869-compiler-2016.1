@@ -1,0 +1,26 @@
+03 'a' Caractere
+04 '1' Caractere
+09 ( Delimitador
+09 gadielXavier Identificador
+09 ) Delimitador
+10 } Delimitador
+11 + Operador
+13 * Operador
+14 / Operador
+15 / Operador
+15 / Operador
+16 234 Numero
+16 + Operador
+16 asc Identificador
+17 xcv Identificador
+17 -10 Numero
+18 * Operador
+18 + Operador
+18 / Operador
+01 '' Caractere Mal formado
+02 ' Caractere Mal formado
+05 'a1' Caractere Mal formado
+06 'a Caractere Mal formado
+07 '@ Caractere Mal formado
+08 '@' Caractere Mal formado
+19 %$# Simbolo Invalido

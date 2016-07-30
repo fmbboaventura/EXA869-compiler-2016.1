@@ -1,0 +1,27 @@
+01 exemplo Identificador
+01 teste Identificador
+01 ; Delimitador
+03 real Palavra Reservada
+03 f Identificador
+03 = Operador
+03 ; Delimitador
+05 caractere Palavra Reservada
+05 flag Identificador
+05 = Operador
+05 ; Delimitador
+07 se Palavra Reservada
+07 ( Delimitador
+07 f Identificador
+07 >= Operador
+07 10 Numero
+07 ) Delimitador
+07 e Identificador
+07 ( Delimitador
+07 f Identificador
+07 < Operador
+07 ) Delimitador
+08 escreva Palavra Reservada
+08 ( Delimitador
+03 3a Numero Mal Formado
+05 'teste' Caractere Mal formado
+08 " mensagem ); Cadeia de Caracteres Mal Formada

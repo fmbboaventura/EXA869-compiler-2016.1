@@ -1,13 +1,10 @@
 package br.ecomp.compiler.lexer;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -119,11 +116,23 @@ public class Lexer {
             }
         }
 
+        tokenList.addAll(faultyTokenList);
         tokenList.forEach(System.out::println);
-        faultyTokenList.forEach(System.out::println);
+        writeOutput(input.getName(), tokenList);
 
         reset();
         reader.close();
+    }
+
+    private void writeOutput(String fileName, List<Token> tokenList) throws IOException {
+        BufferedWriter writer = new BufferedWriter(
+                new FileWriter(new File("output" + File.separator + fileName)));
+
+        for (Token t : tokenList) {
+            writer.write(t.toString());
+            writer.newLine();
+        }
+        writer.close();
     }
 
     private Token buildFaultyTokenBecauseWhyNot() throws IOException {
