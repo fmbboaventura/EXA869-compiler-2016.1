@@ -1,0 +1,1 @@
+java -cp out br.ecomp.compiler.Main %*
