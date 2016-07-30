@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
@@ -17,14 +19,19 @@ public class Lexer {
     private BufferedReader reader;
     private int lineCount, colCount;
     private final char eof;
+    private final ArrayList<String> keywords;
 
     public Lexer() {
         lineCount = 1;
         colCount = 1;
         eof = (char) -1;
+        keywords = new ArrayList<>(Arrays.asList("programa",
+                "const", "var", "funcao", "inicio", "fim",
+                "se", "entao", "enquanto", "faca", "leia",
+                "escreva", "inteiro", "real", "booleano",
+                "verdadeiro", "falso", "cadeia", "caractere"));
     }
 
-    // TODO IDENTIFICAR PALAVRAS RESERVADAS
     public void createTokens(File input) throws IOException {
         if (input.isDirectory()) {
             File[] files = input.listFiles();
@@ -89,7 +96,10 @@ public class Lexer {
             } else if (Character.isLetter(c)) {
                 t = buildIdLexeme();
 
-                if (isTokenId(t.getLexeme())) {
+                if (keywords.contains(t.getLexeme())){
+                    t.setType(Token.TokenType.KEYWORD);
+                    tokenList.add(t);
+                } else if (isTokenId(t.getLexeme())) {
                     t.setType(Token.TokenType.IDENTIFIER);
                     tokenList.add(t);
                 } else {
