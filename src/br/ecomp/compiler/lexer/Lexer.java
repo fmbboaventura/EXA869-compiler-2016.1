@@ -332,6 +332,7 @@ public class Lexer {
     private boolean isLexDelimiter(char c) {
         return isOperator(c) ||
                 (Character.isWhitespace(c) ||
+                        (c == '=') ||
                         (c == '<') ||
                         (c == '>') ||
                         (c == ';') ||
