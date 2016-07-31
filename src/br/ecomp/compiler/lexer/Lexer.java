@@ -225,8 +225,8 @@ public class Lexer {
                     else return new Token(line, lexeme, Token.TokenType.OPERATOR);
                     break;
                 case 2: // Estado 2: leu - e um digito
-                    lexeme += nextChar();
                     if (isLexDelimiter(lookAheadChar())) return new Token(line, lexeme);
+                    lexeme += nextChar();
                     state = 2;
                     break;
             }

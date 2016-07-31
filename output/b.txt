@@ -1,0 +1,31 @@
+01 programa Palavra Reservada
+01 exemplo Identificador
+01 ; Delimitador
+02 real Palavra Reservada
+02 a Identificador
+02 = Operador
+02 3.2 Numero
+02 + Operador
+02 -2 Numero
+02 ; Delimitador
+03 real Palavra Reservada
+03 b Identificador
+03 = Operador
+03 ; Delimitador
+04 real Palavra Reservada
+04 b Identificador
+04 = Operador
+04 a Identificador
+04 / Operador
+04 1 Numero
+04 ; Delimitador
+05 real Palavra Reservada
+05 b Identificador
+05 = Operador
+05 a Identificador
+05 -1 Numero
+05 ; Delimitador
+06 fim Palavra Reservada
+06 programa Palavra Reservada
+06 ; Delimitador
+03 1#1 Numero Mal Formado

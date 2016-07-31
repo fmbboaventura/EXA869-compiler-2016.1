@@ -1,0 +1,4 @@
+programa exemplo;
+    real a = 3+2;
+    real b = a-1;
+fim programa;
