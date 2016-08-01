@@ -16,7 +16,7 @@ public class Lexer {
     private BufferedReader reader;
     private int lineCount, colCount;
     private final char eof;
-    private final ArrayList<String> keywords;
+    private final ArrayList<String> keywords, logOp;
 
     public Lexer() {
         lineCount = 1;
@@ -27,6 +27,7 @@ public class Lexer {
                 "se", "entao", "enquanto", "faca", "leia",
                 "escreva", "inteiro", "real", "booleano",
                 "verdadeiro", "falso", "cadeia", "caractere"));
+        logOp = new ArrayList<>(Arrays.asList("nao", "e", "ou"));
     }
 
     public void createTokens(File input) throws IOException {
@@ -93,7 +94,10 @@ public class Lexer {
             } else if (Character.isLetter(c)) {
                 t = buildIdLexeme();
 
-                if (keywords.contains(t.getLexeme())){
+                if (logOp.contains(t.getLexeme())){
+                    t.setType(Token.TokenType.OPERATOR);
+                    tokenList.add(t);
+                } else if (keywords.contains(t.getLexeme())){
                     t.setType(Token.TokenType.KEYWORD);
                     tokenList.add(t);
                 } else if (isTokenId(t.getLexeme())) {
