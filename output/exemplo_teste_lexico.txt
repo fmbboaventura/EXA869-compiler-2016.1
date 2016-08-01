@@ -15,7 +15,7 @@
 07 >= Operador
 07 10 Numero
 07 ) Delimitador
-07 e Identificador
+07 e Operador
 07 ( Delimitador
 07 f Identificador
 07 < Operador

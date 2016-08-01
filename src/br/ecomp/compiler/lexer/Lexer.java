@@ -345,7 +345,8 @@ public class Lexer {
                         (c == '\'') ||
                         (c == '(') ||
                         (c == ')') ||
-                        (c == '}'));
+                        (c == '}') ||
+                        (c == ','));
     }
 
     private boolean isOperator(char c) {

@@ -1,26 +1,25 @@
-03 'a' Caractere
-04 '1' Caractere
-09 ( Delimitador
-09 gadielXavier Identificador
-09 ) Delimitador
-10 } Delimitador
-11 + Operador
-13 * Operador
-14 / Operador
-15 / Operador
-15 / Operador
-16 234 Numero
+01 , Delimitador
+01 , Delimitador
+02 '1' Caractere
+07 ( Delimitador
+07 gadielXavier Identificador
+07 ) Delimitador
+08 } Delimitador
+09 + Operador
+11 * Operador
+12 / Operador
+13 / Operador
+13 / Operador
+14 234 Numero
+14 + Operador
+14 asc Identificador
+15 xcv Identificador
+15 -10 Numero
+16 * Operador
 16 + Operador
-16 asc Identificador
-17 xcv Identificador
-17 -10 Numero
-18 * Operador
-18 + Operador
-18 / Operador
-01 '' Caractere Mal formado
-02 ' Caractere Mal formado
-05 'a1' Caractere Mal formado
-06 'a Caractere Mal formado
-07 '@ Caractere Mal formado
-08 '@' Caractere Mal formado
-19 %$# Simbolo Invalido
+16 / Operador
+03 'a1' Caractere Mal formado
+04 'a Caractere Mal formado
+05 '@ Caractere Mal formado
+06 '@' Caractere Mal formado
+17 %$# Simbolo Invalido
