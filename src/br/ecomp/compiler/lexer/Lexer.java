@@ -90,7 +90,7 @@ public class Lexer {
                         t.setType(Token.TokenType.INVALID_NUMBER);
                         faultyTokenList.add(t);
                     }
-                }
+                } else tokenList.add(t);
             } else if (Character.isLetter(c)) {
                 t = buildIdLexeme();
 

@@ -11,6 +11,7 @@
 11 ) Delimitador
 12 } Delimitador
 13 + Operador
+14 - Operador
 15 * Operador
 16 / Operador
 17 / Operador
@@ -19,7 +20,9 @@
 18 + Operador
 18 asc Identificador
 19 xcv Identificador
+19 - Operador
 19 -10 Numero
+20 - Operador
 20 * Operador
 20 + Operador
 20 / Operador
