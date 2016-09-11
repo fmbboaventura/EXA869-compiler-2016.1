@@ -1,25 +1,19 @@
-01 'a' Caractere
-01 nao Operador
-01 'b' Caractere
-03 cadeia Palavra Reservada
+01 programa Palavra Reservada
+01 exemplo Identificador
+01 ; Delimitador
+02 real Palavra Reservada
+02 a Identificador
+02 = Operador
+02 3.2 Numero
+02 + Operador
+02 -2 Numero
+02 ; Delimitador
+03 real Palavra Reservada
+03 b Identificador
+03 = Operador
+03 a Identificador
+03 -1 Numero
+03 ; Delimitador
+04 fim Palavra Reservada
 04 programa Palavra Reservada
-04 exemplo Identificador
 04 ; Delimitador
-05 real Palavra Reservada
-05 a Identificador
-05 = Operador
-05 3.2 Numero
-05 + Operador
-05 -2 Numero
-05 ; Delimitador
-06 real Palavra Reservada
-06 b Identificador
-06 = Operador
-06 a Identificador
-06 -1 Numero
-06 ; Delimitador
-07 fim Palavra Reservada
-07 programa Palavra Reservada
-07 ; Delimitador
-02 "cadeia Cadeia de Caracteres Mal Formada
-03 " Cadeia de Caracteres Mal Formada

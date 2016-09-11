@@ -172,6 +172,7 @@ public class Lexer {
         int state = 0;
         int line = lineCount;
         char c;
+        Token.TokenType type = Token.TokenType.OPERATOR;
 
         while (true) {
             switch (state) {
@@ -185,18 +186,40 @@ public class Lexer {
                 case 1: // Estado 1: leu <
                     c = lookAheadChar(); // olha um caractere a frente
                     if (c == '=' || c == '>') state = 3;
+                    else if (c == '<') state = 5;
                     else state = 4;
                     break;
                 case 2: // Estado 2: leu >
                     c = lookAheadChar(); // olha um caractere a frente
                     if (c == '=') state = 3;
+                    else if (c == '>') state = 6;
                     else state = 4;
                     break;
                 case 3: // Estado 3: leu < ou > e outro caractere que forma lexema com eles
                     lexeme += nextChar(); // É sabido que o proximo char deve ser concatenado
-                    return new Token(line, lexeme, Token.TokenType.OPERATOR);
+                    return new Token(line, lexeme, type);
                 case 4: // > ou < sozinhos ou =
-                    return new Token(line, lexeme, Token.TokenType.OPERATOR);
+                    return new Token(line, lexeme, type);
+                case 5: // Estado 5: leu <<
+                    lexeme += nextChar();
+                    c = lookAheadChar();
+                    if (c == '<') {
+                        type = Token.TokenType.VEC_DELIM;
+                        state = 3; // estado 3 concatena o terceiro <
+                    }
+                    else {
+                        type = Token.TokenType.ATRIB;
+                        state = 4; // retorna o << caso leia qualquer coisa que não seja um <
+                    }
+                    break;
+                case 6: // Estado 6: leu >>
+                    if (lookAheadChar(2)[1] == '>') { // sabe-se que o primeiro caractere do array é o segundo >
+                        type = Token.TokenType.VEC_DELIM;
+                        lexeme += nextChar();
+                        state = 3; // estado 3 concatena o terceiro >
+                    }
+                    else state = 4; // retorna o < caso leia qualquer coisa que não seja um <
+                    break;
             }
         }
     }
@@ -437,13 +460,30 @@ public class Lexer {
      * do ponteiro e {@link Reader#reset()} para retornar para
      * a posição marcada, uma vez que a leitura foi realizada.
      *
-     * @return
+     * @return o caractere lido
      * @throws IOException
      */
     private char lookAheadChar() throws IOException {
-        char c;
-        reader.mark(1);
-        c = (char) reader.read();
+        return lookAheadChar(1)[0];
+    }
+
+
+    /**
+     * Le os proximos n caracteres sem mover o ponteiro de leitura.
+     * Usa {@link Reader#mark(int)} para marcar a posição atual
+     * do ponteiro e {@link Reader#reset()} para retornar para
+     * a posição marcada, uma vez que a leitura foi realizada.
+     *
+     * @return um array contendo os proximos n caracteres
+     * @throws IOException
+     */
+    private char[] lookAheadChar(int n) throws IOException {
+        if (n <= 0) throw new RuntimeException("n deve ser maior que zero");
+        char c[] = new char[n];
+        reader.mark(n);
+        for (int i = 0; i < n; i++) {
+            c[i] = (char) reader.read();
+        }
         reader.reset();
         return c;
     }

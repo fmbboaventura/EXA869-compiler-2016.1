@@ -21,7 +21,9 @@ public class Token {
         COMMENT("Comentario"),
         INVALID_COMMENT("Comentario Mal Formado"),
         INVALID_SYMBOL("Simbolo Invalido"),
-        INVALID("Token Invalido");
+        INVALID("Token Invalido"),
+        ATRIB("Atribuicao"),
+        VEC_DELIM("Delimitador de Vetor");
 
         private final String name;
 
