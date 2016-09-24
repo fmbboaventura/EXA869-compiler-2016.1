@@ -1,0 +1,21 @@
+01 var Palavra Reservada
+01 inicio Palavra Reservada
+02 inteiro Palavra Reservada
+02 x Identificador
+02 , Delimitador
+02 y Identificador
+02 , Delimitador
+02 z Identificador
+02 ; Delimitador
+03 fim Palavra Reservada
+05 const Palavra Reservada
+05 inicio Palavra Reservada
+06 inteiro Palavra Reservada
+06 x Identificador
+06 << Atribuicao
+06 3 Numero
+06 ; Delimitador
+07 fim Palavra Reservada
+09 programa Palavra Reservada
+09 inicio Palavra Reservada
+10 fim Palavra Reservada

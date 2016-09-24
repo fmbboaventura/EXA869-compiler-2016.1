@@ -1,0 +1,10 @@
+var inicio
+    inteiro x, y, z;
+fim
+
+const inicio
+    inteiro x << 3;
+fim
+
+programa inicio
+fim

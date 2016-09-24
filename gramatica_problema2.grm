@@ -1,0 +1,122 @@
+﻿"Name" = 'Eureca Gramática'
+"Case Sensitive" = 'False'
+"Start Symbol" = <Programa>
+
+
+!--------------------------------
+!           Terminais
+!--------------------------------
+id = {Letter}({AlphaNumeric} | '_')*
+caractere_t = ''{AlphaNumeric}''
+cadeia_t = '"'{Letter}({AlphaNumeric}|{Whitespace})*'"'
+numero_t = {Digit}+('.'{Digit}+)?
+booleano_t = 'verdadeiro' | 'falso'
+
+
+!--------------------------------
+!       Estrutura Principal
+!--------------------------------
+<Programa> ::= <Variaveis><C>|<C>
+<C> ::= <Constantes><P> | <P>
+<P> ::= 'programa'<Bloco><Funcoes>
+<Funcoes>::= <Funcao_Decl><Funcoes>|<>
+
+<Variaveis> ::= 'var''inicio'<Var_List>'fim'
+<Var_List> ::= <Tipo><Var_Decl><Var_List> |<>
+<Var_Decl> ::= <Id_Vetor>','<Var_Decl> | <Id_Vetor>';'
+
+<Constantes> ::= 'const''inicio'<Const_List>'fim'
+<Const_List> ::= <Tipo><Const_Decl><Const_List>  |<>
+
+<Const_Decl> ::= id'<<'<Literal><Const_Decl2>
+<Const_Decl2> ::= ','<Const_Decl> | ';'
+
+!--------------------------------
+!           Bloco
+!--------------------------------
+<Bloco> ::= 'inicio'<Corpo_Bloco>'fim'
+<Corpo_Bloco> ::= <Comando><Corpo_Bloco> | <Atribuicao><Corpo_Bloco> | <Chamada_Funcao>';'<Corpo_Bloco> | <>
+
+
+!--------------------------------
+!           Comandos
+!--------------------------------
+<Comando> ::= <Se> | <Enquanto> | <Escreva> | <Leia>
+
+<Enquanto> ::= 'enquanto''('<Exp_Logica>')''faca'<Bloco>
+<Se> ::= 'se''('<Exp_Logica>')''entao'<Bloco><Senao>
+<Senao> ::= 'senao'<Bloco> | <>
+
+<Leia> ::= 'leia''('<Leia_Params>')'';'
+<Leia_Params> ::= <Id_Vetor><Leia_Param2>
+<Leia_Param2> ::= ','<Leia_Params> | <>
+
+<Escreva> ::= 'escreva''('<Escreva_Params>')'';'
+<Escreva_Params> ::= <Exp_Aritmetica><Escreva_Param2> | caractere_t<Escreva_Param2> | cadeia_t<Escreva_Param2>
+<Escreva_Param2> ::= ','<Escreva_Params> | <>
+
+
+!--------------------------------
+!           Atribuição
+!--------------------------------
+<Atribuicao> ::= <Id_Vetor>'<<'<Valor>';'
+
+
+!--------------------------------
+!           Função
+!--------------------------------
+<Funcao_Decl> ::= 'funcao'<Funcao_Decl2>
+<Funcao_Decl2>::= <Tipo>id'('<Param_Decl>')'<Bloco> | id'('<Param_Decl>')'<Bloco>
+<Param_Decl> ::=  <Param_Decl_List> | <>
+<Param_Decl_List> ::=  <tipo><Id_Vetor><Param_Decl_List2>
+<Param_Decl_List2>::= ','<Param_Decl_List>|<>
+
+<Chamada_Funcao>::= id '(' <Chamada_Funcao2>
+<Chamada_Funcao2>::=<Param_Cham>')' |  ')'
+<Param_Cham> ::= <Valor> <Param_Cham2>
+<Param_Cham2>::= ','<Param_Cham>|<>
+
+!--------------------------------
+!           Expressões
+!--------------------------------
+<Exp_Aritmetica> ::= <Exp_A1> | <Exp_A1><Exp_SomSub>
+<Exp_SomSub> ::= <Operador_A1><Exp_A1> | <Operador_A1><Exp_A1><Exp_SomSub>
+<Operador_A1> ::= '+' | '-'
+<Exp_A1> ::= <Numerico_Funcao> | <Numerico_Funcao><Exp_MulDiv>
+<Exp_MulDiv> ::= <Operador_A2><Numerico_Funcao>| <Operador_A2><Numerico_Funcao><Exp_MulDiv>
+<Operador_A2> ::= '*' | '/'
+<Valor_Numerico> ::= '('<Exp_Aritmetica>')' | numero_t
+<Numerico_Funcao> ::= <Valor_Numerico> | <Vetor_Funcao>
+
+!<Exp_Logica> ::= <Valor_Booleano><Operador_L1><Exp_Logica> | <Operador_L2><Valor_Booleano><Operador_L1><Exp_Logica> | <Operador_L2><Valor_Booleano> | <Valor_Booleano>
+<Exp_Logica> ::= <Vetor_Funcao><Operador_L1><Vetor_Funcao><Exp_Logica2> |<Vetor_Funcao><Operador_L1><Valor_Booleano> | <Valor_Booleano><Operador_L1><Exp_Logica> | <Operador_L2><X4><Exp_Logica2> | <Valor_Booleano>
+<Exp_Logica2> ::= <Operador_L1><Exp_Logica3> | <>
+<Exp_Logica3> ::= <X5><Exp_Logica2> | <Operador_L2><X4><Exp_Logica2>
+<X5> ::= <X4> | <Vetor_Funcao>
+<X4> ::= '('<Vetor_Funcao>')' | <Valor_Booleano>
+<Operador_L1> ::= 'e' | 'ou'
+<Operador_L2> ::= 'nao'
+<Valor_Booleano> ::= '('<Exp_Logica>')' | <Exp_Relacional> |  booleano_t
+
+<Exp_Relacional> ::= <Numerico_Funcao><Operador_R1><Numerico_Funcao> | <Literal_Numero><Operador_R2><Literal_Numero>
+<Operador_R1> ::= <Operador_R2> | '<' | '<=' | '>' | '>='
+<Operador_R2> ::= '<>' | '='
+
+
+!--------------------------------
+!           Outros
+!--------------------------------
+<Tipo> ::= 'inteiro' | 'real' | 'booleano' | 'cadeia' | 'caractere'
+<Literal> ::= caractere_t | cadeia_t | numero_t | booleano_t
+<Vetor> ::= '<<<'<Exp_Aritmetica><Vetor2>'>>>'  | <>
+<Vetor2> ::= ','<Exp_Aritmetica><Vetor2> | <>
+<Vetor_Funcao> ::= <Id_Vetor> | <Chamada_Funcao>
+<Valor> ::= <Exp_Aritmetica> | <Exp_Logica> | caractere_t | cadeia_t
+         
+
+
+!--------------------------------
+!           Correções
+!--------------------------------
+<Literal_Numero> ::= caractere_t | cadeia_t | booleano_t
+<Id_Vetor> ::= id<Vetor>
