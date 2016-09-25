@@ -102,6 +102,6 @@ public class Token {
 
     @Override
     public String toString() {
-        return String.format("%02d %s %s", line, getLexeme(), type.toString());
+        return String.format("Linha %02d %s %s", line, getLexeme(), type.toString());
     }
 }

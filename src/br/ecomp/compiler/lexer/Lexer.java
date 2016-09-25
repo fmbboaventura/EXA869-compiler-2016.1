@@ -36,16 +36,7 @@ public class Lexer {
         lexMap.put("/", Token.TokenType.DIV);
     }
 
-    public void createTokens(File input) throws IOException {
-        if (input.isDirectory()) {
-            File[] files = input.listFiles();
-            if ((files != null) && (files.length > 0))
-                for (File f :
-                        files) {
-                    createTokens(f);
-                }
-            return;
-        }
+    public Collection<Token> createTokens(File input) throws IOException {
 
         reader = new BufferedReader(new FileReader(input));
         LinkedList<Token> tokenList = new LinkedList<>();
@@ -53,6 +44,8 @@ public class Lexer {
 
         char c;
         Token t;
+
+        System.out.println("Passo 1: Analise Semantica");
         while ((c = lookAheadChar()) != eof) {
 
             if (Character.isWhitespace(c)) {
@@ -131,17 +124,25 @@ public class Lexer {
             }
         }
 
-        tokenList.addAll(faultyTokenList);
-        tokenList.forEach(System.out::println);
-        writeOutput(input.getName(), tokenList);
+        LinkedList<Token> allTokens = new LinkedList<>(tokenList);
+        allTokens.addAll(faultyTokenList);
+        //tokenList.forEach(System.out::println);
+        writeOutput(input.getName(), allTokens);
 
         reset();
         reader.close();
+
+        System.out.println("\t" + tokenList.size() + " tokens identificados com sucesso.");
+        if (!faultyTokenList.isEmpty()) {
+            System.out.println("\t" + faultyTokenList.size() + " erros lexicos foram encontrados.");
+            for (Token token : faultyTokenList) System.out.println("\t" + token.toString());
+        }
+        return tokenList;
     }
 
     private void writeOutput(String fileName, List<Token> tokenList) throws IOException {
         BufferedWriter writer = new BufferedWriter(
-                new FileWriter(new File("output" + File.separator + fileName)));
+                new FileWriter(new File("output" + File.separator + "lex_"+ fileName)));
 
         for (Token t : tokenList) {
             writer.write(t.toString());

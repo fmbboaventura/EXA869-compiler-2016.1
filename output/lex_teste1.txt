@@ -1,0 +1,21 @@
+Linha 01 var Palavra Reservada
+Linha 01 inicio Palavra Reservada
+Linha 02 inteiro Tipo de Dados
+Linha 02 x Identificador
+Linha 02 , Delimitador
+Linha 02 y Identificador
+Linha 02 , Delimitador
+Linha 02 z Identificador
+Linha 02 ; Delimitador
+Linha 03 fim Palavra Reservada
+Linha 05 const Palavra Reservada
+Linha 05 inicio Palavra Reservada
+Linha 06 inteiro Tipo de Dados
+Linha 06 x Identificador
+Linha 06 << Atribuicao
+Linha 06 3 Numero
+Linha 06 ; Delimitador
+Linha 07 fim Palavra Reservada
+Linha 09 programa Palavra Reservada
+Linha 09 inicio Palavra Reservada
+Linha 10 fim Palavra Reservada

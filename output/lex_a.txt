@@ -1,0 +1,33 @@
+Linha 01 << Atribuicao
+Linha 02 <<< Delimitador
+Linha 03 >>> Delimitador
+Linha 04 > Operador Relacional
+Linha 04 > Operador Relacional
+Linha 05 , Delimitador
+Linha 05 , Delimitador
+Linha 06 '1' Caractere
+Linha 11 ( Delimitador
+Linha 11 gadielXavier Identificador
+Linha 11 ) Delimitador
+Linha 13 + Operador Aritmetico
+Linha 14 - Operador Aritmetico
+Linha 15 * Operador Aritmetico
+Linha 16 / Operador Aritmetico
+Linha 17 / Operador Aritmetico
+Linha 17 / Operador Aritmetico
+Linha 18 234 Numero
+Linha 18 + Operador Aritmetico
+Linha 18 asc Identificador
+Linha 19 xcv Identificador
+Linha 19 - Operador Aritmetico
+Linha 19 -10 Numero
+Linha 20 - Operador Aritmetico
+Linha 20 * Operador Aritmetico
+Linha 20 + Operador Aritmetico
+Linha 20 / Operador Aritmetico
+Linha 07 'a1' Caractere Mal formado
+Linha 08 'a Caractere Mal formado
+Linha 09 '@ Caractere Mal formado
+Linha 10 '@' Caractere Mal formado
+Linha 12 } Token Invalido
+Linha 21 %$# Simbolo Invalido
