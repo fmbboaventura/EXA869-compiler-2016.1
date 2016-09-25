@@ -1,6 +1,7 @@
 package br.ecomp.compiler;
 
 import br.ecomp.compiler.lexer.Lexer;
+import br.ecomp.compiler.parser.Parser;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +32,9 @@ public class Main {
         }
 
         Lexer lexer = new Lexer();
+        Parser parser = new Parser();
 
         System.out.println("Analisando o Arquivo: " + input.getName());
-        lexer.createTokens(input);
+        parser.parse(lexer.createTokens(input));
     }
 }

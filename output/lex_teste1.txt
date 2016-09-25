@@ -7,15 +7,67 @@ Linha 02 y Identificador
 Linha 02 , Delimitador
 Linha 02 z Identificador
 Linha 02 ; Delimitador
-Linha 03 fim Palavra Reservada
-Linha 05 const Palavra Reservada
-Linha 05 inicio Palavra Reservada
-Linha 06 inteiro Tipo de Dados
-Linha 06 x Identificador
-Linha 06 << Atribuicao
-Linha 06 3 Numero
+Linha 03 caractere Tipo de Dados
+Linha 03 a Identificador
+Linha 03 , Delimitador
+Linha 03 b Identificador
+Linha 03 ; Delimitador
+Linha 04 real Tipo de Dados
+Linha 04 c Identificador
+Linha 04 ; Delimitador
+Linha 05 booleano Tipo de Dados
+Linha 05 eF Identificador
+Linha 05 , Delimitador
+Linha 05 g Identificador
+Linha 05 , Delimitador
+Linha 05 H Identificador
+Linha 05 ; Delimitador
+Linha 06 cadeia Tipo de Dados
+Linha 06 um4Str1ng Identificador
 Linha 06 ; Delimitador
 Linha 07 fim Palavra Reservada
-Linha 09 programa Palavra Reservada
+Linha 09 const Palavra Reservada
 Linha 09 inicio Palavra Reservada
-Linha 10 fim Palavra Reservada
+Linha 10 inteiro Tipo de Dados
+Linha 10 x Identificador
+Linha 10 << Atribuicao
+Linha 10 3 Numero
+Linha 10 , Delimitador
+Linha 11 y Identificador
+Linha 11 << Atribuicao
+Linha 11 45 Numero
+Linha 11 , Delimitador
+Linha 11 z Identificador
+Linha 11 << Atribuicao
+Linha 11 1000 Numero
+Linha 11 ; Delimitador
+Linha 12 caractere Tipo de Dados
+Linha 12 c Identificador
+Linha 12 << Atribuicao
+Linha 12 'c' Caractere
+Linha 12 ; Delimitador
+Linha 13 real Tipo de Dados
+Linha 13 aBc Identificador
+Linha 13 << Atribuicao
+Linha 13 3.14 Numero
+Linha 13 , Delimitador
+Linha 14 DeF Identificador
+Linha 14 << Atribuicao
+Linha 14 3.1415926535897932384626433832795 Numero
+Linha 14 ; Delimitador
+Linha 15 booleano Tipo de Dados
+Linha 15 taSerto Identificador
+Linha 15 << Atribuicao
+Linha 15 , Delimitador
+Linha 15 TaCerto Identificador
+Linha 15 << Atribuicao
+Linha 15 ; Delimitador
+Linha 16 cadeia Tipo de Dados
+Linha 16 hue Identificador
+Linha 16 << Atribuicao
+Linha 16 "heuheuheuheuh" Cadeia de Caracteres
+Linha 16 ; Delimitador
+Linha 17 fim Palavra Reservada
+Linha 19 programa Palavra Reservada
+Linha 19 inicio Palavra Reservada
+Linha 20 fim Palavra Reservada

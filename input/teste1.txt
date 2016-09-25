@@ -1,9 +1,19 @@
 var inicio
     inteiro x, y, z;
+    caractere a, b;
+    real c;
+    booleano eF,g,H;
+    cadeia um4Str1ng;
 fim
 
 const inicio
-    inteiro x << 3;
+    inteiro x << 3, 
+        y << 45,z<<1000;
+    caractere c << 'c';
+    real aBc << 3.14, 
+        DeF << 3.1415926535897932384626433832795 ;
+    booleano taSerto << falso, TaCerto << verdadeiro;
+    cadeia hue << "heuheuheuheuh";
 fim
 
 programa inicio

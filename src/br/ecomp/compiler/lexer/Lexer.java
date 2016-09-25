@@ -145,14 +145,16 @@ public class Lexer {
     }
 
     private void writeOutput(String fileName, List<Token> tokenList) throws IOException {
+        String outputPath = "output" + File.separator + "lex_"+ fileName;
         BufferedWriter writer = new BufferedWriter(
-                new FileWriter(new File("output" + File.separator + "lex_"+ fileName)));
+                new FileWriter(new File(outputPath)));
 
         for (Token t : tokenList) {
             writer.write(t.toString());
             writer.newLine();
         }
         writer.close();
+        System.out.println("\tDetalhes dos tokens salvos no arquivo " + outputPath);
     }
 
     private Token buildFaultyTokenBecauseWhyNot() throws IOException {
