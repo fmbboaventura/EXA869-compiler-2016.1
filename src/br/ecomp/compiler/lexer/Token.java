@@ -6,7 +6,7 @@ package br.ecomp.compiler.lexer;
  */
 public class Token {
 
-    protected enum TokenType {
+    public enum TokenType {
         ATRIB      ("Atribuicao"),
         IDENTIFIER ("Identificador"),
         CHARACTER  ("Caractere"),
@@ -33,11 +33,7 @@ public class Token {
         E  ("Operador Booleano"),
         OU ("Operador Booleano"),
         NAO("Operador Booleano"),
-        INTEIRO  ("Tipo de Dados"),
-        REAL     ("Tipo de Dados"),
-        BOOLEANO ("Tipo de Dados"),
-        CARACTERE("Tipo de Dados"),
-        CADEIA   ("Tipo de Dados"),
+        DATA_TYPE("Tipo de Dados"),
         PROGRAMA("Palavra Reservada"),
         CONST   ("Palavra Reservada"),
         VAR     ("Palavra Reservada"),
