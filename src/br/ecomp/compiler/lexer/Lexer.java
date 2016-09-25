@@ -1,10 +1,7 @@
 package br.ecomp.compiler.lexer;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -17,6 +14,7 @@ public class Lexer {
     private int lineCount, colCount;
     private final char eof;
     private final ArrayList<String> keywords, logOp;
+    private final HashMap<String, Token.TokenType> lexMap;
 
     public Lexer() {
         lineCount = 1;
@@ -28,6 +26,14 @@ public class Lexer {
                 "escreva", "inteiro", "real", "booleano",
                 "verdadeiro", "falso", "cadeia", "caractere"));
         logOp = new ArrayList<>(Arrays.asList("nao", "e", "ou"));
+        lexMap = new HashMap<>();
+        lexMap.put("(", Token.TokenType.PAREN_L);
+        lexMap.put(")", Token.TokenType.PAREN_R);
+        lexMap.put(",", Token.TokenType.COMMA);
+        lexMap.put(";", Token.TokenType.SEMICOLON);
+        lexMap.put("+", Token.TokenType.PLUS);
+        lexMap.put("*", Token.TokenType.TIMES);
+        lexMap.put("/", Token.TokenType.DIV);
     }
 
     public void createTokens(File input) throws IOException {
@@ -82,7 +88,7 @@ public class Lexer {
                 }
             } else if (c == '-' || Character.isDigit(c)) {
                 t = buildNumberLexeme();
-                if (!t.getType().equals(Token.TokenType.OPERATOR)) {
+                if (!t.getType().equals(Token.TokenType.MINUS)) {
                     if (isTokenNumber(t.getLexeme())) {
                         t.setType(Token.TokenType.NUMBER);
                         tokenList.add(t);
@@ -95,10 +101,13 @@ public class Lexer {
                 t = buildIdLexeme();
 
                 if (logOp.contains(t.getLexeme())){
-                    t.setType(Token.TokenType.OPERATOR);
+                    t.setType(Token.TokenType.valueOf(t.getLexeme()));
                     tokenList.add(t);
-                } else if (keywords.contains(t.getLexeme())){
-                    t.setType(Token.TokenType.KEYWORD);
+                } else if(t.getLexeme().equals("verdadeiro") ||
+                        t.getLexeme().equals("falso")) {
+                    t.setType(Token.TokenType.BOOL_V);
+                }else if (keywords.contains(t.getLexeme())){
+                    t.setType(Token.TokenType.valueOf(t.getLexeme().toUpperCase()));
                     tokenList.add(t);
                 } else if (isTokenId(t.getLexeme())) {
                     t.setType(Token.TokenType.IDENTIFIER);
@@ -107,14 +116,16 @@ public class Lexer {
                     t.setType(Token.TokenType.INVALID_IDENTIFIER);
                     faultyTokenList.add(t);
                 }
-            } else if (isOperator(c)) {
-                tokenList.add(new Token(lineCount,
-                        Character.toString(nextChar()),
-                        Token.TokenType.OPERATOR));
-            } else if (isLexDelimiter(c)) {
-                tokenList.add(new Token(lineCount,
-                        Character.toString(nextChar()),
-                        Token.TokenType.DELIMITER));
+            } else if (isOperator(c) || isLexDelimiter(c)) {
+                if (lexMap.containsKey("" + c)) {
+                    tokenList.add(new Token(lineCount,
+                            Character.toString(nextChar()),
+                            lexMap.get("" + c)));
+                } else {
+                    faultyTokenList.add(new Token(lineCount,
+                            Character.toString(nextChar()),
+                            Token.TokenType.INVALID));
+                }
             } else {
                 faultyTokenList.add(buildFaultyTokenBecauseWhyNot());
             }
@@ -172,7 +183,7 @@ public class Lexer {
         int state = 0;
         int line = lineCount;
         char c;
-        Token.TokenType type = Token.TokenType.OPERATOR;
+        Token.TokenType type = Token.TokenType.INVALID;
 
         while (true) {
             switch (state) {
@@ -180,20 +191,36 @@ public class Lexer {
                     c = nextChar();
                     if (c == '<') state = 1;
                     else if (c == '>') state = 2;
-                    else if (c == '=') state = 4;
+                    else if (c == '=') {
+                        state = 4;
+                        type = Token.TokenType.EQ;
+                    }
                     lexeme += c;
                     break;
                 case 1: // Estado 1: leu <
                     c = lookAheadChar(); // olha um caractere a frente
-                    if (c == '=' || c == '>') state = 3;
-                    else if (c == '<') state = 5;
-                    else state = 4;
+                    if (c == '=') {
+                        state = 3;
+                        type = Token.TokenType.LE; // menor ou igual
+                    } else if (c == '>') {
+                        type = Token.TokenType.NEQ; // diferente (not equal)
+                        state = 3;
+                    } else if (c == '<') state = 5;
+                    else {
+                        state = 4;
+                        type = Token.TokenType.LT;
+                    }
                     break;
                 case 2: // Estado 2: leu >
                     c = lookAheadChar(); // olha um caractere a frente
-                    if (c == '=') state = 3;
-                    else if (c == '>') state = 6;
-                    else state = 4;
+                    if (c == '=') {
+                        state = 3;
+                        type = Token.TokenType.GE; // maior ou igual
+                    } else if (c == '>') state = 6;
+                    else {
+                        state = 4;
+                        type = Token.TokenType.GT;
+                    }
                     break;
                 case 3: // Estado 3: leu < ou > e outro caractere que forma lexema com eles
                     lexeme += nextChar(); // É sabido que o proximo char deve ser concatenado
@@ -204,7 +231,7 @@ public class Lexer {
                     lexeme += nextChar();
                     c = lookAheadChar();
                     if (c == '<') {
-                        type = Token.TokenType.VEC_DELIM;
+                        type = Token.TokenType.VEC_DELIM_L;
                         state = 3; // estado 3 concatena o terceiro <
                     }
                     else {
@@ -214,11 +241,14 @@ public class Lexer {
                     break;
                 case 6: // Estado 6: leu >>
                     if (lookAheadChar(2)[1] == '>') { // sabe-se que o primeiro caractere do array é o segundo >
-                        type = Token.TokenType.VEC_DELIM;
+                        type = Token.TokenType.VEC_DELIM_R;
                         lexeme += nextChar();
                         state = 3; // estado 3 concatena o terceiro >
                     }
-                    else state = 4; // retorna o < caso leia qualquer coisa que não seja um <
+                    else {
+                        state = 4;
+                        type = Token.TokenType.GT;
+                    }
                     break;
             }
         }
@@ -249,7 +279,7 @@ public class Lexer {
                 case 1: // Estado 1: leu um -
                     c = lookAheadChar();
                     if (Character.isDigit(c)) state = 2;
-                    else return new Token(line, lexeme, Token.TokenType.OPERATOR);
+                    else return new Token(line, lexeme, Token.TokenType.MINUS);
                     break;
                 case 2: // Estado 2: leu - e um digito
                     if (isLexDelimiter(lookAheadChar())) return new Token(line, lexeme);

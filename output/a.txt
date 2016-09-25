@@ -1,33 +1,33 @@
 01 << Atribuicao
-02 <<< Delimitador de Vetor
-03 >>> Delimitador de Vetor
-04 > Operador
-04 > Operador
+02 <<< Delimitador
+03 >>> Delimitador
+04 > Operador Relacional
+04 > Operador Relacional
 05 , Delimitador
 05 , Delimitador
 06 '1' Caractere
 11 ( Delimitador
 11 gadielXavier Identificador
 11 ) Delimitador
-12 } Delimitador
-13 + Operador
-14 - Operador
-15 * Operador
-16 / Operador
-17 / Operador
-17 / Operador
+13 + Operador Aritmetico
+14 - Operador Aritmetico
+15 * Operador Aritmetico
+16 / Operador Aritmetico
+17 / Operador Aritmetico
+17 / Operador Aritmetico
 18 234 Numero
-18 + Operador
+18 + Operador Aritmetico
 18 asc Identificador
 19 xcv Identificador
-19 - Operador
+19 - Operador Aritmetico
 19 -10 Numero
-20 - Operador
-20 * Operador
-20 + Operador
-20 / Operador
+20 - Operador Aritmetico
+20 * Operador Aritmetico
+20 + Operador Aritmetico
+20 / Operador Aritmetico
 07 'a1' Caractere Mal formado
 08 'a Caractere Mal formado
 09 '@ Caractere Mal formado
 10 '@' Caractere Mal formado
+12 } Token Invalido
 21 %$# Simbolo Invalido

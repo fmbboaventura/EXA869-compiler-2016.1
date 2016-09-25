@@ -1,6 +1,6 @@
 01 var Palavra Reservada
 01 inicio Palavra Reservada
-02 inteiro Palavra Reservada
+02 inteiro Tipo de Dados
 02 x Identificador
 02 , Delimitador
 02 y Identificador
@@ -10,7 +10,7 @@
 03 fim Palavra Reservada
 05 const Palavra Reservada
 05 inicio Palavra Reservada
-06 inteiro Palavra Reservada
+06 inteiro Tipo de Dados
 06 x Identificador
 06 << Atribuicao
 06 3 Numero
