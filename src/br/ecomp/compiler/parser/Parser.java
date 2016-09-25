@@ -24,6 +24,7 @@ public class Parser {
 
     private void nextToken() {
         if (tokenIt.hasNext()) currentToken = tokenIt.next();
+        accept(Token.TokenType.COMMENT); // Pulando comentarios
     }
 
     private boolean accept (Token.TokenType type) {
