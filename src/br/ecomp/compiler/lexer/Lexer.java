@@ -46,7 +46,7 @@ public class Lexer {
         char c;
         Token t;
 
-        System.out.println("Passo 1: Analise Semantica");
+        System.out.println("Passo 1: Analise Lexica");
         while ((c = lookAheadChar()) != eof) {
 
             if (Character.isWhitespace(c)) {
