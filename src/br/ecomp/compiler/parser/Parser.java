@@ -27,6 +27,7 @@ public class Parser {
         errorCount = 0;
         tokenIt = tokens.iterator();
         System.out.println("Passo 2: Analise Sintatica");
+        programa();
         System.out.println(String.format("\t%d erros sintáticos foram encontrados", errorCount));
         if (errorCount == 0) System.out.println("\tAnalise Sintatica concluida com sucesso.");
     }
@@ -97,6 +98,7 @@ public class Parser {
         if (accept(Token.TokenType.VAR)){ // Se aceitou um var
             expect(Token.TokenType.INICIO); // Espera um inicio
             varlist();
+            expect(Token.TokenType.FIM);
         }
     }
 
