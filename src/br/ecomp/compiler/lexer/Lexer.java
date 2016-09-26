@@ -100,6 +100,7 @@ public class Lexer {
                 } else if(t.getLexeme().equals("verdadeiro") ||
                         t.getLexeme().equals("falso")) {
                     t.setType(Token.TokenType.BOOL_V);
+                    tokenList.add(t);
                 } else if (dataTypes.contains(t.getLexeme())) {
                     t.setType(Token.TokenType.DATA_TYPE);
                     tokenList.add(t);

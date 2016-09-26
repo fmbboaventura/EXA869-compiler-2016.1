@@ -58,9 +58,11 @@ Linha 14 ; Delimitador
 Linha 15 booleano Tipo de Dados
 Linha 15 taSerto Identificador
 Linha 15 << Atribuicao
+Linha 15 falso Valor Booleano
 Linha 15 , Delimitador
 Linha 15 TaCerto Identificador
 Linha 15 << Atribuicao
+Linha 15 verdadeiro Valor Booleano
 Linha 15 ; Delimitador
 Linha 16 cadeia Tipo de Dados
 Linha 16 hue Identificador
