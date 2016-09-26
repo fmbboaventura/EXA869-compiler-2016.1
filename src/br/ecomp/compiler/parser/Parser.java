@@ -3,13 +3,10 @@ package br.ecomp.compiler.parser;
 import br.ecomp.compiler.lexer.Token;
 import br.ecomp.compiler.lexer.Token.TokenType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 /**
  * @author Filipe Boaventura
@@ -45,8 +42,11 @@ public class Parser {
      * seja encontrado, para ignorar comentários.
      */
     private void nextToken() {
-        if (tokenIt.hasNext()) currentToken = tokenIt.next();
-        accept(Token.TokenType.COMMENT); // Pulando comentarios
+        if (tokenIt.hasNext()) {
+            currentToken = tokenIt.next();
+            accept(Token.TokenType.COMMENT); // Pulando comentarios
+            System.out.println("Token Atual: " + currentToken.toString());
+        }
     }
 
     /**
@@ -77,14 +77,22 @@ public class Parser {
      */
     private boolean expect(Token.TokenType type) {
         if (accept(type)) return true;
-        error("Erro! Token inesperado :"
-                + "\n\t" + currentToken.toString());
+        error(type);
         return false;
     }
 
-    private void error(String message) {
+    private void error(TokenType... expected) {
         errorCount++;
-        System.out.println(message);
+        String expectedTokenNames = "";
+
+        for (int i = 0; i < expected.length; i++) {
+            expectedTokenNames += expected[i].name();
+            if (i < expected.length-1)
+                expectedTokenNames += ", ";
+        }
+        System.out.println(String.format("Erro na linha %d. Esperava: %s. Obteve: %s.",
+                currentToken.getLine(), expectedTokenNames, currentToken.getLexeme()
+                        + " " + currentToken.getType()));
         // TODO: gravar mensagem num txt
     }
 
@@ -114,21 +122,17 @@ public class Parser {
     // <Variaveis> ::= 'var''inicio'<Var_List>'fim'
     private void variaveis() {
         if (accept(Token.TokenType.VAR)){ // Se aceitou um var
-        	
-        	// Espera um inicio
-        	if(expect(Token.TokenType.INICIO)){
-        		varlist();
-        	}
-        	else{
-        		panicMode(Token.TokenType.INICIO, Token.TokenType.FIM,
-        				Token.TokenType.BOOLEANO, Token.TokenType.CADEIA,
-        				Token.TokenType.CARACTERE, Token.TokenType.REAL,
-        				Token.TokenType.INTEIRO, Token.TokenType.CONST,
-        				Token.TokenType.PROGRAMA);
-        		accept(TokenType.INICIO);
-        		varlist();
-        	}
-            
+
+            // Espera um inicio
+            if (!expect(Token.TokenType.INICIO)) {
+                panicMode(Token.TokenType.INICIO, Token.TokenType.FIM,
+                        Token.TokenType.BOOLEANO, Token.TokenType.CADEIA,
+                        Token.TokenType.CARACTERE, Token.TokenType.REAL,
+                        Token.TokenType.INTEIRO, Token.TokenType.CONST,
+                        Token.TokenType.PROGRAMA);
+                accept(TokenType.INICIO);
+            }
+            varlist();
             expect(Token.TokenType.FIM);
         }
     }
@@ -247,7 +251,7 @@ public class Parser {
         else if (accept(Token.TokenType.CHARACTER));
         else if (accept(Token.TokenType.CHAR_STRING));
         else if (accept(Token.TokenType.BOOL_V));
-        else error("Erro! Token inesperado :"
-                    + "\n\t" + currentToken.toString());
+        else error(TokenType.NUMBER, TokenType.CHAR_STRING,
+                    TokenType.CHARACTER, TokenType.BOOL_V);
     }
 }

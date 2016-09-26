@@ -1,6 +1,4 @@
 Linha 01 var Palavra Reservada
-Linha 01 xxx Identificador
-Linha 01 inicio Palavra Reservada
 Linha 02 inteiro Tipo de Dados
 Linha 02 x Identificador
 Linha 02 , Delimitador
@@ -73,5 +71,4 @@ Linha 16 ; Delimitador
 Linha 17 fim Palavra Reservada
 Linha 19 programa Palavra Reservada
 Linha 19 inicio Palavra Reservada
-Linha 20 const Palavra Reservada
-Linha 21 fim Palavra Reservada
+Linha 20 fim Palavra Reservada
