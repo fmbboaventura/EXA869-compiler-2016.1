@@ -132,7 +132,7 @@ public class Parser {
 
     // <Const_List> ::= <Tipo><Const_Decl><Const_List>  |<>
     private void constlist() {
-        if (accept(Token.TokenType.DATA_TYPE)) {
+        if (tipo()) {
             constdecl();
             constlist();
         }
@@ -157,7 +157,7 @@ public class Parser {
 
     // <Var_List> ::= <Tipo><Var_Decl><Var_List> |<>
     private void varlist() {
-        if (accept(Token.TokenType.DATA_TYPE)) { // espera um tipo
+        if (tipo()) { // espera um tipo
             vardecl();
             varlist();
         } // o else eh o vazio
@@ -198,6 +198,16 @@ public class Parser {
             expect(Token.TokenType.NUMBER); // tem que encontrar um numero em seguida
             vetor2(); // pode se repetir
         }
+    }
+
+    // <Tipo> ::= 'inteiro' | 'real' | 'booleano' | 'cadeia' | 'caractere'
+    private boolean tipo() { // mudar pra tipo boolean?
+        if (accept(Token.TokenType.INTEIRO)) return true;
+        if (accept(Token.TokenType.REAL)) return true;
+        if (accept(Token.TokenType.CARACTERE)) return true;
+        if (accept(Token.TokenType.CADEIA)) return true;
+        if (accept(Token.TokenType.BOOLEANO)) return true;
+        return false;
     }
 
     // <Literal> ::= caractere_t | cadeia_t | numero_t | booleano_t

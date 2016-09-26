@@ -13,7 +13,7 @@ public class Lexer {
     private BufferedReader reader;
     private int lineCount, colCount;
     private final char eof;
-    private final ArrayList<String> keywords, dataTypes, logOp;
+    private final ArrayList<String> keywords, logOp;
     private final HashMap<String, Token.TokenType> lexMap;
 
     public Lexer() {
@@ -23,8 +23,7 @@ public class Lexer {
         keywords = new ArrayList<>(Arrays.asList("programa",
                 "const", "var", "funcao", "inicio", "fim",
                 "se", "entao", "enquanto", "faca", "leia",
-                "escreva"));
-        dataTypes = new ArrayList<>(Arrays.asList("inteiro", "real",
+                "escreva", "inteiro", "real",
                 "booleano","cadeia", "caractere"));
         logOp = new ArrayList<>(Arrays.asList("nao", "e", "ou"));
         lexMap = new HashMap<>();
@@ -100,9 +99,6 @@ public class Lexer {
                 } else if(t.getLexeme().equals("verdadeiro") ||
                         t.getLexeme().equals("falso")) {
                     t.setType(Token.TokenType.BOOL_V);
-                    tokenList.add(t);
-                } else if (dataTypes.contains(t.getLexeme())) {
-                    t.setType(Token.TokenType.DATA_TYPE);
                     tokenList.add(t);
                 } else if (keywords.contains(t.getLexeme())){
                     t.setType(Token.TokenType.valueOf(t.getLexeme().toUpperCase()));
