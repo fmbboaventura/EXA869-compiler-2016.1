@@ -1,9 +1,15 @@
 package br.ecomp.compiler.parser;
 
 import br.ecomp.compiler.lexer.Token;
+import br.ecomp.compiler.lexer.Token.TokenType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 /**
  * @author Filipe Boaventura
@@ -82,7 +88,19 @@ public class Parser {
         // TODO: gravar mensagem num txt
     }
 
-    /******************************************
+    /**
+     * 
+     * @param sync
+     */
+    private void panicMode(TokenType... sync) {
+    	List<TokenType> syncTokens = Arrays.asList(sync);
+    	while(!syncTokens.contains(currentToken.getType())){
+    		System.out.println("\tPulou Token: " + currentToken.toString());
+    		nextToken();
+    	}
+	}
+
+	/******************************************
      *            Nao-Terminais
      *****************************************/
 
@@ -96,8 +114,21 @@ public class Parser {
     // <Variaveis> ::= 'var''inicio'<Var_List>'fim'
     private void variaveis() {
         if (accept(Token.TokenType.VAR)){ // Se aceitou um var
-            expect(Token.TokenType.INICIO); // Espera um inicio
-            varlist();
+        	
+        	// Espera um inicio
+        	if(expect(Token.TokenType.INICIO)){
+        		varlist();
+        	}
+        	else{
+        		panicMode(Token.TokenType.INICIO, Token.TokenType.FIM,
+        				Token.TokenType.BOOLEANO, Token.TokenType.CADEIA,
+        				Token.TokenType.CARACTERE, Token.TokenType.REAL,
+        				Token.TokenType.INTEIRO, Token.TokenType.CONST,
+        				Token.TokenType.PROGRAMA);
+        		accept(TokenType.INICIO);
+        		varlist();
+        	}
+            
             expect(Token.TokenType.FIM);
         }
     }

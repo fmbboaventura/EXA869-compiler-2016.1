@@ -1,4 +1,4 @@
-var inicio
+var xxx inicio
     inteiro x, y, z;
     caractere a, b;
     real c;
@@ -17,4 +17,5 @@ const inicio
 fim
 
 programa inicio
+const
 fim
