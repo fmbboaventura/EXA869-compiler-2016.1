@@ -3,6 +3,7 @@ package br.ecomp.compiler.parser;
 import br.ecomp.compiler.lexer.Token;
 import br.ecomp.compiler.lexer.Token.TokenType;
 
+import javax.smartcardio.ATR;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -17,7 +18,8 @@ public class Parser {
      * Ponteiro para o simbolo atual da entrada.
      */
     private Token currentToken;
-    private Iterator<Token> tokenIt;
+    private List<Token> tokenList;
+    private int index;
     private int errorCount;
 
     /**
@@ -26,9 +28,10 @@ public class Parser {
      * @param tokens coleção de entrada contendo os
      * {@link Token}s para a análise sintática.
      */
-    public void parse(Collection<Token> tokens) {
+    public void parse(List<Token> tokens) {
         errorCount = 0;
-        tokenIt = tokens.iterator();
+        tokenList = tokens;
+        index = -1;
         System.out.println("Passo 2: Analise Sintatica");
         programa();
         System.out.println(String.format("\t%d erros sintáticos foram encontrados", errorCount));
@@ -42,8 +45,9 @@ public class Parser {
      * seja encontrado, para ignorar comentários.
      */
     private void nextToken() {
-        if (tokenIt.hasNext()) {
-            currentToken = tokenIt.next();
+        if (index + 1 < tokenList.size()) {
+            index++;
+            currentToken = tokenList.get(index);
             accept(Token.TokenType.COMMENT); // Pulando comentarios
             System.out.println("Token Atual: " + currentToken.toString());
         }
@@ -79,6 +83,12 @@ public class Parser {
         if (accept(type)) return true;
         error(type);
         return false;
+    }
+
+    private boolean lookAheadToken(int n, TokenType type) {
+        if (index + n < tokenList.size()) {
+            return tokenList.get(index + n).getType() == type;
+        } return false;
     }
 
     private void error(TokenType... expected) {
@@ -147,13 +157,6 @@ public class Parser {
     private void p() {
         expect(Token.TokenType.PROGRAMA);
         bloco();
-    }
-
-    // <Bloco> ::= 'inicio' 'fim'
-    // bloco simplificado por agora
-    private void bloco() {
-        expect(Token.TokenType.INICIO);
-        expect(Token.TokenType.FIM);
     }
 
     // <Constantes> ::= 'const''inicio'<Const_List>'fim'
@@ -232,6 +235,66 @@ public class Parser {
         if (accept(Token.TokenType.COMMA)) { // se encontrou uma virgula
             expect(Token.TokenType.NUMBER); // tem que encontrar um numero em seguida
             vetor2(); // pode se repetir
+        }
+    }
+
+    // <Bloco> ::= 'inicio'<Corpo_Bloco>'fim'
+    // bloco simplificado por agora
+    private void bloco() {
+        expect(Token.TokenType.INICIO);
+        corpoBloco();
+        expect(Token.TokenType.FIM);
+    }
+
+    // <Corpo_Bloco> ::= <Atribuicao><Corpo_Bloco> | <Chamada_Funcao>';'<Corpo_Bloco> | <>
+    // Simplificado. Não é a gramática final. Falta comandos
+    private void corpoBloco() {
+        if (currentToken.getType() == TokenType.IDENTIFIER) {
+            if (lookAheadToken(1, TokenType.ATRIB)) {
+                atribuicao();
+                corpoBloco();
+            } else if (lookAheadToken(1, TokenType.PAREN_L)) {
+                chamadaFuncao();
+                expect(TokenType.SEMICOLON);
+                corpoBloco();
+            }
+        } // falta os comandos
+    }
+
+    // <Atribuicao> ::= <Id_Vetor>'<<'<Literal>';'
+    private void atribuicao() {
+        idvetor();
+        expect(TokenType.ATRIB);
+        literal();
+        expect(TokenType.SEMICOLON);
+    }
+
+    // <Chamada_Funcao>::= id '(' <Chamada_Funcao2>
+    private void chamadaFuncao() {
+        expect(TokenType.IDENTIFIER);
+        expect(TokenType.PAREN_L);
+        chamadaFuncao2();
+    }
+
+    // <Chamada_Funcao2>::=<Param_Cham>')' |  ')'
+    private void chamadaFuncao2() {
+        if (!accept(TokenType.PAREN_R)) {
+            paramCham();
+            expect(TokenType.PAREN_R);
+        }
+    }
+
+    // <Param_Cham> ::= <Literal> <Param_Cham2>
+    // simplificado
+    private void paramCham() {
+        literal();
+        paramCham2();
+    }
+
+    // <Param_Cham2>::= ','<Param_Cham>|<>
+    private void paramCham2() {
+        if (accept(TokenType.COMMA)) {
+            paramCham();
         }
     }
 

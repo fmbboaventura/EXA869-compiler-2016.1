@@ -17,4 +17,8 @@ const inicio
 fim
 
 programa inicio
+    x << 1;
+    y << 2; z << 3;
+    umaFuncao();
+    outraFuncao(4,3.14,'a',falso);
 fim

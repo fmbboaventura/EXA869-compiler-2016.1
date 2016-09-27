@@ -36,7 +36,7 @@ public class Lexer {
         lexMap.put("/", Token.TokenType.DIV);
     }
 
-    public Collection<Token> createTokens(File input) throws IOException {
+    public List<Token> createTokens(File input) throws IOException {
 
         reader = new BufferedReader(new FileReader(input));
         LinkedList<Token> tokenList = new LinkedList<>();
