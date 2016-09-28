@@ -99,4 +99,47 @@ Linha 23 , Delimitador
 Linha 23 falso Valor Booleano
 Linha 23 ) Delimitador
 Linha 23 ; Delimitador
-Linha 24 fim Palavra Reservada
+Linha 25 enquanto Palavra Reservada
+Linha 25 ( Delimitador
+Linha 25 falso Valor Booleano
+Linha 25 ) Delimitador
+Linha 25 faca Palavra Reservada
+Linha 25 inicio Palavra Reservada
+Linha 26 escreva Palavra Reservada
+Linha 26 ( Delimitador
+Linha 26 "loop" Cadeia de Caracteres
+Linha 26 , Delimitador
+Linha 26 100 Numero
+Linha 26 , Delimitador
+Linha 26 'p' Caractere
+Linha 26 ) Delimitador
+Linha 26 ; Delimitador
+Linha 27 fim Palavra Reservada
+Linha 29 leia Palavra Reservada
+Linha 29 ( Delimitador
+Linha 29 x Identificador
+Linha 29 , Delimitador
+Linha 29 y Identificador
+Linha 29 , Delimitador
+Linha 29 z Identificador
+Linha 29 ) Delimitador
+Linha 29 ; Delimitador
+Linha 31 se Palavra Reservada
+Linha 31 ( Delimitador
+Linha 31 verdadeiro Valor Booleano
+Linha 31 ) Delimitador
+Linha 31 entao Palavra Reservada
+Linha 31 inicio Palavra Reservada
+Linha 32 funcaoVerdadeiro Identificador
+Linha 32 ( Delimitador
+Linha 32 ) Delimitador
+Linha 32 ; Delimitador
+Linha 33 fim Palavra Reservada
+Linha 33 senao Palavra Reservada
+Linha 33 inicio Palavra Reservada
+Linha 34 funcaoFalso Identificador
+Linha 34 ( Delimitador
+Linha 34 ) Delimitador
+Linha 34 ; Delimitador
+Linha 35 fim Palavra Reservada
+Linha 36 fim Palavra Reservada

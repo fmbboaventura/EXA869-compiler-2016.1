@@ -92,6 +92,8 @@ public class Parser {
     }
 
     private void error(TokenType... expected) {
+        if (expected.length == 0)
+            throw new IllegalArgumentException("informe pelo menos um TokenType esperado");
         errorCount++;
         String expectedTokenNames = "";
 
@@ -246,8 +248,7 @@ public class Parser {
         expect(Token.TokenType.FIM);
     }
 
-    // <Corpo_Bloco> ::= <Atribuicao><Corpo_Bloco> | <Chamada_Funcao>';'<Corpo_Bloco> | <>
-    // Simplificado. Não é a gramática final. Falta comandos
+    //<Corpo_Bloco> ::= <Comando><Corpo_Bloco> | <Atribuicao><Corpo_Bloco> | <Chamada_Funcao>';'<Corpo_Bloco> | <>
     private void corpoBloco() {
         if (currentToken.getType() == TokenType.IDENTIFIER) {
             if (lookAheadToken(1, TokenType.ATRIB)) {
@@ -258,7 +259,76 @@ public class Parser {
                 expect(TokenType.SEMICOLON);
                 corpoBloco();
             }
-        } // falta os comandos
+        } // abaixo são os comandos
+        // <Se> ::= 'se''('<Exp_Logica>')''entao'<Bloco><Senao>
+        else if (accept(TokenType.SE)) {
+            expect(TokenType.PAREN_L);
+            // Não tem expressões ainda. Usando booleano como placeholder
+            expect(TokenType.BOOL_V);
+            expect(TokenType.PAREN_R);
+            expect(TokenType.ENTAO);
+            bloco();
+            // <Senao> ::= 'senao'<Bloco> | <>
+            if (accept(TokenType.SENAO)) {
+                bloco();
+            }
+            corpoBloco();
+        }
+        // <Enquanto> ::= 'enquanto''('booleano_t')''faca'<Bloco>
+        else if (accept(TokenType.ENQUANTO)) {
+            expect(TokenType.PAREN_L);
+            // Não tem expressões ainda. Usando booleano como placeholder
+            expect(TokenType.BOOL_V);
+            expect(TokenType.PAREN_R);
+            expect(TokenType.FACA);
+            bloco();
+            corpoBloco();
+        }
+        // <Escreva> ::= 'escreva''('<Escreva_Params>')'';'
+        else if (accept(TokenType.ESCREVA)) {
+            expect(TokenType.PAREN_L);
+            escrevaParams();
+            expect(TokenType.PAREN_R);
+            expect(TokenType.SEMICOLON);
+            corpoBloco();
+        }
+        // <Leia> ::= 'leia''('<Leia_Params>')'';'
+        else if (accept(TokenType.LEIA)) {
+            expect(TokenType.PAREN_L);
+            leiaParams();
+            expect(TokenType.PAREN_R);
+            expect(TokenType.SEMICOLON);
+            corpoBloco();
+        } // Se não cair em nenhuma das condições acima, significa que corpobloco derivou vazio
+    }
+
+    // <Escreva_Params> ::= numero_t<Escreva_Param2> | caractere_t<Escreva_Param2> | cadeia_t<Escreva_Param2>
+    private void escrevaParams() {
+        // Usando numero no lugar de expressão aritmética
+        if (accept(TokenType.NUMBER)) escrevaParams2();
+        else if (accept(TokenType.CHARACTER)) escrevaParams2();
+        else if (accept(TokenType.CHAR_STRING)) escrevaParams2();
+        else error(TokenType.NUMBER, TokenType.CHARACTER, TokenType.CHAR_STRING);
+    }
+
+    // <Escreva_Param2> ::= ','<Escreva_Params> | <>
+    private void escrevaParams2() {
+        if (accept(TokenType.COMMA)) {
+            escrevaParams();
+        }
+    }
+
+    // <Leia_Params> ::= <Id_Vetor><Leia_Param2>
+    private void leiaParams() {
+        idvetor();
+        leiaParam2();
+    }
+
+    // <Leia_Param2> ::= ','<Leia_Params> | <>
+    private void leiaParam2() {
+        if (accept(TokenType.COMMA)) {
+            leiaParams();
+        }
     }
 
     // <Atribuicao> ::= <Id_Vetor>'<<'<Literal>';'
