@@ -67,9 +67,8 @@ booleano_t = 'verdadeiro' | 'falso'
 !--------------------------------
 <Funcao_Decl> ::= 'funcao'<Funcao_Decl2>
 <Funcao_Decl2>::= <Tipo>id'('<Param_Decl>')'<Bloco> | id'('<Param_Decl>')'<Bloco>
-<Param_Decl> ::=  <Param_Decl_List> | <>
-<Param_Decl_List> ::=  <tipo><Id_Vetor><Param_Decl_List2>
-<Param_Decl_List2>::= ','<Param_Decl_List>|<>
+<Param_Decl> ::=  <tipo><Id_Vetor><Param_Decl_List> | <>
+<Param_Decl_List> ::=  ','<Param_Decl>|<>
 
 <Chamada_Funcao>::= id '(' <Chamada_Funcao2>
 <Chamada_Funcao2>::=<Param_Cham>')' |  ')'
