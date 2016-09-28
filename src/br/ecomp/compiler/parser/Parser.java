@@ -161,10 +161,11 @@ public class Parser {
         p();
     }
 
-    // <P> ::= 'programa'<Bloco>
+    // <P> ::= 'programa'<Bloco><Funcoes>
     private void p() {
         expect(Token.TokenType.PROGRAMA);
         bloco();
+        funcoes();
     }
 
     // <Constantes> ::= 'const''inicio'<Const_List>'fim'
@@ -356,6 +357,53 @@ public class Parser {
         expect(TokenType.ATRIB);
         literal();
         expect(TokenType.SEMICOLON);
+    }
+
+    // <Funcoes>::= <Funcao_Decl><Funcoes>|<>
+    private void funcoes() {
+        if (currentToken.getType() == TokenType.FUNCAO) {
+            funcaoDecl();
+            funcoes();
+        }
+    }
+
+    // <Funcao_Decl> ::= 'funcao'<Funcao_Decl2>
+    private void funcaoDecl() {
+        expect(TokenType.FUNCAO);
+        funcaoDecl2();
+    }
+
+    // <Funcao_Decl2>::= <Tipo>id'('<Param_Decl>')'<Bloco> | id'('<Param_Decl>')'<Bloco>
+    private void funcaoDecl2() {
+        tipo(); // tipo() não vai disparar erro caso não encontre um tipo
+        expect(TokenType.IDENTIFIER); // Mas o identificador é obrigatório
+        expect(TokenType.PAREN_L);
+        paramDecl();
+        expect(TokenType.PAREN_R);
+        bloco();
+    }
+
+    //<Param_Decl> ::=  <tipo><Id_Vetor><Param_Decl_List> | <>
+    // Modifiquei removendo produções unitárias
+    private void paramDecl() {
+        // se o token atual for o fecha parentese, param_decl derivou vazio
+        if (currentToken.getType() == TokenType.PAREN_R) return;
+        else {
+            if (!tipo()) {
+                error(TokenType.INTEIRO, TokenType.REAL,
+                        TokenType.BOOLEANO, TokenType.CARACTERE,
+                        TokenType.CADEIA);
+            }
+            idvetor();
+            paramDeclList();
+        }
+    }
+
+    // <Param_Decl_List> ::=  ','<Param_Decl>|<>
+    private void paramDeclList() {
+        if (accept(TokenType.COMMA)) {
+            paramDecl();
+        }
     }
 
     // <Chamada_Funcao>::= id '(' <Chamada_Funcao2>

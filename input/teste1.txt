@@ -35,3 +35,9 @@ programa inicio
         funcaoFalso();
     fim
 fim
+
+funcao umaFuncao() inicio
+fim
+
+funcao cadeia outraFuncao(inteiro a, real b, cadeia c, booleano d) inicio
+fim

@@ -149,3 +149,27 @@ Linha 35 ) Delimitador
 Linha 35 ; Delimitador
 Linha 36 fim Palavra Reservada
 Linha 37 fim Palavra Reservada
+Linha 39 funcao Palavra Reservada
+Linha 39 umaFuncao Identificador
+Linha 39 ( Delimitador
+Linha 39 ) Delimitador
+Linha 39 inicio Palavra Reservada
+Linha 40 fim Palavra Reservada
+Linha 42 funcao Palavra Reservada
+Linha 42 cadeia Tipo de Dados
+Linha 42 outraFuncao Identificador
+Linha 42 ( Delimitador
+Linha 42 inteiro Tipo de Dados
+Linha 42 a Identificador
+Linha 42 , Delimitador
+Linha 42 real Tipo de Dados
+Linha 42 b Identificador
+Linha 42 , Delimitador
+Linha 42 cadeia Tipo de Dados
+Linha 42 c Identificador
+Linha 42 , Delimitador
+Linha 42 booleano Tipo de Dados
+Linha 42 d Identificador
+Linha 42 ) Delimitador
+Linha 42 inicio Palavra Reservada
+Linha 43 fim Palavra Reservada
