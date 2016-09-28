@@ -142,8 +142,14 @@ public class Parser {
                         Token.TokenType.PROGRAMA);
                 accept(TokenType.INICIO);
             }
+            
             varlist();
-            expect(Token.TokenType.FIM);
+            
+            if(!expect(Token.TokenType.FIM)){
+            	panicMode(Token.TokenType.PROGRAMA, Token.TokenType.CONST, 
+            			Token.TokenType.FIM);
+            	accept(TokenType.FIM);
+            }
         }
     }
 
@@ -207,13 +213,22 @@ public class Parser {
         if (accept(Token.TokenType.COMMA)) {
             vardecl();
         } else  { // Se não tem virgula, testa por ponto e virgula. Isso resolve a ambiguidade?
-            expect(Token.TokenType.SEMICOLON);
+            if(!expect(Token.TokenType.SEMICOLON)){
+            	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.COMMA,
+            			Token.TokenType.INTEIRO, Token.TokenType.BOOLEANO,
+            			Token.TokenType.CARACTERE, Token.TokenType.CADEIA,
+            			Token.TokenType.REAL);
+            }
         }
     }
 
     // <Id_Vetor> ::= id<Vetor>
     private void idvetor() {
-        expect(Token.TokenType.IDENTIFIER);
+        if(!expect(Token.TokenType.IDENTIFIER)){
+        	panicMode(Token.TokenType.COMMA, Token.TokenType.SEMICOLON,
+        			Token.TokenType.IDENTIFIER);
+        	accept(TokenType.IDENTIFIER);
+        }
         vetor();
     }
 
@@ -226,7 +241,11 @@ public class Parser {
         if (accept(Token.TokenType.VEC_DELIM_L)) {//se encontrou <<<
             expect(Token.TokenType.NUMBER); // TODO implementar as expressoes
             vetor2();
-            expect(Token.TokenType.VEC_DELIM_R); // espera que feche o vetor com >>>
+            if(!expect(Token.TokenType.VEC_DELIM_R)){ // espera que feche o vetor com >>>
+            	panicMode(Token.TokenType.VEC_DELIM_R, Token.TokenType.IDENTIFIER,
+            			Token.TokenType.COMMA, Token.TokenType.SEMICOLON);
+            	accept(TokenType.VEC_DELIM_R);
+            }
         }
     }
 
