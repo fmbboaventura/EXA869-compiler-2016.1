@@ -25,121 +25,127 @@ Linha 05 ; Delimitador
 Linha 06 cadeia Tipo de Dados
 Linha 06 um4Str1ng Identificador
 Linha 06 ; Delimitador
-Linha 07 fim Palavra Reservada
-Linha 09 const Palavra Reservada
-Linha 09 inicio Palavra Reservada
-Linha 10 inteiro Tipo de Dados
-Linha 10 x Identificador
-Linha 10 << Atribuicao
-Linha 10 3 Numero
-Linha 10 , Delimitador
-Linha 11 y Identificador
+Linha 07 inteiro Tipo de Dados
+Linha 07 x Identificador
+Linha 07 <<< Delimitador
+Linha 07 2 Numero
+Linha 07 >>> Delimitador
+Linha 07 ; Delimitador
+Linha 08 fim Palavra Reservada
+Linha 10 const Palavra Reservada
+Linha 10 inicio Palavra Reservada
+Linha 11 inteiro Tipo de Dados
+Linha 11 x Identificador
 Linha 11 << Atribuicao
-Linha 11 45 Numero
+Linha 11 3 Numero
 Linha 11 , Delimitador
-Linha 11 z Identificador
-Linha 11 << Atribuicao
-Linha 11 1000 Numero
-Linha 11 ; Delimitador
-Linha 12 caractere Tipo de Dados
-Linha 12 c Identificador
+Linha 12 y Identificador
 Linha 12 << Atribuicao
-Linha 12 'c' Caractere
+Linha 12 45 Numero
+Linha 12 , Delimitador
+Linha 12 z Identificador
+Linha 12 << Atribuicao
+Linha 12 1000 Numero
 Linha 12 ; Delimitador
-Linha 13 real Tipo de Dados
-Linha 13 aBc Identificador
+Linha 13 caractere Tipo de Dados
+Linha 13 c Identificador
 Linha 13 << Atribuicao
-Linha 13 3.14 Numero
-Linha 13 , Delimitador
-Linha 14 DeF Identificador
+Linha 13 'c' Caractere
+Linha 13 ; Delimitador
+Linha 14 real Tipo de Dados
+Linha 14 aBc Identificador
 Linha 14 << Atribuicao
-Linha 14 3.1415926535897932384626433832795 Numero
-Linha 14 ; Delimitador
-Linha 15 booleano Tipo de Dados
-Linha 15 taSerto Identificador
+Linha 14 3.14 Numero
+Linha 14 , Delimitador
+Linha 15 DeF Identificador
 Linha 15 << Atribuicao
-Linha 15 falso Valor Booleano
-Linha 15 , Delimitador
-Linha 15 TaCerto Identificador
-Linha 15 << Atribuicao
-Linha 15 verdadeiro Valor Booleano
+Linha 15 3.1415926535897932384626433832795 Numero
 Linha 15 ; Delimitador
-Linha 16 cadeia Tipo de Dados
-Linha 16 hue Identificador
+Linha 16 booleano Tipo de Dados
+Linha 16 taSerto Identificador
 Linha 16 << Atribuicao
-Linha 16 "heuheuheuheuh" Cadeia de Caracteres
+Linha 16 falso Valor Booleano
+Linha 16 , Delimitador
+Linha 16 TaCerto Identificador
+Linha 16 << Atribuicao
+Linha 16 verdadeiro Valor Booleano
 Linha 16 ; Delimitador
-Linha 17 fim Palavra Reservada
-Linha 19 programa Palavra Reservada
-Linha 19 inicio Palavra Reservada
-Linha 20 x Identificador
-Linha 20 << Atribuicao
-Linha 20 1 Numero
-Linha 20 ; Delimitador
-Linha 21 y Identificador
+Linha 17 cadeia Tipo de Dados
+Linha 17 hue Identificador
+Linha 17 << Atribuicao
+Linha 17 "heuheuheuheuh" Cadeia de Caracteres
+Linha 17 ; Delimitador
+Linha 18 fim Palavra Reservada
+Linha 20 programa Palavra Reservada
+Linha 20 inicio Palavra Reservada
+Linha 21 x Identificador
 Linha 21 << Atribuicao
-Linha 21 2 Numero
+Linha 21 1 Numero
 Linha 21 ; Delimitador
-Linha 21 z Identificador
-Linha 21 << Atribuicao
-Linha 21 3 Numero
-Linha 21 ; Delimitador
-Linha 22 umaFuncao Identificador
-Linha 22 ( Delimitador
-Linha 22 ) Delimitador
+Linha 22 y Identificador
+Linha 22 << Atribuicao
+Linha 22 2 Numero
 Linha 22 ; Delimitador
-Linha 23 outraFuncao Identificador
+Linha 22 z Identificador
+Linha 22 << Atribuicao
+Linha 22 3 Numero
+Linha 22 ; Delimitador
+Linha 23 umaFuncao Identificador
 Linha 23 ( Delimitador
-Linha 23 4 Numero
-Linha 23 , Delimitador
-Linha 23 3.14 Numero
-Linha 23 , Delimitador
-Linha 23 'a' Caractere
-Linha 23 , Delimitador
-Linha 23 falso Valor Booleano
 Linha 23 ) Delimitador
 Linha 23 ; Delimitador
-Linha 25 enquanto Palavra Reservada
-Linha 25 ( Delimitador
-Linha 25 falso Valor Booleano
-Linha 25 ) Delimitador
-Linha 25 faca Palavra Reservada
-Linha 25 inicio Palavra Reservada
-Linha 26 escreva Palavra Reservada
+Linha 24 outraFuncao Identificador
+Linha 24 ( Delimitador
+Linha 24 4 Numero
+Linha 24 , Delimitador
+Linha 24 3.14 Numero
+Linha 24 , Delimitador
+Linha 24 'a' Caractere
+Linha 24 , Delimitador
+Linha 24 falso Valor Booleano
+Linha 24 ) Delimitador
+Linha 24 ; Delimitador
+Linha 26 enquanto Palavra Reservada
 Linha 26 ( Delimitador
-Linha 26 "loop" Cadeia de Caracteres
-Linha 26 , Delimitador
-Linha 26 100 Numero
-Linha 26 , Delimitador
-Linha 26 'p' Caractere
+Linha 26 falso Valor Booleano
 Linha 26 ) Delimitador
-Linha 26 ; Delimitador
-Linha 27 fim Palavra Reservada
-Linha 29 leia Palavra Reservada
-Linha 29 ( Delimitador
-Linha 29 x Identificador
-Linha 29 , Delimitador
-Linha 29 y Identificador
-Linha 29 , Delimitador
-Linha 29 z Identificador
-Linha 29 ) Delimitador
-Linha 29 ; Delimitador
-Linha 31 se Palavra Reservada
-Linha 31 ( Delimitador
-Linha 31 verdadeiro Valor Booleano
-Linha 31 ) Delimitador
-Linha 31 entao Palavra Reservada
-Linha 31 inicio Palavra Reservada
-Linha 32 funcaoVerdadeiro Identificador
+Linha 26 faca Palavra Reservada
+Linha 26 inicio Palavra Reservada
+Linha 27 escreva Palavra Reservada
+Linha 27 ( Delimitador
+Linha 27 "loop" Cadeia de Caracteres
+Linha 27 , Delimitador
+Linha 27 100 Numero
+Linha 27 , Delimitador
+Linha 27 'p' Caractere
+Linha 27 ) Delimitador
+Linha 27 ; Delimitador
+Linha 28 fim Palavra Reservada
+Linha 30 leia Palavra Reservada
+Linha 30 ( Delimitador
+Linha 30 x Identificador
+Linha 30 , Delimitador
+Linha 30 y Identificador
+Linha 30 , Delimitador
+Linha 30 z Identificador
+Linha 30 ) Delimitador
+Linha 30 ; Delimitador
+Linha 32 se Palavra Reservada
 Linha 32 ( Delimitador
+Linha 32 verdadeiro Valor Booleano
 Linha 32 ) Delimitador
-Linha 32 ; Delimitador
-Linha 33 fim Palavra Reservada
-Linha 33 senao Palavra Reservada
-Linha 33 inicio Palavra Reservada
-Linha 34 funcaoFalso Identificador
-Linha 34 ( Delimitador
-Linha 34 ) Delimitador
-Linha 34 ; Delimitador
-Linha 35 fim Palavra Reservada
+Linha 32 entao Palavra Reservada
+Linha 32 inicio Palavra Reservada
+Linha 33 funcaoVerdadeiro Identificador
+Linha 33 ( Delimitador
+Linha 33 ) Delimitador
+Linha 33 ; Delimitador
+Linha 34 fim Palavra Reservada
+Linha 34 senao Palavra Reservada
+Linha 34 inicio Palavra Reservada
+Linha 35 funcaoFalso Identificador
+Linha 35 ( Delimitador
+Linha 35 ) Delimitador
+Linha 35 ; Delimitador
 Linha 36 fim Palavra Reservada
+Linha 37 fim Palavra Reservada
