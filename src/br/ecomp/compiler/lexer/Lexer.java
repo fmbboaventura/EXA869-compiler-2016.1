@@ -22,7 +22,7 @@ public class Lexer {
         eof = (char) -1;
         keywords = new ArrayList<>(Arrays.asList("programa",
                 "const", "var", "funcao", "inicio", "fim",
-                "se", "entao", "enquanto", "faca", "leia",
+                "se", "senao", "entao", "enquanto", "faca", "leia",
                 "escreva", "inteiro", "real",
                 "booleano","cadeia", "caractere"));
         logOp = new ArrayList<>(Arrays.asList("nao", "e", "ou"));

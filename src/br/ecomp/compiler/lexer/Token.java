@@ -45,6 +45,7 @@ public class Token {
         INICIO  ("Palavra Reservada"),
         FIM     ("Palavra Reservada"),
         SE      ("Palavra Reservada"),
+        SENAO   ("Palavra Reservada"),
         ENTAO   ("Palavra Reservada"),
         ENQUANTO("Palavra Reservada"),
         FACA    ("Palavra Reservada"),
