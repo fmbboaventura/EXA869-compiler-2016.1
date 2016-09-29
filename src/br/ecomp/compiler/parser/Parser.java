@@ -150,6 +150,7 @@ public class Parser {
             	accept(TokenType.FIM);
             }
         }
+        
     }
 
     // <C> ::= <Constantes><P> | <P>
@@ -168,9 +169,22 @@ public class Parser {
     // <Constantes> ::= 'const''inicio'<Const_List>'fim'
     private void constantes() {
         if (accept(Token.TokenType.CONST)) {
-            expect(Token.TokenType.INICIO);
+        	
+        	 // Espera um inicio
+            if (!expect(Token.TokenType.INICIO)) {
+                panicMode(Token.TokenType.INICIO, Token.TokenType.FIM,
+                        Token.TokenType.BOOLEANO, Token.TokenType.CADEIA,
+                        Token.TokenType.CARACTERE, Token.TokenType.REAL,
+                        Token.TokenType.INTEIRO, Token.TokenType.PROGRAMA);
+                accept(TokenType.INICIO);
+            }
+            
             constlist();
-            expect(Token.TokenType.FIM);
+           
+            if(!expect(Token.TokenType.FIM)){
+            	panicMode(Token.TokenType.PROGRAMA, Token.TokenType.FIM);
+            	accept(TokenType.FIM);
+            }
         }
     }
 
@@ -180,12 +194,29 @@ public class Parser {
             constdecl();
             constlist();
         }
+        else if(currentToken.getType() != Token.TokenType.FIM){ //se nao for vazio entra aqui
+        	error(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
+        	panicMode(Token.TokenType.IDENTIFIER);
+        	constdecl();
+        	constlist();
+        } // o else eh o vazio
     }
 
     // <Const_Decl> ::= id'<<'<Literal><Const_Decl2>
     private void constdecl() {
-        expect(Token.TokenType.IDENTIFIER);
-        expect(Token.TokenType.ATRIB);
+        
+        
+        if(!expect(Token.TokenType.IDENTIFIER)){
+        	panicMode(Token.TokenType.ATRIB, Token.TokenType.IDENTIFIER);
+        	accept(TokenType.IDENTIFIER);
+        }
+        
+        if(!expect(Token.TokenType.ATRIB)){
+        	panicMode(Token.TokenType.ATRIB, Token.TokenType.NUMBER,
+        			Token.TokenType.CHARACTER, Token.TokenType.CHAR_STRING,
+        			Token.TokenType.BOOL_V);
+        	accept(Token.TokenType.ATRIB);
+        }
         literal();
         constdecl2();
     }
@@ -195,7 +226,12 @@ public class Parser {
         if (accept(Token.TokenType.COMMA)) {
             constdecl();
         } else {
-            expect(Token.TokenType.SEMICOLON);
+        	if(!expect(Token.TokenType.SEMICOLON)){
+            	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.INTEIRO,
+            			Token.TokenType.BOOLEANO,
+            			Token.TokenType.CARACTERE, Token.TokenType.CADEIA,
+            			Token.TokenType.REAL, Token.TokenType.FIM);
+            }
         }
     }
 
@@ -218,12 +254,13 @@ public class Parser {
         idvetor();
         if (accept(Token.TokenType.COMMA)) {
             vardecl();
-        } else  { // Se não tem virgula, testa por ponto e virgula. Isso resolve a ambiguidade?
+        }
+        else  { // Se não tem virgula, testa por ponto e virgula. Isso resolve a ambiguidade?
             if(!expect(Token.TokenType.SEMICOLON)){
-            	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.COMMA,
-            			Token.TokenType.INTEIRO, Token.TokenType.BOOLEANO,
+            	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.INTEIRO,
+            			Token.TokenType.BOOLEANO,
             			Token.TokenType.CARACTERE, Token.TokenType.CADEIA,
-            			Token.TokenType.REAL);
+            			Token.TokenType.REAL, Token.TokenType.FIM);
             }
         }
     }
