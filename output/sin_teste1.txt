@@ -1,0 +1,2 @@
+0 erros sintáticos foram encontrados
+Analise Sintatica concluida com sucesso.

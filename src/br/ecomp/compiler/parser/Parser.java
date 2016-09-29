@@ -3,6 +3,10 @@ package br.ecomp.compiler.parser;
 import br.ecomp.compiler.lexer.Token;
 import br.ecomp.compiler.lexer.Token.TokenType;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,6 +22,7 @@ public class Parser {
     private List<Token> tokenList;
     private int index;
     private int errorCount;
+    private BufferedWriter writer;
 
     /**
      * Inicia a análise sintática sobre a coleção de
@@ -25,14 +30,24 @@ public class Parser {
      * @param tokens coleção de entrada contendo os
      * {@link Token}s para a análise sintática.
      */
-    public void parse(List<Token> tokens) {
+    public void parse(List<Token> tokens, String outputPath) throws IOException {
         errorCount = 0;
         tokenList = tokens;
         index = -1;
+        writer = new BufferedWriter(new FileWriter(new File(outputPath)));
+
         System.out.println("Passo 2: Analise Sintatica");
         programa();
         System.out.println(String.format("\t%d erros sintáticos foram encontrados", errorCount));
-        if (errorCount == 0) System.out.println("\tAnalise Sintatica concluida com sucesso.");
+        writer.write(String.format("%d erros sintáticos foram encontrados", errorCount));
+        writer.newLine();
+        if (errorCount == 0) {
+            System.out.println("\tAnalise Sintatica concluida com sucesso.");
+            writer.write("Analise Sintatica concluida com sucesso.");
+            writer.newLine();
+        }
+        writer.close();
+        System.out.println("O status da analise foi salvo no arquivo " + outputPath);
     }
 
     /**
@@ -99,10 +114,16 @@ public class Parser {
             if (i < expected.length-1)
                 expectedTokenNames += ", ";
         }
-        System.out.println(String.format("Erro na linha %d. Esperava: %s. Obteve: %s.",
+        String errorMsg = String.format("Erro na linha %d. Esperava: %s. Obteve: %s.",
                 currentToken.getLine(), expectedTokenNames, currentToken.getLexeme()
-                        + " " + currentToken.getType()));
-        // TODO: gravar mensagem num txt
+                        + " " + currentToken.getType());
+        System.out.println(errorMsg);
+        try {
+            writer.write(errorMsg);
+            writer.newLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
