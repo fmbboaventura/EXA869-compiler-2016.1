@@ -95,7 +95,7 @@ public class Parser {
         String expectedTokenNames = "";
 
         for (int i = 0; i < expected.length; i++) {
-            expectedTokenNames += expected[i].name();
+            expectedTokenNames += expected[i].toString();
             if (i < expected.length-1)
                 expectedTokenNames += ", ";
         }
