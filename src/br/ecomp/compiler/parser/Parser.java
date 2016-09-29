@@ -55,14 +55,19 @@ public class Parser {
      * {@link Parser#currentToken}. Consome mais um simbolo
      * caso um token do tipo {@link br.ecomp.compiler.lexer.Token.TokenType#COMMENT}
      * seja encontrado, para ignorar comentários.
+     *
+     * @return retorna true se conseguiu atualizar o
+     *         {@link Parser#currentToken}. Retorna false
+     *         caso tenha chegado no fim da entrada.
      */
-    private void nextToken() {
+    private boolean nextToken() {
         if (index + 1 < tokenList.size()) {
             index++;
             currentToken = tokenList.get(index);
             accept(Token.TokenType.COMMENT); // Pulando comentarios
             System.out.println("Token Atual: " + currentToken.toString());
-        }
+            return true;
+        } return false;
     }
 
     /**
@@ -134,7 +139,7 @@ public class Parser {
     	List<TokenType> syncTokens = Arrays.asList(sync);
     	while(!syncTokens.contains(currentToken.getType())){
     		System.out.println("\tPulou Token: " + currentToken.toString());
-    		nextToken();
+    		if (!nextToken()) return;
     	}
 	}
 
