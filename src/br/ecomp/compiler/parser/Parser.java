@@ -333,26 +333,60 @@ public class Parser {
                 expect(TokenType.SEMICOLON);
                 corpoBloco();
             }
+            else{ //caso nao encontre ATRIB ou PAREN_L depois de id
+            	atribuicao();
+            	corpoBloco();
+            }
+            
         } // abaixo são os comandos
         // <Se> ::= 'se''('<Exp_Logica>')''entao'<Bloco><Senao>
         else if (accept(TokenType.SE)) {
-            expect(TokenType.PAREN_L);
+            if(!expect(TokenType.PAREN_L)){
+            	panicMode(Token.TokenType.PAREN_L, Token.TokenType.IDENTIFIER,
+            			Token.TokenType.NUMBER);
+            	accept(Token.TokenType.PAREN_L);
+            }
+            
             expLogica();
-            expect(TokenType.PAREN_R);
-            expect(TokenType.ENTAO);
+            
+            if(!expect(TokenType.PAREN_R)){
+            	panicMode(Token.TokenType.PAREN_R, Token.TokenType.ENTAO);
+            	accept(Token.TokenType.PAREN_R);
+            }
+            if(!expect(TokenType.ENTAO)){
+            	panicMode(Token.TokenType.ENTAO, Token.TokenType.INICIO);
+            	accept(Token.TokenType.ENTAO);
+            }
+            
             bloco();
+            
             // <Senao> ::= 'senao'<Bloco> | <>
             if (accept(TokenType.SENAO)) {
                 bloco();
             }
+            
             corpoBloco();
         }
         // <Enquanto> ::= 'enquanto''('booleano_t')''faca'<Bloco>
         else if (accept(TokenType.ENQUANTO)) {
-            expect(TokenType.PAREN_L);
+        	if(!expect(TokenType.PAREN_L)){
+            	panicMode(Token.TokenType.PAREN_L, Token.TokenType.IDENTIFIER,
+            			Token.TokenType.NUMBER);
+            	accept(Token.TokenType.PAREN_L);
+            }
+        	
             expLogica();
-            expect(TokenType.PAREN_R);
-            expect(TokenType.FACA);
+            
+            if(!expect(TokenType.PAREN_R)){
+            	panicMode(Token.TokenType.PAREN_R, Token.TokenType.FACA);
+            	accept(Token.TokenType.PAREN_R);
+            }
+            
+            if(!expect(TokenType.FACA)){
+            	panicMode(Token.TokenType.FACA, Token.TokenType.INICIO);
+            	accept(Token.TokenType.FACA);
+            }
+            
             bloco();
             corpoBloco();
         }
@@ -372,6 +406,15 @@ public class Parser {
             expect(TokenType.SEMICOLON);
             corpoBloco();
         } // Se não cair em nenhuma das condições acima, significa que corpobloco derivou vazio
+        
+        else if(currentToken.getType() != Token.TokenType.FIM){ //se nao for vazio entra aqui
+        	error(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
+        	panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.SE,
+        			Token.TokenType.ENQUANTO, Token.TokenType.LEIA,
+        			Token.TokenType.ESCREVA);
+        	corpoBloco();
+        } // o else eh o vazio
+
     }
 
     // <Escreva_Params> ::= numero_t<Escreva_Param2> | caractere_t<Escreva_Param2> | cadeia_t<Escreva_Param2>
@@ -473,8 +516,16 @@ public class Parser {
 
     // <Chamada_Funcao>::= id '(' <Chamada_Funcao2>
     private void chamadaFuncao() {
-        expect(TokenType.IDENTIFIER);
-        expect(TokenType.PAREN_L);
+        if(!expect(TokenType.IDENTIFIER)){
+        	panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.PAREN_L);
+        	accept(Token.TokenType.IDENTIFIER);
+        }
+        if(!expect(TokenType.PAREN_L)){
+        	panicMode(Token.TokenType.PAREN_L, Token.TokenType.IDENTIFIER,
+        			Token.TokenType.NUMBER, Token.TokenType.CARACTERE,
+        			Token.TokenType.BOOL_V, Token.TokenType.CHAR_STRING);
+        	accept(Token.TokenType.PAREN_L);
+        }
         chamadaFuncao2();
     }
 
@@ -482,7 +533,12 @@ public class Parser {
     private void chamadaFuncao2() {
         if (!accept(TokenType.PAREN_R)) {
             paramCham();
-            expect(TokenType.PAREN_R);
+            if(!expect(TokenType.PAREN_R)){
+            	panicMode(Token.TokenType.PAREN_R, Token.TokenType.SEMICOLON,
+            			Token.TokenType.MINUS, Token.TokenType.DIV,
+            			Token.TokenType.PLUS, Token.TokenType.TIMES);
+            	accept(Token.TokenType.PAREN_R);
+            }
         }
     }
 
