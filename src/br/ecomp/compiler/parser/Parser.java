@@ -325,18 +325,15 @@ public class Parser {
     //<Corpo_Bloco> ::= <Comando><Corpo_Bloco> | <Atribuicao><Corpo_Bloco> | <Chamada_Funcao>';'<Corpo_Bloco> | <>
     private void corpoBloco() {
         if (currentToken.getType() == TokenType.IDENTIFIER) {
-            if (lookAheadToken(1, TokenType.ATRIB)) {
-                atribuicao();
-                corpoBloco();
-            } else if (lookAheadToken(1, TokenType.PAREN_L)) {
-                chamadaFuncao();
-                expect(TokenType.SEMICOLON);
-                corpoBloco();
-            }
-            else{ //caso nao encontre ATRIB ou PAREN_L depois de id
-            	atribuicao();
-            	corpoBloco();
-            }
+        	if (lookAheadToken(1, TokenType.PAREN_L)) {
+        		chamadaFuncao();
+        		expect(TokenType.SEMICOLON);
+        		corpoBloco();
+        	}
+        	else{ //caso nao encontre PAREN_L depois de id
+        		atribuicao();
+        		corpoBloco();
+        	}
             
         } // abaixo são os comandos
         // <Se> ::= 'se''('<Exp_Logica>')''entao'<Bloco><Senao>
@@ -392,18 +389,50 @@ public class Parser {
         }
         // <Escreva> ::= 'escreva''('<Escreva_Params>')'';'
         else if (accept(TokenType.ESCREVA)) {
-            expect(TokenType.PAREN_L);
+            if(!expect(TokenType.PAREN_L)){
+            	panicMode(Token.TokenType.PAREN_L, Token.TokenType.NUMBER,
+            			Token.TokenType.IDENTIFIER, Token.TokenType.CHAR_STRING,
+            			Token.TokenType.CARACTERE);
+            	accept(Token.TokenType.PAREN_L);
+            }
+            
             escrevaParams();
-            expect(TokenType.PAREN_R);
-            expect(TokenType.SEMICOLON);
+            if(!expect(TokenType.PAREN_R)){
+            	panicMode(Token.TokenType.PAREN_R, Token.TokenType.SEMICOLON);
+            	accept(Token.TokenType.PAREN_R);
+            }
+            
+            if(!expect(TokenType.SEMICOLON)){
+            	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.FIM,
+            			Token.TokenType.IDENTIFIER, Token.TokenType.SE,
+            			Token.TokenType.ENQUANTO, Token.TokenType.ESCREVA,
+            			Token.TokenType.LEIA);
+            }
+            
             corpoBloco();
         }
         // <Leia> ::= 'leia''('<Leia_Params>')'';'
         else if (accept(TokenType.LEIA)) {
-            expect(TokenType.PAREN_L);
+        	
+        	if(!expect(TokenType.PAREN_L)){
+            	panicMode(Token.TokenType.PAREN_L, Token.TokenType.IDENTIFIER);
+            	accept(Token.TokenType.PAREN_L);
+            }
+        	
             leiaParams();
-            expect(TokenType.PAREN_R);
-            expect(TokenType.SEMICOLON);
+            
+            if(!expect(TokenType.PAREN_R)){
+            	panicMode(Token.TokenType.PAREN_R, Token.TokenType.SEMICOLON);
+            	accept(Token.TokenType.PAREN_R);
+            }
+            
+            if(!expect(TokenType.SEMICOLON)){
+            	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.FIM,
+            			Token.TokenType.IDENTIFIER, Token.TokenType.SE,
+            			Token.TokenType.ENQUANTO, Token.TokenType.ESCREVA,
+            			Token.TokenType.LEIA);
+            }
+            
             corpoBloco();
         } // Se não cair em nenhuma das condições acima, significa que corpobloco derivou vazio
         
