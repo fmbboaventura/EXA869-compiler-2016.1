@@ -19,17 +19,17 @@ fim
 
 programa inicio
     x << 1;
-    y << 2; z << 3;
-    umaFuncao();
+    y << (2 + 1) * 1; 
+    z << umaFuncao() / 2;
     outraFuncao(4,3.14,'a',falso);
     
-    enquanto (falso) faca inicio
+    enquanto (a < b) faca inicio
          escreva("loop",100,'p');  
     fim
     
     leia(x,y,  z);
     
-    se (verdadeiro) entao inicio
+    se (a <= funcaoFalso()) entao inicio
         funcaoVerdadeiro();
     fim senao inicio
         funcaoFalso();

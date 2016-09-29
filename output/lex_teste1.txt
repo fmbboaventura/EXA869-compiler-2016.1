@@ -84,15 +84,21 @@ Linha 21 1 Numero
 Linha 21 ; Delimitador
 Linha 22 y Identificador
 Linha 22 << Atribuicao
+Linha 22 ( Delimitador
 Linha 22 2 Numero
+Linha 22 + Operador Aritmetico
+Linha 22 1 Numero
+Linha 22 ) Delimitador
+Linha 22 * Operador Aritmetico
+Linha 22 1 Numero
 Linha 22 ; Delimitador
-Linha 22 z Identificador
-Linha 22 << Atribuicao
-Linha 22 3 Numero
-Linha 22 ; Delimitador
+Linha 23 z Identificador
+Linha 23 << Atribuicao
 Linha 23 umaFuncao Identificador
 Linha 23 ( Delimitador
 Linha 23 ) Delimitador
+Linha 23 / Operador Aritmetico
+Linha 23 2 Numero
 Linha 23 ; Delimitador
 Linha 24 outraFuncao Identificador
 Linha 24 ( Delimitador
@@ -107,7 +113,9 @@ Linha 24 ) Delimitador
 Linha 24 ; Delimitador
 Linha 26 enquanto Palavra Reservada
 Linha 26 ( Delimitador
-Linha 26 falso Valor Booleano
+Linha 26 a Identificador
+Linha 26 < Operador Relacional
+Linha 26 b Identificador
 Linha 26 ) Delimitador
 Linha 26 faca Palavra Reservada
 Linha 26 inicio Palavra Reservada
@@ -132,7 +140,11 @@ Linha 30 ) Delimitador
 Linha 30 ; Delimitador
 Linha 32 se Palavra Reservada
 Linha 32 ( Delimitador
-Linha 32 verdadeiro Valor Booleano
+Linha 32 a Identificador
+Linha 32 <= Operador Relacional
+Linha 32 funcaoFalso Identificador
+Linha 32 ( Delimitador
+Linha 32 ) Delimitador
 Linha 32 ) Delimitador
 Linha 32 entao Palavra Reservada
 Linha 32 inicio Palavra Reservada

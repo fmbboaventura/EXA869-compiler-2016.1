@@ -3,10 +3,7 @@ package br.ecomp.compiler.parser;
 import br.ecomp.compiler.lexer.Token;
 import br.ecomp.compiler.lexer.Token.TokenType;
 
-import javax.smartcardio.ATR;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -242,7 +239,7 @@ public class Parser {
     // <Vetor2> ::= ','<Exp_Aritmetica><Vetor2> | <>
     private void vetor() {
         if (accept(Token.TokenType.VEC_DELIM_L)) {//se encontrou <<<
-            expect(Token.TokenType.NUMBER); // TODO implementar as expressoes
+            expAritimetica(); // TODO implementar as expressoes
             vetor2();
             if(!expect(Token.TokenType.VEC_DELIM_R)){ // espera que feche o vetor com >>>
             	panicMode(Token.TokenType.VEC_DELIM_R, Token.TokenType.IDENTIFIER,
@@ -252,10 +249,10 @@ public class Parser {
         }
     }
 
-    // <Vetor2> ::= ','numero_t<Vetor2> | <>
+    // <Vetor2> ::= ','<Exp_Aritmetica><Vetor2> | <>
     private void vetor2() {
         if (accept(Token.TokenType.COMMA)) { // se encontrou uma virgula
-            expect(Token.TokenType.NUMBER); // tem que encontrar um numero em seguida
+            expAritimetica();
             vetor2(); // pode se repetir
         }
     }
@@ -283,8 +280,7 @@ public class Parser {
         // <Se> ::= 'se''('<Exp_Logica>')''entao'<Bloco><Senao>
         else if (accept(TokenType.SE)) {
             expect(TokenType.PAREN_L);
-            // Não tem expressões ainda. Usando booleano como placeholder
-            expect(TokenType.BOOL_V);
+            expLogica();
             expect(TokenType.PAREN_R);
             expect(TokenType.ENTAO);
             bloco();
@@ -297,8 +293,7 @@ public class Parser {
         // <Enquanto> ::= 'enquanto''('booleano_t')''faca'<Bloco>
         else if (accept(TokenType.ENQUANTO)) {
             expect(TokenType.PAREN_L);
-            // Não tem expressões ainda. Usando booleano como placeholder
-            expect(TokenType.BOOL_V);
+            expLogica();
             expect(TokenType.PAREN_R);
             expect(TokenType.FACA);
             bloco();
@@ -351,11 +346,11 @@ public class Parser {
         }
     }
 
-    // <Atribuicao> ::= <Id_Vetor>'<<'<Literal>';'
+    // <Atribuicao> ::= <Id_Vetor>'<<'<Valor>';'
     private void atribuicao() {
         idvetor();
         expect(TokenType.ATRIB);
-        literal();
+        valor();
         expect(TokenType.SEMICOLON);
     }
 
@@ -433,6 +428,270 @@ public class Parser {
         if (accept(TokenType.COMMA)) {
             paramCham();
         }
+    }
+
+    // <Valor> ::= <Exp_Aritmetica> | <Exp_Logica> | caractere_t | cadeia_t
+    private void valor() {
+        if (accept(TokenType.CHAR_STRING));
+        else if (accept(TokenType.CHARACTER));
+        else {
+            // Procura por um operador lógico. Se encontrar, chama expressão lógica
+            boolean logOpFound = false;
+
+            // Lista de operadores lógicos e relacionais
+            List<TokenType> logRelOpList = Arrays.asList(TokenType.EQ, TokenType.NEQ,
+                    TokenType.LT, TokenType.LE, TokenType.GT, TokenType.GE, TokenType.E,
+                    TokenType.NAO, TokenType.OU);
+
+            // pare se encontrar qualquer um desses tokens
+            List<TokenType> stopToken = Arrays.asList(TokenType.SEMICOLON, TokenType.FIM,
+                    TokenType.SE, TokenType.ENQUANTO, TokenType.LEIA, TokenType.ESCREVA);
+
+            logOpFound = searchForTokens(logRelOpList, stopToken);
+
+            if (logOpFound) expLogica();
+            else expAritimetica();
+        }
+    }
+
+    private boolean searchForTokens(List<TokenType> targetTokens, List<TokenType> stopTokens) {
+        for (int i = 1; i < tokenList.size() ; i++) {
+
+            for (TokenType s : stopTokens) {
+                if (lookAheadToken(i, s)) return false;
+            }
+
+            for (TokenType t : targetTokens) {
+                if (lookAheadToken(i, t)) return true;
+            }
+        }
+        return false;
+    }
+
+    // <Exp_Aritmetica> ::= <Exp_A1> | <Exp_A1><Exp_SomSub>
+    // primeiro(<Exp_Aritmetica>) = {'(', numero_t, id}
+    private void expAritimetica() {
+        expA1();
+        if (currentToken.getType() == TokenType.PLUS ||
+                currentToken.getType() == TokenType.MINUS)
+            expSomaSub();
+    }
+
+    // <Exp_A1> ::= <Numerico_Funcao> | <Numerico_Funcao><Exp_MulDiv>
+    // primeiro(<Exp_A1>) = primeiro(<Numerico_Funcao>) = {'(', numero_t, id}
+    private void expA1() {
+        numericoFuncao();
+        if (currentToken.getType() == TokenType.TIMES ||
+                currentToken.getType() == TokenType.DIV)
+            expMulDiv();
+    }
+
+    // <Exp_SomSub> ::= <Operador_A1><Exp_A1> | <Operador_A1><Exp_A1><Exp_SomSub>
+    // Primeiro(<Exp_SomSub>) = {'+', '-'}
+    private void expSomaSub() {
+        operadorA1();
+        expA1();
+        if (currentToken.getType() == TokenType.PLUS ||
+                currentToken.getType() == TokenType.MINUS)
+            expSomaSub();
+    }
+
+    // <Operador_A1> ::= '+' | '-'
+    private void operadorA1() {
+        if (accept(TokenType.PLUS));
+        else if (accept(TokenType.MINUS));
+        else error(TokenType.PLUS, TokenType.MINUS);
+    }
+
+    // <Exp_MulDiv> ::= <Operador_A2><Numerico_Funcao>| <Operador_A2><Numerico_Funcao><Exp_MulDiv>
+    // Primeiro(<Exp_MulDiv>) = {'*' | '/'}
+    private void expMulDiv() {
+        operadorA2();
+        numericoFuncao();
+        if (currentToken.getType() == TokenType.TIMES ||
+                currentToken.getType() == TokenType.DIV)
+            expMulDiv();
+    }
+
+    // <Operador_A2> ::= '*' | '/'
+    private void operadorA2() {
+        if (accept(TokenType.TIMES));
+        else if (accept(TokenType.DIV));
+        else error(TokenType.TIMES, TokenType.DIV);
+    }
+
+    // <Numerico_Funcao> ::= <Valor_Numerico> | <Vetor_Funcao>
+    // Primeiro(<Numerico_Funcao>) = {'(', numero_t, id}
+    private void numericoFuncao() {
+        if (currentToken.getType() == TokenType.NUMBER ||
+                currentToken.getType() == TokenType.PAREN_L) {
+            valorNumerico();
+        } else vetorFuncao();
+    }
+
+    // <Valor_Numerico> ::= '('<Exp_Aritmetica>')' | numero_t
+    // primeiro(<Valor_Numerico>) = {'(', numero_t}
+    private void valorNumerico() {
+        if (accept(TokenType.PAREN_L)) {
+            expAritimetica();
+            expect(TokenType.PAREN_R);
+        } else expect(TokenType.NUMBER);
+    }
+
+    // <Vetor_Funcao> ::= <Id_Vetor> | <Chamada_Funcao>
+    // primeiro(<Vetor_Funcao>) = {id}
+    private void vetorFuncao() {
+        if (lookAheadToken(1, TokenType.PAREN_L)) chamadaFuncao();
+        else idvetor();
+    }
+
+    /* <Exp_Logica> ::= <Vetor_Funcao><Operador_L1><Vetor_Funcao><Exp_Logica2> |
+     *                  <Vetor_Funcao><Operador_L1><Valor_Booleano> |
+     *                  <Valor_Booleano><Operador_L1><Exp_Logica> |
+     *                  <Operador_L2><X4><Exp_Logica2> |
+     *                  <Valor_Booleano>
+     *  primeiro(<Exp_Logica>) = {'nao', '(', numero_t, id, caractere_t, cadeia_t, booleano_t}
+     */
+    private void expLogica() {
+        if (currentToken.getType() == TokenType.NAO) {
+            operadorL2();
+            x4();
+            expLogica2();
+        } else {
+            if (lookAheadToken(1, TokenType.PAREN_L) || lookAheadToken(1, TokenType.VEC_DELIM_L)) {
+                vetorFuncao();
+                operadorL1();
+
+                if (currentToken.getType() == TokenType.IDENTIFIER) {
+                    vetorFuncao();
+                    expLogica2();
+                } else valorBooleano();
+            } else {
+                valorBooleano();
+                if (currentToken.getType() == TokenType.E ||
+                        currentToken.getType() == TokenType.OU) {
+                    operadorL1();
+                    expLogica();
+                }
+            }
+        }
+    }
+
+    // <Exp_Logica2> ::= <Operador_L1><Exp_Logica3> | <>
+    private void expLogica2() {
+        if (currentToken.getType() == TokenType.E ||
+                currentToken.getType() == TokenType.OU) {
+            operadorL1();
+            expLogica3();
+        } // vazio
+    }
+
+    // <Exp_Logica3> ::= <X5><Exp_Logica2> | <Operador_L2><X4><Exp_Logica2>
+    private void expLogica3() {
+        if (currentToken.getType() == TokenType.NAO) {
+            operadorL2();
+            x4();
+            expLogica2();
+        } else {
+            x5();
+            expLogica2();
+        }
+    }
+
+    // <X4> ::= '('<Vetor_Funcao>')' | <Valor_Booleano>
+    // primeiro(<X4>) = {'(', numero_t, id, caractere_t, cadeia_t, booleano_t}
+    private void x4() {
+        if (currentToken.getType() == TokenType.PAREN_L){
+            if (lookAheadToken(2, TokenType.VEC_DELIM_L) ||
+                    lookAheadToken(2, TokenType.PAREN_L)){
+                expect(TokenType.PAREN_L);
+                vetorFuncao();
+                expect(TokenType.PAREN_R);
+            }
+        } else valorBooleano();
+    }
+
+    // <X5> ::= <X4> | <Vetor_Funcao>
+    // primeiro(<X5>) = {'(', numero_t, id, caractere_t, cadeia_t, booleano_t, id}
+    private void x5() {
+        if (accept(TokenType.IDENTIFIER)) {
+            vetorFuncao();
+        } else x4();
+    }
+
+    // <Operador_L1> ::= 'e' | 'ou'
+    private void operadorL1() {
+        if (accept(TokenType.E));
+        else if (accept(TokenType.OU));
+        else error(TokenType.E, TokenType.OU);
+    }
+
+    // <Operador_L2> ::= 'nao'
+    private void operadorL2() {
+        expect(TokenType.NAO);
+    }
+
+    // <Valor_Booleano> ::= '('<Exp_Logica>')' | <Exp_Relacional> |  booleano_t
+    // primeiro(<Valor_Booleano>) = {'(', numero_t, id, caractere_t, cadeia_t, booleano_t}
+    private void valorBooleano() {
+        // Como decidir entre as produções?
+        if (!accept(TokenType.BOOL_V)){
+            // Ambas as produções restantes podem começar com varios (
+            if (accept(TokenType.PAREN_L)) {
+                expLogica();
+                expect(TokenType.PAREN_R);
+            } else if (accept(TokenType.BOOL_V));
+            else expRelacional();
+        }
+    }
+
+    /* <Exp_Relacional> ::= <Numerico_Funcao><Operador_R1><Numerico_Funcao> |
+     *                      <Literal_Numero><Operador_R2><Literal_Numero>
+     * primeiro(<Exp_Relacional>) = {'(', numero_t, id, caractere_t, cadeia_t, booleano_t}
+     */
+    private void expRelacional() {
+        if (currentToken.getType() == TokenType.NUMBER ||
+                currentToken.getType() == TokenType.PAREN_L ||
+                currentToken.getType() == TokenType.IDENTIFIER) {
+            numericoFuncao();
+            operadorR1();
+            numericoFuncao();
+        } else {
+            literalNumero();
+            operadorR2();
+            literalNumero();
+        }
+    }
+
+    // <Operador_R1> ::= <Operador_R2> | '<' | '<=' | '>' | '>='
+    // Primeiro(<Operador_R1>) = {'=', '<>', '<', '<=', '>', '>='}
+    private void operadorR1() {
+        if (accept(TokenType.NEQ));
+        else if (accept(TokenType.EQ));
+        else if (accept(TokenType.LT));
+        else if (accept(TokenType.LE));
+        else if (accept(TokenType.GT));
+        else if (accept(TokenType.GE));
+        else error(TokenType.NEQ, TokenType.EQ, TokenType.LT,
+                    TokenType.LE, TokenType.GE, TokenType.GT);
+    }
+
+    // <Operador_R2> ::= '<>' | '='
+    // Primeiro(<Operador_R2>) = {'=', '<>'}
+    private void operadorR2() {
+        if (accept(TokenType.NEQ));
+        else if (accept(TokenType.EQ));
+        else error(TokenType.NEQ, TokenType.EQ);
+    }
+
+    // <Literal_Numero> ::= caractere_t | cadeia_t | booleano_t
+    // literal menos numero?
+    // primeiro(<Literal_Numero>) = {caractere_t, cadeia_t, booleano_t}
+    private void literalNumero() {
+        if (accept(TokenType.CHARACTER));
+        else if (accept(TokenType.CHAR_STRING));
+        else if (accept(TokenType.BOOL_V));
+        else error(TokenType.CHAR_STRING, TokenType.CHARACTER, TokenType.BOOL_V);
     }
 
     // <Tipo> ::= 'inteiro' | 'real' | 'booleano' | 'cadeia' | 'caractere'
