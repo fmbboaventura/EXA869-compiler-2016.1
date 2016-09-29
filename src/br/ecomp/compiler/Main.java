@@ -29,7 +29,9 @@ public class Main {
                     analyze(f);
                 }
             return;
-        }
+        } else if (!input.getName().substring(
+                input.getName().lastIndexOf('.')).equals(".txt"))
+            return;
 
         Lexer lexer = new Lexer();
         Parser parser = new Parser();
