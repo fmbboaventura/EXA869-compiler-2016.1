@@ -94,7 +94,7 @@ public class Lexer {
                 t = buildIdLexeme();
 
                 if (logOp.contains(t.getLexeme())){
-                    t.setType(Token.TokenType.valueOf(t.getLexeme()));
+                    t.setType(Token.TokenType.valueOf(t.getLexeme().toUpperCase()));
                     tokenList.add(t);
                 } else if(t.getLexeme().equals("verdadeiro") ||
                         t.getLexeme().equals("falso")) {
