@@ -204,6 +204,12 @@ public class Parser {
         if (tipo()) { // espera um tipo
             vardecl();
             varlist();
+        } 
+        else if(currentToken.getType() != Token.TokenType.FIM){ //se nao for vazio entra aqui
+        	error(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
+        	panicMode(Token.TokenType.IDENTIFIER);
+        	vardecl();
+        	varlist();
         } // o else eh o vazio
     }
 
