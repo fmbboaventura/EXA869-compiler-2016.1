@@ -534,10 +534,23 @@ public class Parser {
     // <Funcao_Decl2>::= <Tipo>id'('<Param_Decl>')'<Bloco> | id'('<Param_Decl>')'<Bloco>
     private void funcaoDecl2() {
         tipo(); // tipo() não vai disparar erro caso não encontre um tipo
-        expect(TokenType.IDENTIFIER); // Mas o identificador é obrigatório
-        expect(TokenType.PAREN_L);
+        if(!expect(TokenType.IDENTIFIER)){ // Mas o identificador é obrigatório
+        	panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.PAREN_L);
+        	accept(Token.TokenType.IDENTIFIER);
+        }
+        if(!expect(TokenType.PAREN_L)){
+        	panicMode(Token.TokenType.PAREN_L, Token.TokenType.PAREN_R,
+        			Token.TokenType.IDENTIFIER, Token.TokenType.INTEIRO,
+        			Token.TokenType.BOOLEANO, Token.TokenType.CADEIA,
+        			Token.TokenType.REAL, Token.TokenType.CARACTERE);
+        }
+        
         paramDecl();
-        expect(TokenType.PAREN_R);
+        
+        if(!expect(TokenType.PAREN_R)){
+        	panicMode(Token.TokenType.PAREN_R, Token.TokenType.INICIO);
+        	accept(Token.TokenType.PAREN_R);
+        }
         bloco();
     }
 
