@@ -161,7 +161,10 @@ public class Parser {
 
     // <P> ::= 'programa'<Bloco><Funcoes>
     private void p() {
-        expect(Token.TokenType.PROGRAMA);
+        if(!expect(Token.TokenType.PROGRAMA)){
+        	panicMode(Token.TokenType.PROGRAMA);
+        	accept(Token.TokenType.PROGRAMA);
+        }
         bloco();
         funcoes();
     }
@@ -303,9 +306,20 @@ public class Parser {
     // <Bloco> ::= 'inicio'<Corpo_Bloco>'fim'
     // bloco simplificado por agora
     private void bloco() {
-        expect(Token.TokenType.INICIO);
+        if(!expect(Token.TokenType.INICIO)){
+        	 panicMode(Token.TokenType.INICIO, Token.TokenType.FIM,
+                     Token.TokenType.IDENTIFIER, Token.TokenType.ENQUANTO,
+                     Token.TokenType.SE, Token.TokenType.ESCREVA,
+                     Token.TokenType.LEIA);
+        	accept(Token.TokenType.INICIO);
+        }
+        
         corpoBloco();
-        expect(Token.TokenType.FIM);
+        
+        if(!expect(Token.TokenType.FIM)){
+        	panicMode(Token.TokenType.FIM, Token.TokenType.FUNCAO);
+        	accept(TokenType.FIM);
+        }
     }
 
     //<Corpo_Bloco> ::= <Comando><Corpo_Bloco> | <Atribuicao><Corpo_Bloco> | <Chamada_Funcao>';'<Corpo_Bloco> | <>
@@ -392,9 +406,22 @@ public class Parser {
     // <Atribuicao> ::= <Id_Vetor>'<<'<Valor>';'
     private void atribuicao() {
         idvetor();
-        expect(TokenType.ATRIB);
+        if(!expect(TokenType.ATRIB)){
+        	panicMode(Token.TokenType.ATRIB, Token.TokenType.NUMBER,
+        			Token.TokenType.IDENTIFIER, Token.TokenType.PAREN_L,
+        			Token.TokenType.BOOL_V, Token.TokenType.CHAR_STRING,
+        			Token.TokenType.CHARACTER);
+        	accept(Token.TokenType.ATRIB);
+        }
+        
         valor();
-        expect(TokenType.SEMICOLON);
+        
+        if(!expect(TokenType.SEMICOLON)){
+        	panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.SEMICOLON,
+        			Token.TokenType.ENQUANTO, Token.TokenType.SE,
+        			Token.TokenType.LEIA, Token.TokenType.ESCREVA);
+        	accept(Token.TokenType.SEMICOLON);
+        }
     }
 
     // <Funcoes>::= <Funcao_Decl><Funcoes>|<>
