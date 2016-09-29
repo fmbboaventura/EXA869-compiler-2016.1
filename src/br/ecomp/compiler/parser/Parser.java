@@ -6,6 +6,8 @@ import br.ecomp.compiler.lexer.Token.TokenType;
 import java.util.Arrays;
 import java.util.List;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
+
 /**
  * @author Filipe Boaventura
  * @since 24/09/2016.
@@ -702,8 +704,16 @@ public class Parser {
     private void valorNumerico() {
         if (accept(TokenType.PAREN_L)) {
             expAritimetica();
-            expect(TokenType.PAREN_R);
-        } else expect(TokenType.NUMBER);
+            if(!expect(TokenType.PAREN_R)){
+            	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.PLUS,
+            			Token.TokenType.MINUS, Token.TokenType.DIV,
+            			Token.TokenType.TIMES);
+            }
+        } else if(!expect(TokenType.NUMBER)){
+        	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.PLUS,
+        			Token.TokenType.MINUS, Token.TokenType.DIV,
+        			Token.TokenType.TIMES);
+        }
     }
 
     // <Vetor_Funcao> ::= <Id_Vetor> | <Chamada_Funcao>
