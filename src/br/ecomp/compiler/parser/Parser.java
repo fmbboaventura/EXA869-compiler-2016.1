@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
-
 /**
  * @author Filipe Boaventura
  * @since 24/09/2016.
@@ -341,12 +339,19 @@ public class Parser {
                      Token.TokenType.LEIA);
         	accept(Token.TokenType.INICIO);
         }
-        
+        bloco2();
+    }
+
+    private void bloco2() {
+        if (currentToken.getType() == TokenType.VAR){
+            variaveis();
+        }
+
         corpoBloco();
-        
+
         if(!expect(Token.TokenType.FIM)){
-        	panicMode(Token.TokenType.FIM, Token.TokenType.FUNCAO);
-        	accept(TokenType.FIM);
+            panicMode(Token.TokenType.FIM, Token.TokenType.FUNCAO);
+            accept(TokenType.FIM);
         }
     }
 

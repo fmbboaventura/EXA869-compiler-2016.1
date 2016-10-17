@@ -119,69 +119,137 @@ Linha 26 b Identificador
 Linha 26 ) Delimitador
 Linha 26 faca Palavra Reservada
 Linha 26 inicio Palavra Reservada
-Linha 27 escreva Palavra Reservada
-Linha 27 ( Delimitador
-Linha 27 "loop" Cadeia de Caracteres
-Linha 27 , Delimitador
-Linha 27 100 Numero
-Linha 27 , Delimitador
-Linha 27 'p' Caractere
-Linha 27 ) Delimitador
-Linha 27 ; Delimitador
-Linha 28 fim Palavra Reservada
-Linha 30 leia Palavra Reservada
-Linha 30 ( Delimitador
-Linha 30 x Identificador
-Linha 30 , Delimitador
-Linha 30 y Identificador
-Linha 30 , Delimitador
-Linha 30 z Identificador
-Linha 30 ) Delimitador
+Linha 27 var Palavra Reservada
+Linha 27 inicio Palavra Reservada
+Linha 28 inteiro Tipo de Dados
+Linha 28 x Identificador
+Linha 28 , Delimitador
+Linha 28 y Identificador
+Linha 28 , Delimitador
+Linha 28 z Identificador
+Linha 28 ; Delimitador
+Linha 29 caractere Tipo de Dados
+Linha 29 a Identificador
+Linha 29 , Delimitador
+Linha 29 b Identificador
+Linha 29 ; Delimitador
+Linha 30 real Tipo de Dados
+Linha 30 c Identificador
 Linha 30 ; Delimitador
-Linha 32 se Palavra Reservada
-Linha 32 ( Delimitador
-Linha 32 a Identificador
-Linha 32 <= Operador Relacional
-Linha 32 funcaoFalso Identificador
-Linha 32 ( Delimitador
-Linha 32 ) Delimitador
-Linha 32 ) Delimitador
-Linha 32 entao Palavra Reservada
-Linha 32 inicio Palavra Reservada
-Linha 33 funcaoVerdadeiro Identificador
-Linha 33 ( Delimitador
-Linha 33 ) Delimitador
+Linha 31 booleano Tipo de Dados
+Linha 31 eF Identificador
+Linha 31 , Delimitador
+Linha 31 g Identificador
+Linha 31 , Delimitador
+Linha 31 H Identificador
+Linha 31 ; Delimitador
+Linha 32 cadeia Tipo de Dados
+Linha 32 um4Str1ng Identificador
+Linha 32 ; Delimitador
+Linha 33 inteiro Tipo de Dados
+Linha 33 x Identificador
+Linha 33 <<< Delimitador
+Linha 33 2 Numero
+Linha 33 >>> Delimitador
 Linha 33 ; Delimitador
 Linha 34 fim Palavra Reservada
-Linha 34 senao Palavra Reservada
-Linha 34 inicio Palavra Reservada
-Linha 35 funcaoFalso Identificador
+Linha 35 escreva Palavra Reservada
 Linha 35 ( Delimitador
+Linha 35 "loop" Cadeia de Caracteres
+Linha 35 , Delimitador
+Linha 35 100 Numero
+Linha 35 , Delimitador
+Linha 35 'p' Caractere
 Linha 35 ) Delimitador
 Linha 35 ; Delimitador
 Linha 36 fim Palavra Reservada
-Linha 37 fim Palavra Reservada
-Linha 39 funcao Palavra Reservada
-Linha 39 umaFuncao Identificador
-Linha 39 ( Delimitador
-Linha 39 ) Delimitador
-Linha 39 inicio Palavra Reservada
-Linha 40 fim Palavra Reservada
-Linha 42 funcao Palavra Reservada
-Linha 42 cadeia Tipo de Dados
-Linha 42 outraFuncao Identificador
-Linha 42 ( Delimitador
-Linha 42 inteiro Tipo de Dados
-Linha 42 a Identificador
-Linha 42 , Delimitador
-Linha 42 real Tipo de Dados
-Linha 42 b Identificador
-Linha 42 , Delimitador
-Linha 42 cadeia Tipo de Dados
-Linha 42 c Identificador
-Linha 42 , Delimitador
-Linha 42 booleano Tipo de Dados
-Linha 42 d Identificador
-Linha 42 ) Delimitador
+Linha 38 leia Palavra Reservada
+Linha 38 ( Delimitador
+Linha 38 x Identificador
+Linha 38 , Delimitador
+Linha 38 y Identificador
+Linha 38 , Delimitador
+Linha 38 z Identificador
+Linha 38 ) Delimitador
+Linha 38 ; Delimitador
+Linha 40 se Palavra Reservada
+Linha 40 ( Delimitador
+Linha 40 a Identificador
+Linha 40 <= Operador Relacional
+Linha 40 funcaoFalso Identificador
+Linha 40 ( Delimitador
+Linha 40 ) Delimitador
+Linha 40 ) Delimitador
+Linha 40 entao Palavra Reservada
+Linha 40 inicio Palavra Reservada
+Linha 41 funcaoVerdadeiro Identificador
+Linha 41 ( Delimitador
+Linha 41 ) Delimitador
+Linha 41 ; Delimitador
+Linha 42 fim Palavra Reservada
+Linha 42 senao Palavra Reservada
 Linha 42 inicio Palavra Reservada
-Linha 43 fim Palavra Reservada
+Linha 43 funcaoFalso Identificador
+Linha 43 ( Delimitador
+Linha 43 ) Delimitador
+Linha 43 ; Delimitador
+Linha 44 fim Palavra Reservada
+Linha 45 fim Palavra Reservada
+Linha 47 funcao Palavra Reservada
+Linha 47 umaFuncao Identificador
+Linha 47 ( Delimitador
+Linha 47 ) Delimitador
+Linha 47 inicio Palavra Reservada
+Linha 48 var Palavra Reservada
+Linha 48 inicio Palavra Reservada
+Linha 49 inteiro Tipo de Dados
+Linha 49 x Identificador
+Linha 49 , Delimitador
+Linha 49 y Identificador
+Linha 49 , Delimitador
+Linha 49 z Identificador
+Linha 49 ; Delimitador
+Linha 50 caractere Tipo de Dados
+Linha 50 a Identificador
+Linha 50 , Delimitador
+Linha 50 b Identificador
+Linha 50 ; Delimitador
+Linha 51 real Tipo de Dados
+Linha 51 c Identificador
+Linha 51 ; Delimitador
+Linha 52 booleano Tipo de Dados
+Linha 52 eF Identificador
+Linha 52 , Delimitador
+Linha 52 g Identificador
+Linha 52 , Delimitador
+Linha 52 H Identificador
+Linha 52 ; Delimitador
+Linha 53 cadeia Tipo de Dados
+Linha 53 um4Str1ng Identificador
+Linha 53 ; Delimitador
+Linha 54 inteiro Tipo de Dados
+Linha 54 x Identificador
+Linha 54 <<< Delimitador
+Linha 54 2 Numero
+Linha 54 >>> Delimitador
+Linha 54 ; Delimitador
+Linha 55 fim Palavra Reservada
+Linha 56 fim Palavra Reservada
+Linha 58 funcao Palavra Reservada
+Linha 58 cadeia Tipo de Dados
+Linha 58 outraFuncao Identificador
+Linha 58 ( Delimitador
+Linha 58 inteiro Tipo de Dados
+Linha 58 a Identificador
+Linha 58 , Delimitador
+Linha 58 real Tipo de Dados
+Linha 58 b Identificador
+Linha 58 , Delimitador
+Linha 58 cadeia Tipo de Dados
+Linha 58 c Identificador
+Linha 58 , Delimitador
+Linha 58 booleano Tipo de Dados
+Linha 58 d Identificador
+Linha 58 ) Delimitador
+Linha 58 inicio Palavra Reservada
+Linha 59 fim Palavra Reservada
