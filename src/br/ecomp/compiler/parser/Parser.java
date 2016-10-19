@@ -18,11 +18,14 @@ public class Parser {
     /**
      * Ponteiro para o simbolo atual da entrada.
      */
-    private Token currentToken;
+    private Token currentToken, previousToken;
     private List<Token> tokenList;
     private int index;
     private int errorCount;
     private BufferedWriter writer;
+    private boolean firstRun;
+    private SymbolTable top;
+    private Symbol.Type currentType;
 
     /**
      * Inicia a análise sintática sobre a coleção de
@@ -31,6 +34,7 @@ public class Parser {
      * {@link Token}s para a análise sintática.
      */
     public void parse(List<Token> tokens, String outputPath) throws IOException {
+        firstRun = true;
         errorCount = 0;
         tokenList = tokens;
         index = -1;
@@ -38,6 +42,7 @@ public class Parser {
 
         System.out.println("Passo 2: Analise Sintatica");
         programa();
+        firstRun = false;
         System.out.println(String.format("\t%d erros sintáticos foram encontrados", errorCount));
         writer.write(String.format("%d erros sintáticos foram encontrados", errorCount));
         writer.newLine();
@@ -48,6 +53,7 @@ public class Parser {
         }
         writer.close();
         System.out.println("O status da analise foi salvo no arquivo " + outputPath);
+        System.out.println(top.toString());
     }
 
     /**
@@ -63,6 +69,7 @@ public class Parser {
     private boolean nextToken() {
         if (index + 1 < tokenList.size()) {
             index++;
+            previousToken = currentToken;
             currentToken = tokenList.get(index);
             accept(Token.TokenType.COMMENT); // Pulando comentarios
             System.out.println("Token Atual: " + currentToken.toString());
@@ -123,7 +130,7 @@ public class Parser {
                 currentToken.getLine(), expectedTokenNames, currentToken.getLexeme()
                         + " " + currentToken.getType());
         System.out.println(errorMsg);
-        try {
+        if (firstRun) try {
             writer.write(errorMsg);
             writer.newLine();
         } catch (IOException e) {
@@ -150,6 +157,7 @@ public class Parser {
     // <Programa> ::= <Variaveis><C>|<C>
     private void programa() {
         nextToken();
+        top = new SymbolTable(null);
         variaveis();
         c();
     }
@@ -269,13 +277,14 @@ public class Parser {
         if (tipo()) { // espera um tipo
             vardecl();
             varlist();
-        } 
-        else if(currentToken.getType() != Token.TokenType.FIM){ //se nao for vazio entra aqui
-        	error(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
-        	panicMode(Token.TokenType.IDENTIFIER);
-        	vardecl();
-        	varlist();
-        } // o else eh o vazio
+        }
+        // FIXME
+//        else if(currentToken.getType() != Token.TokenType.FIM){ //se nao for vazio entra aqui
+//        	error(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
+//        	panicMode(Token.TokenType.IDENTIFIER);
+//        	vardecl();
+//        	varlist();
+//        } // o else eh o vazio
     }
 
     // <Var_Decl> ::= <Id_Vetor>','<Var_Decl> | <Id_Vetor>';' AMBIGUIDADE! Fatorar a esquerda!
@@ -310,6 +319,7 @@ public class Parser {
     // <Vetor> ::= '<<<'<Exp_Aritmetica><Vetor2>'>>>'  | <>
     // <Vetor2> ::= ','<Exp_Aritmetica><Vetor2> | <>
     private void vetor() {
+        Token identifier = previousToken;
         if (accept(Token.TokenType.VEC_DELIM_L)) {//se encontrou <<<
             expAritimetica(); // TODO implementar as expressoes
             vetor2();
@@ -318,6 +328,9 @@ public class Parser {
             			Token.TokenType.COMMA, Token.TokenType.SEMICOLON);
             	accept(TokenType.VEC_DELIM_R);
             }
+        } else {
+            Symbol s = new Symbol(identifier, currentType);
+            if (firstRun || (!firstRun && !top.isRoot())) top.put(s);
         }
     }
 
@@ -339,13 +352,17 @@ public class Parser {
                      Token.TokenType.LEIA);
         	accept(Token.TokenType.INICIO);
         }
+        SymbolTable saved = top;
+        top = new SymbolTable(top);
         bloco2();
+        top = saved;
     }
 
     private void bloco2() {
         if (currentToken.getType() == TokenType.VAR){
             variaveis();
         }
+        varlist(); // varlist pode ser vazio
 
         corpoBloco();
 
@@ -545,7 +562,12 @@ public class Parser {
 
     // <Funcao_Decl2>::= <Tipo>id'('<Param_Decl>')'<Bloco> | id'('<Param_Decl>')'<Bloco>
     private void funcaoDecl2() {
-        tipo(); // tipo() não vai disparar erro caso não encontre um tipo
+        Symbol s;
+        if (tipo()) // trata o caso da função ser void
+            s = new Symbol(currentToken, Symbol.Type.valueOf(previousToken.getLexeme().toUpperCase()));
+        else s = new Symbol(currentToken, Symbol.Type.VOID);
+        if (firstRun) top.put(s);
+
         if(!expect(TokenType.IDENTIFIER)){ // Mas o identificador é obrigatório
         	panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.PAREN_L);
         	accept(Token.TokenType.IDENTIFIER);
@@ -905,12 +927,15 @@ public class Parser {
 
     // <Tipo> ::= 'inteiro' | 'real' | 'booleano' | 'cadeia' | 'caractere'
     private boolean tipo() { // mudar pra tipo boolean?
-        if (accept(Token.TokenType.INTEIRO)) return true;
-        if (accept(Token.TokenType.REAL)) return true;
-        if (accept(Token.TokenType.CARACTERE)) return true;
-        if (accept(Token.TokenType.CADEIA)) return true;
-        if (accept(Token.TokenType.BOOLEANO)) return true;
-        return false;
+        boolean ok = false;
+        if (accept(Token.TokenType.INTEIRO)) ok = true;
+        if (accept(Token.TokenType.REAL)) ok = true;
+        if (accept(Token.TokenType.CARACTERE)) ok = true;
+        if (accept(Token.TokenType.CADEIA)) ok = true;
+        if (accept(Token.TokenType.BOOLEANO)) ok = true;
+        if (ok)
+            currentType = Symbol.Type.valueOf(previousToken.getLexeme().toUpperCase());
+        return ok;
     }
 
     // <Literal> ::= caractere_t | cadeia_t | numero_t | booleano_t

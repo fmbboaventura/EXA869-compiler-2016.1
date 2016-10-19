@@ -4,7 +4,7 @@ var inicio
     real c;
     booleano eF,g,H;
     cadeia um4Str1ng;
-    inteiro x<<<2>>>;
+    inteiro vet<<<2>>>;
 fim
 
 const inicio
@@ -24,14 +24,6 @@ programa inicio
     outraFuncao(4,3.14,'a',falso);
     
     enquanto (a < b) faca inicio
-         var inicio
-             inteiro x, y, z;
-             caractere a, b;
-             real c;
-             booleano eF,g,H;
-             cadeia um4Str1ng;
-             inteiro x<<<2>>>;
-         fim
          escreva("loop",100,'p');  
     fim
     
@@ -45,15 +37,13 @@ programa inicio
 fim
 
 funcao umaFuncao() inicio
-    var inicio
-        inteiro x, y, z;
-        caractere a, b;
-        real c;
-        booleano eF,g,H;
-        cadeia um4Str1ng;
-        inteiro x<<<2>>>;
-    fim
+    inteiro x, y, z;
+    caractere a, b;
+    real c;
+    booleano eF,g,H;
+    cadeia um4Str1ng;
+    inteiro x<<<2>>>;
 fim
 
-funcao cadeia outraFuncao(inteiro a, real b, cadeia c, booleano d) inicio
+funcao cadeia outraFuncao() inicio
 fim

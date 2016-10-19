@@ -3,6 +3,7 @@ package br.ecomp.compiler.parser;
 import br.ecomp.compiler.lexer.Token;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Filipe Boaventura
@@ -14,7 +15,7 @@ public class SymbolTable {
 
     protected SymbolTable(SymbolTable p) {
         table = new HashMap<>();
-        previous = null;
+        previous = p;
     }
 
     public void put(Symbol s) {
@@ -27,5 +28,19 @@ public class SymbolTable {
                 return env.table.get(t.getLexeme());
         }
         return null;
+    }
+
+    public boolean isRoot() {
+        return previous == null;
+    }
+
+    @Override
+    public String toString() {
+        String symbols = "{\n";
+        for (String s : table.keySet()) {
+            symbols += "\t" + table.get(s).toString() + "\n";
+        }
+        symbols += "}";
+        return symbols;
     }
 }

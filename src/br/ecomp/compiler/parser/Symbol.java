@@ -12,7 +12,8 @@ public class Symbol {
         REAL,
         BOOLEANO,
         CARACTERE,
-        CADEIA
+        CADEIA,
+        VOID
     }
     private Token token;
     private Type type;
@@ -28,5 +29,10 @@ public class Symbol {
 
     public Type getType() {
         return type;
+    }
+
+    @Override
+    public String toString() {
+        return token.getLexeme() + ":" + type.name();
     }
 }

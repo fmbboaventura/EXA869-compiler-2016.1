@@ -35,7 +35,7 @@ booleano_t = 'verdadeiro' | 'falso'
 !           Bloco
 !--------------------------------
 <Bloco> ::= 'inicio'<Bloco2>
-<Bloco2> ::= <Variaveis><Corpo_Bloco>'fim' | <Corpo_Bloco>'fim'
+<Bloco2> ::= <Variaveis><Corpo_Bloco>'fim' | <Var_List><Corpo_Bloco>'fim'
 <Corpo_Bloco> ::= <Comando><Corpo_Bloco> | <Atribuicao><Corpo_Bloco> | <Chamada_Funcao>';'<Corpo_Bloco> | <>
 
 
