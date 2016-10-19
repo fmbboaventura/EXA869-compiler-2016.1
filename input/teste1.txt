@@ -4,7 +4,7 @@ var inicio
     real c;
     booleano eF,g,H;
     cadeia um4Str1ng;
-    inteiro vet<<<2>>>;
+    inteiro vet<<<2,3,4>>>;
 fim
 
 const inicio

@@ -320,26 +320,26 @@ public class Parser {
     // <Vetor2> ::= ','<Exp_Aritmetica><Vetor2> | <>
     private void vetor() {
         Token identifier = previousToken;
+        Symbol s;
         if (accept(Token.TokenType.VEC_DELIM_L)) {//se encontrou <<<
             expAritimetica(); // TODO implementar as expressoes
-            vetor2();
+            int dimensions = 1 + vetor2();
             if(!expect(Token.TokenType.VEC_DELIM_R)){ // espera que feche o vetor com >>>
             	panicMode(Token.TokenType.VEC_DELIM_R, Token.TokenType.IDENTIFIER,
             			Token.TokenType.COMMA, Token.TokenType.SEMICOLON);
             	accept(TokenType.VEC_DELIM_R);
             }
-        } else {
-            Symbol s = new Symbol(identifier, currentType);
-            if (firstRun || (!firstRun && !top.isRoot())) top.put(s);
-        }
+            s = new Vector(identifier, currentType, dimensions);
+        } else s = new Symbol(identifier, currentType);
+        if (firstRun || (!firstRun && !top.isRoot())) top.put(s);
     }
 
     // <Vetor2> ::= ','<Exp_Aritmetica><Vetor2> | <>
-    private void vetor2() {
+    private int vetor2() {
         if (accept(Token.TokenType.COMMA)) { // se encontrou uma virgula
             expAritimetica();
-            vetor2(); // pode se repetir
-        }
+            return 1 + vetor2(); // pode se repetir
+        } return 0;
     }
 
     // <Bloco> ::= 'inicio'<Corpo_Bloco>'fim'

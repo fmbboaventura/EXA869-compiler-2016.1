@@ -29,6 +29,10 @@ Linha 07 inteiro Tipo de Dados
 Linha 07 vet Identificador
 Linha 07 <<< Delimitador
 Linha 07 2 Numero
+Linha 07 , Delimitador
+Linha 07 3 Numero
+Linha 07 , Delimitador
+Linha 07 4 Numero
 Linha 07 >>> Delimitador
 Linha 07 ; Delimitador
 Linha 08 fim Palavra Reservada
