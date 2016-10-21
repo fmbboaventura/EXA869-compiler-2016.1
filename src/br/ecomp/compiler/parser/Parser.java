@@ -330,7 +330,7 @@ public class Parser {
             	accept(TokenType.VEC_DELIM_R);
             }
             s = new Vector(identifier, currentType, dimensions);
-        } else s = new Symbol(identifier, currentType);
+        } else s = new Variable(identifier, currentType);
         if (firstRun || (!firstRun && !top.isRoot())) top.put(s);
     }
 
