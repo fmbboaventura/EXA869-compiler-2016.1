@@ -72,7 +72,7 @@ public class Parser {
             previousToken = currentToken;
             currentToken = tokenList.get(index);
             accept(Token.TokenType.COMMENT); // Pulando comentarios
-            System.out.println("Token Atual: " + currentToken.toString());
+            //System.out.println("Token Atual: " + currentToken.toString());
             return true;
         } return false;
     }
@@ -105,7 +105,7 @@ public class Parser {
      */
     private boolean expect(Token.TokenType type) {
         if (accept(type)) return true;
-        error(type);
+        syntaxError(type);
         return false;
     }
 
@@ -115,7 +115,7 @@ public class Parser {
         } return false;
     }
 
-    private void error(TokenType... expected) {
+    private void syntaxError(TokenType... expected) {
         if (expected.length == 0)
             throw new IllegalArgumentException("informe pelo menos um TokenType esperado");
         errorCount++;
@@ -138,8 +138,15 @@ public class Parser {
         }
     }
 
+    private void mismatchedTypeError(int line, Symbol.Type expected, Symbol.Type actual) {
+        System.out.println("Erro! Tipo invalido na linha " + line + ": " +
+                "\n\tEsperava " + expected.name() +
+                "\n\tObteve " + actual.name());
+        //TODO salvar em arquivo
+    }
+
     /**
-     * 
+     *
      * @param sync
      */
     private void panicMode(TokenType... sync) {
@@ -175,16 +182,16 @@ public class Parser {
                         Token.TokenType.PROGRAMA);
                 accept(TokenType.INICIO);
             }
-            
+
             varlist();
-            
+
             if(!expect(Token.TokenType.FIM)){
-            	panicMode(Token.TokenType.PROGRAMA, Token.TokenType.CONST, 
+            	panicMode(Token.TokenType.PROGRAMA, Token.TokenType.CONST,
             			Token.TokenType.FIM);
             	accept(TokenType.FIM);
             }
         }
-        
+
     }
 
     // <C> ::= <Constantes><P> | <P>
@@ -206,7 +213,7 @@ public class Parser {
     // <Constantes> ::= 'const''inicio'<Const_List>'fim'
     private void constantes() {
         if (accept(Token.TokenType.CONST)) {
-        	
+
         	 // Espera um inicio
             if (!expect(Token.TokenType.INICIO)) {
                 panicMode(Token.TokenType.INICIO, Token.TokenType.FIM,
@@ -215,9 +222,9 @@ public class Parser {
                         Token.TokenType.INTEIRO, Token.TokenType.PROGRAMA);
                 accept(TokenType.INICIO);
             }
-            
+
             constlist();
-           
+
             if(!expect(Token.TokenType.FIM)){
             	panicMode(Token.TokenType.PROGRAMA, Token.TokenType.FIM);
             	accept(TokenType.FIM);
@@ -232,7 +239,7 @@ public class Parser {
             constlist();
         }
         else if(currentToken.getType() != Token.TokenType.FIM){ //se nao for vazio entra aqui
-        	error(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
+        	syntaxError(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
         	panicMode(Token.TokenType.IDENTIFIER);
         	constdecl();
         	constlist();
@@ -241,20 +248,27 @@ public class Parser {
 
     // <Const_Decl> ::= id'<<'<Literal><Const_Decl2>
     private void constdecl() {
-        
-        
+
+        Symbol s = null;
         if(!expect(Token.TokenType.IDENTIFIER)){
         	panicMode(Token.TokenType.ATRIB, Token.TokenType.IDENTIFIER);
         	accept(TokenType.IDENTIFIER);
+        } else {
+            s = new Variable(previousToken, currentType, true);
         }
-        
+
         if(!expect(Token.TokenType.ATRIB)){
         	panicMode(Token.TokenType.ATRIB, Token.TokenType.NUMBER,
         			Token.TokenType.CHARACTER, Token.TokenType.CHAR_STRING,
         			Token.TokenType.BOOL_V);
         	accept(Token.TokenType.ATRIB);
         }
-        literal();
+        Symbol.Type t = literal();
+        if (firstRun)
+            if (s != null && currentType.equals(t)) {
+                top.put(s);
+            } else mismatchedTypeError(previousToken.getLine(), currentType, t);
+
         constdecl2();
     }
 
@@ -280,7 +294,7 @@ public class Parser {
         }
         // FIXME
 //        else if(currentToken.getType() != Token.TokenType.FIM){ //se nao for vazio entra aqui
-//        	error(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
+//        	syntaxError(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
 //        	panicMode(Token.TokenType.IDENTIFIER);
 //        	vardecl();
 //        	varlist();
@@ -487,7 +501,7 @@ public class Parser {
         } // Se não cair em nenhuma das condições acima, significa que corpobloco derivou vazio
         
         else if(currentToken.getType() != Token.TokenType.FIM){ //se nao for vazio entra aqui
-        	error(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
+        	syntaxError(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
         	panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.SE,
         			Token.TokenType.ENQUANTO, Token.TokenType.LEIA,
         			Token.TokenType.ESCREVA);
@@ -502,7 +516,7 @@ public class Parser {
         if (accept(TokenType.NUMBER)) escrevaParams2();
         else if (accept(TokenType.CHARACTER)) escrevaParams2();
         else if (accept(TokenType.CHAR_STRING)) escrevaParams2();
-        else error(TokenType.NUMBER, TokenType.CHARACTER, TokenType.CHAR_STRING);
+        else syntaxError(TokenType.NUMBER, TokenType.CHARACTER, TokenType.CHAR_STRING);
     }
 
     // <Escreva_Param2> ::= ','<Escreva_Params> | <>
@@ -595,7 +609,7 @@ public class Parser {
         if (currentToken.getType() == TokenType.PAREN_R) return;
         else {
             if (!tipo()) {
-                error(TokenType.INTEIRO, TokenType.REAL,
+                syntaxError(TokenType.INTEIRO, TokenType.REAL,
                         TokenType.BOOLEANO, TokenType.CARACTERE,
                         TokenType.CADEIA);
             }
@@ -723,7 +737,7 @@ public class Parser {
     private void operadorA1() {
         if (accept(TokenType.PLUS));
         else if (accept(TokenType.MINUS));
-        else error(TokenType.PLUS, TokenType.MINUS);
+        else syntaxError(TokenType.PLUS, TokenType.MINUS);
     }
 
     // <Exp_MulDiv> ::= <Operador_A2><Numerico_Funcao>| <Operador_A2><Numerico_Funcao><Exp_MulDiv>
@@ -740,7 +754,7 @@ public class Parser {
     private void operadorA2() {
         if (accept(TokenType.TIMES));
         else if (accept(TokenType.DIV));
-        else error(TokenType.TIMES, TokenType.DIV);
+        else syntaxError(TokenType.TIMES, TokenType.DIV);
     }
 
     // <Numerico_Funcao> ::= <Valor_Numerico> | <Vetor_Funcao>
@@ -854,7 +868,7 @@ public class Parser {
     private void operadorL1() {
         if (accept(TokenType.E));
         else if (accept(TokenType.OU));
-        else error(TokenType.E, TokenType.OU);
+        else syntaxError(TokenType.E, TokenType.OU);
     }
 
     // <Operador_L2> ::= 'nao'
@@ -903,7 +917,7 @@ public class Parser {
         else if (accept(TokenType.LE));
         else if (accept(TokenType.GT));
         else if (accept(TokenType.GE));
-        else error(TokenType.NEQ, TokenType.EQ, TokenType.LT,
+        else syntaxError(TokenType.NEQ, TokenType.EQ, TokenType.LT,
                     TokenType.LE, TokenType.GE, TokenType.GT);
     }
 
@@ -912,7 +926,7 @@ public class Parser {
     private void operadorR2() {
         if (accept(TokenType.NEQ));
         else if (accept(TokenType.EQ));
-        else error(TokenType.NEQ, TokenType.EQ);
+        else syntaxError(TokenType.NEQ, TokenType.EQ);
     }
 
     // <Literal_Numero> ::= caractere_t | cadeia_t | booleano_t
@@ -922,7 +936,7 @@ public class Parser {
         if (accept(TokenType.CHARACTER));
         else if (accept(TokenType.CHAR_STRING));
         else if (accept(TokenType.BOOL_V));
-        else error(TokenType.CHAR_STRING, TokenType.CHARACTER, TokenType.BOOL_V);
+        else syntaxError(TokenType.CHAR_STRING, TokenType.CHARACTER, TokenType.BOOL_V);
     }
 
     // <Tipo> ::= 'inteiro' | 'real' | 'booleano' | 'cadeia' | 'caractere'
@@ -939,12 +953,16 @@ public class Parser {
     }
 
     // <Literal> ::= caractere_t | cadeia_t | numero_t | booleano_t
-    private void literal() {
-        if (accept(Token.TokenType.NUMBER));
-        else if (accept(Token.TokenType.CHARACTER));
-        else if (accept(Token.TokenType.CHAR_STRING));
-        else if (accept(Token.TokenType.BOOL_V));
-        else error(TokenType.NUMBER, TokenType.CHAR_STRING,
+    private Symbol.Type literal() {
+        if (accept(Token.TokenType.NUMBER)) {
+            if (previousToken.getLexeme().contains(".")) return Symbol.Type.REAL;
+            else return Symbol.Type.INTEIRO;
+        }
+        else if (accept(Token.TokenType.CHARACTER)) return Symbol.Type.CARACTERE;
+        else if (accept(Token.TokenType.CHAR_STRING)) return Symbol.Type.CADEIA;
+        else if (accept(Token.TokenType.BOOL_V)) return Symbol.Type.BOOLEANO;
+        else syntaxError(TokenType.NUMBER, TokenType.CHAR_STRING,
                     TokenType.CHARACTER, TokenType.BOOL_V);
+        return null;
     }
 }

@@ -39,20 +39,20 @@ Linha 08 fim Palavra Reservada
 Linha 10 const Palavra Reservada
 Linha 10 inicio Palavra Reservada
 Linha 11 inteiro Tipo de Dados
-Linha 11 x Identificador
+Linha 11 X Identificador
 Linha 11 << Atribuicao
-Linha 11 3 Numero
+Linha 11 3.0 Numero
 Linha 11 , Delimitador
-Linha 12 y Identificador
+Linha 12 Y Identificador
 Linha 12 << Atribuicao
 Linha 12 45 Numero
 Linha 12 , Delimitador
-Linha 12 z Identificador
+Linha 12 Z Identificador
 Linha 12 << Atribuicao
 Linha 12 1000 Numero
 Linha 12 ; Delimitador
 Linha 13 caractere Tipo de Dados
-Linha 13 c Identificador
+Linha 13 C Identificador
 Linha 13 << Atribuicao
 Linha 13 'c' Caractere
 Linha 13 ; Delimitador

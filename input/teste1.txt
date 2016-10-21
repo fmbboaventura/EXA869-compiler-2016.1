@@ -8,9 +8,9 @@ var inicio
 fim
 
 const inicio
-    inteiro x  << 3, 
-        y << 45,z<<1000;
-    caractere c << 'c';
+    inteiro X  << 3.0,
+        Y << 45,Z<<1000;
+    caractere C << 'c';
     real aBc << 3.14, 
         DeF << 3.1415926535897932384626433832795 ;
     booleano taSerto << falso, TaCerto << verdadeiro;
