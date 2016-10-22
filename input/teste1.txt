@@ -8,7 +8,7 @@ var inicio
 fim
 
 const inicio
-    inteiro X  << 3.0,
+    inteiro X  << 3,
         Y << 45,Z<<1000;
     caractere C << 'c';
     real aBc << 3.14, 
@@ -42,8 +42,10 @@ funcao umaFuncao() inicio
     real c;
     booleano eF,g,H;
     cadeia um4Str1ng;
-    inteiro x<<<2>>>;
 fim
 
 funcao cadeia outraFuncao(inteiro i, real j, booleano k) inicio
+    caractere i;
+    inteiro j;
+    real k;
 fim

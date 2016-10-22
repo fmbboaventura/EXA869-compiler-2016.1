@@ -139,13 +139,6 @@ public class Parser {
         }
     }
 
-    private void mismatchedTypeError(int line, Symbol.Type expected, Symbol.Type actual) {
-        System.out.println("Erro! Tipo invalido na linha " + line + ": " +
-                "\n\tEsperava " + expected.name() +
-                "\n\tObteve " + actual.name());
-        //TODO salvar em arquivo
-    }
-
     /**
      *
      * @param sync
@@ -157,6 +150,19 @@ public class Parser {
     		if (!nextToken()) return;
     	}
 	}
+
+    private void mismatchedTypeError(int line, Symbol.Type expected, Symbol.Type actual) {
+        System.out.println("Erro! Tipo invalido na linha " + line + ": " +
+                "\n\tEsperava " + expected.name() +
+                "\n\tObteve " + actual.name());
+        //TODO salvar em arquivo
+    }
+
+    private void variableAlreadyDefinedError(Token token) {
+        String s = String.format("Erro na linha %d: \"%s\" ja foi definido no escopo.",
+                token.getLine(), token.getLexeme());
+        System.out.println(s);
+    }
 
 	/******************************************
      *            Nao-Terminais
@@ -267,7 +273,7 @@ public class Parser {
         Symbol.Type t = literal();
         if (firstRun)
             if (s != null && currentType.equals(t)) {
-                top.put(s);
+                putSymbol(s);
             } else mismatchedTypeError(previousToken.getLine(), currentType, t);
 
         constdecl2();
@@ -305,7 +311,7 @@ public class Parser {
     // <Var_Decl> ::= <Id_Vetor>','<Var_Decl> | <Id_Vetor>';' AMBIGUIDADE! Fatorar a esquerda!
     private void vardecl() {
         Symbol s = idvetor();
-        if (firstRun || (!firstRun && !top.isRoot())) top.put(s);
+        if (firstRun || (!firstRun && !top.isRoot())) putSymbol(s);
         if (accept(Token.TokenType.COMMA)) {
             vardecl();
         }
@@ -317,6 +323,11 @@ public class Parser {
             			Token.TokenType.REAL, Token.TokenType.FIM);
             }
         }
+    }
+
+    private void putSymbol(Symbol s) {
+        if (top.containsSymbol(s)) variableAlreadyDefinedError(s.getToken());
+        else top.put(s);
     }
 
     // <Id_Vetor> ::= id<Vetor>
@@ -360,7 +371,7 @@ public class Parser {
 
     // <Bloco> ::= 'inicio'<Corpo_Bloco>'fim'
     // bloco simplificado por agora
-    private void bloco() {
+    private void bloco(Symbol... args) {
         if(!expect(Token.TokenType.INICIO)){
         	 panicMode(Token.TokenType.INICIO, Token.TokenType.FIM,
                      Token.TokenType.IDENTIFIER, Token.TokenType.ENQUANTO,
@@ -370,6 +381,13 @@ public class Parser {
         }
         SymbolTable saved = top;
         top = new SymbolTable(top);
+
+        // se for uma função, arg contém seus argumentos
+        //  eles são inseridos na tabela de simbolos do
+        // bloco da funcao
+        for (Symbol s : args) {
+            putSymbol(s);
+        }
         bloco2();
         top = saved;
     }
@@ -595,9 +613,6 @@ public class Parser {
                     Token.TokenType.REAL, Token.TokenType.CARACTERE);
         }
 
-        // Cria uma tabela de simbolos pra gravar os argumentos da funcao
-        SymbolTable saved = top;
-        top = new SymbolTable(null);
         LinkedList<Symbol> args = paramDecl();
 
         if(!expect(TokenType.PAREN_R)){
@@ -605,12 +620,10 @@ public class Parser {
             accept(Token.TokenType.PAREN_R);
         }
 
-        top = saved; // recupera a tabela de simbolos anterior
+        bloco(args.toArray(new Symbol[args.size()]));
 
         Function f = new Function(identifier, t, args.toArray(new Symbol[args.size()]));
-        if (firstRun) top.put(f);
-
-        bloco();
+        if (firstRun) putSymbol(f);
     }
 
     //<Param_Decl> ::=  <tipo><Id_Vetor><Param_Decl_List> | <>

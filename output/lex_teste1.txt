@@ -41,7 +41,7 @@ Linha 10 inicio Palavra Reservada
 Linha 11 inteiro Tipo de Dados
 Linha 11 X Identificador
 Linha 11 << Atribuicao
-Linha 11 3.0 Numero
+Linha 11 3 Numero
 Linha 11 , Delimitador
 Linha 12 Y Identificador
 Linha 12 << Atribuicao
@@ -195,25 +195,28 @@ Linha 43 ; Delimitador
 Linha 44 cadeia Tipo de Dados
 Linha 44 um4Str1ng Identificador
 Linha 44 ; Delimitador
-Linha 45 inteiro Tipo de Dados
-Linha 45 x Identificador
-Linha 45 <<< Delimitador
-Linha 45 2 Numero
-Linha 45 >>> Delimitador
-Linha 45 ; Delimitador
-Linha 46 fim Palavra Reservada
-Linha 48 funcao Palavra Reservada
-Linha 48 cadeia Tipo de Dados
-Linha 48 outraFuncao Identificador
-Linha 48 ( Delimitador
-Linha 48 inteiro Tipo de Dados
+Linha 45 fim Palavra Reservada
+Linha 47 funcao Palavra Reservada
+Linha 47 cadeia Tipo de Dados
+Linha 47 outraFuncao Identificador
+Linha 47 ( Delimitador
+Linha 47 inteiro Tipo de Dados
+Linha 47 i Identificador
+Linha 47 , Delimitador
+Linha 47 real Tipo de Dados
+Linha 47 j Identificador
+Linha 47 , Delimitador
+Linha 47 booleano Tipo de Dados
+Linha 47 k Identificador
+Linha 47 ) Delimitador
+Linha 47 inicio Palavra Reservada
+Linha 48 caractere Tipo de Dados
 Linha 48 i Identificador
-Linha 48 , Delimitador
-Linha 48 real Tipo de Dados
-Linha 48 j Identificador
-Linha 48 , Delimitador
-Linha 48 booleano Tipo de Dados
-Linha 48 k Identificador
-Linha 48 ) Delimitador
-Linha 48 inicio Palavra Reservada
-Linha 49 fim Palavra Reservada
+Linha 48 ; Delimitador
+Linha 49 inteiro Tipo de Dados
+Linha 49 j Identificador
+Linha 49 ; Delimitador
+Linha 50 real Tipo de Dados
+Linha 50 k Identificador
+Linha 50 ; Delimitador
+Linha 51 fim Palavra Reservada

@@ -18,7 +18,9 @@ public class SymbolTable {
     }
 
     public void put(Symbol s) {
-        table.put(s.getToken().getLexeme(), s);
+        String key = (s instanceof Function) ? "f_" + s.getToken().getLexeme()
+                : s.getToken().getLexeme();
+        table.put(key, s);
     }
 
     public Symbol get(Token t) {
@@ -27,6 +29,10 @@ public class SymbolTable {
                 return env.table.get(t.getLexeme());
         }
         return null;
+    }
+
+    public boolean containsSymbol(Symbol s) {
+        return table.containsKey(s.getToken().getLexeme());
     }
 
     public boolean isRoot() {
