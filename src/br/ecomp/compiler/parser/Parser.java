@@ -576,29 +576,39 @@ public class Parser {
 
     // <Funcao_Decl2>::= <Tipo>id'('<Param_Decl>')'<Bloco> | id'('<Param_Decl>')'<Bloco>
     private void funcaoDecl2() {
-        Symbol s;
+        Token identifier = null;
+        Symbol.Type t;
         if (tipo()) // trata o caso da função ser void
-            s = new Symbol(currentToken, Symbol.Type.valueOf(previousToken.getLexeme().toUpperCase()));
-        else s = new Symbol(currentToken, Symbol.Type.VOID);
-        if (firstRun) top.put(s);
+            t = Symbol.Type.valueOf(previousToken.getLexeme().toUpperCase());
+        else t = Symbol.Type.VOID;
 
         if(!expect(TokenType.IDENTIFIER)){ // Mas o identificador é obrigatório
-        	panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.PAREN_L);
-        	accept(Token.TokenType.IDENTIFIER);
-        }
+            panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.PAREN_L);
+            accept(Token.TokenType.IDENTIFIER);
+        } else identifier = previousToken;
         if(!expect(TokenType.PAREN_L)){
-        	panicMode(Token.TokenType.PAREN_L, Token.TokenType.PAREN_R,
-        			Token.TokenType.IDENTIFIER, Token.TokenType.INTEIRO,
-        			Token.TokenType.BOOLEANO, Token.TokenType.CADEIA,
-        			Token.TokenType.REAL, Token.TokenType.CARACTERE);
+            panicMode(Token.TokenType.PAREN_L, Token.TokenType.PAREN_R,
+                    Token.TokenType.IDENTIFIER, Token.TokenType.INTEIRO,
+                    Token.TokenType.BOOLEANO, Token.TokenType.CADEIA,
+                    Token.TokenType.REAL, Token.TokenType.CARACTERE);
         }
-        
+
+        // Cria uma tabela de simbolos pra gravar os argumentos da funcao
+        SymbolTable saved = top;
+        top = new SymbolTable(null);
         paramDecl();
-        
+
         if(!expect(TokenType.PAREN_R)){
-        	panicMode(Token.TokenType.PAREN_R, Token.TokenType.INICIO);
-        	accept(Token.TokenType.PAREN_R);
+            panicMode(Token.TokenType.PAREN_R, Token.TokenType.INICIO);
+            accept(Token.TokenType.PAREN_R);
         }
+
+        Symbol[] args = top.getSymbols();
+        top = saved; // recupera a tabela de simbolos anterior
+
+        Function f = new Function(identifier, t, args);
+        if (firstRun) top.put(f);
+
         bloco();
     }
 

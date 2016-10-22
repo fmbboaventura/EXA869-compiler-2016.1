@@ -206,6 +206,14 @@ Linha 48 funcao Palavra Reservada
 Linha 48 cadeia Tipo de Dados
 Linha 48 outraFuncao Identificador
 Linha 48 ( Delimitador
+Linha 48 inteiro Tipo de Dados
+Linha 48 i Identificador
+Linha 48 , Delimitador
+Linha 48 real Tipo de Dados
+Linha 48 j Identificador
+Linha 48 , Delimitador
+Linha 48 booleano Tipo de Dados
+Linha 48 k Identificador
 Linha 48 ) Delimitador
 Linha 48 inicio Palavra Reservada
 Linha 49 fim Palavra Reservada

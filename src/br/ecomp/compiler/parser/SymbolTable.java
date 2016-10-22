@@ -3,7 +3,6 @@ package br.ecomp.compiler.parser;
 import br.ecomp.compiler.lexer.Token;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Filipe Boaventura
@@ -32,6 +31,10 @@ public class SymbolTable {
 
     public boolean isRoot() {
         return previous == null;
+    }
+
+    public Symbol[] getSymbols() {
+        return table.values().toArray(new Symbol[table.values().size()]);
     }
 
     @Override

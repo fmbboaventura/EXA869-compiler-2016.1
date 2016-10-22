@@ -45,5 +45,5 @@ funcao umaFuncao() inicio
     inteiro x<<<2>>>;
 fim
 
-funcao cadeia outraFuncao() inicio
+funcao cadeia outraFuncao(inteiro i, real j, booleano k) inicio
 fim
