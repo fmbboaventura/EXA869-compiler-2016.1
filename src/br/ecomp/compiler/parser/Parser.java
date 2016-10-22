@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -303,7 +304,8 @@ public class Parser {
 
     // <Var_Decl> ::= <Id_Vetor>','<Var_Decl> | <Id_Vetor>';' AMBIGUIDADE! Fatorar a esquerda!
     private void vardecl() {
-        idvetor();
+        Symbol s = idvetor();
+        if (firstRun || (!firstRun && !top.isRoot())) top.put(s);
         if (accept(Token.TokenType.COMMA)) {
             vardecl();
         }
@@ -318,13 +320,13 @@ public class Parser {
     }
 
     // <Id_Vetor> ::= id<Vetor>
-    private void idvetor() {
+    private Symbol idvetor() {
         if(!expect(Token.TokenType.IDENTIFIER)){
         	panicMode(Token.TokenType.COMMA, Token.TokenType.SEMICOLON,
         			Token.TokenType.IDENTIFIER);
         	accept(TokenType.IDENTIFIER);
         }
-        vetor();
+        return vetor();
     }
 
     // <Vetor> ::= '<<<'numero_t<Vetor2>'>>>'  | <>
@@ -332,7 +334,7 @@ public class Parser {
     // Vetor original:
     // <Vetor> ::= '<<<'<Exp_Aritmetica><Vetor2>'>>>'  | <>
     // <Vetor2> ::= ','<Exp_Aritmetica><Vetor2> | <>
-    private void vetor() {
+    private Symbol vetor() {
         Token identifier = previousToken;
         Symbol s;
         if (accept(Token.TokenType.VEC_DELIM_L)) {//se encontrou <<<
@@ -345,7 +347,7 @@ public class Parser {
             }
             s = new Vector(identifier, currentType, dimensions);
         } else s = new Variable(identifier, currentType);
-        if (firstRun || (!firstRun && !top.isRoot())) top.put(s);
+        return s;
     }
 
     // <Vetor2> ::= ','<Exp_Aritmetica><Vetor2> | <>
@@ -596,17 +598,16 @@ public class Parser {
         // Cria uma tabela de simbolos pra gravar os argumentos da funcao
         SymbolTable saved = top;
         top = new SymbolTable(null);
-        paramDecl();
+        LinkedList<Symbol> args = paramDecl();
 
         if(!expect(TokenType.PAREN_R)){
             panicMode(Token.TokenType.PAREN_R, Token.TokenType.INICIO);
             accept(Token.TokenType.PAREN_R);
         }
 
-        Symbol[] args = top.getSymbols();
         top = saved; // recupera a tabela de simbolos anterior
 
-        Function f = new Function(identifier, t, args);
+        Function f = new Function(identifier, t, args.toArray(new Symbol[args.size()]));
         if (firstRun) top.put(f);
 
         bloco();
@@ -614,25 +615,29 @@ public class Parser {
 
     //<Param_Decl> ::=  <tipo><Id_Vetor><Param_Decl_List> | <>
     // Modifiquei removendo produções unitárias
-    private void paramDecl() {
+    private LinkedList<Symbol> paramDecl() {
+        LinkedList<Symbol> args = new LinkedList<>();
         // se o token atual for o fecha parentese, param_decl derivou vazio
-        if (currentToken.getType() == TokenType.PAREN_R) return;
+        if (currentToken.getType() == TokenType.PAREN_R) return args;
         else {
             if (!tipo()) {
                 syntaxError(TokenType.INTEIRO, TokenType.REAL,
                         TokenType.BOOLEANO, TokenType.CARACTERE,
                         TokenType.CADEIA);
             }
-            idvetor();
-            paramDeclList();
+            args.add(idvetor());
+            args.addAll(paramDeclList());
+            return args;
         }
     }
 
     // <Param_Decl_List> ::=  ','<Param_Decl>|<>
-    private void paramDeclList() {
+    private LinkedList<Symbol> paramDeclList() {
+        LinkedList<Symbol> args = new LinkedList<>();
         if (accept(TokenType.COMMA)) {
-            paramDecl();
+            args.addAll(paramDecl());
         }
+        return args;
     }
 
     // <Chamada_Funcao>::= id '(' <Chamada_Funcao2>
