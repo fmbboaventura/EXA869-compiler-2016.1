@@ -22,8 +22,9 @@ public class Parser {
     private Token currentToken, previousToken;
     private List<Token> tokenList;
     private int index;
-    private int errorCount;
-    private BufferedWriter writer;
+    private int syntaxErrorCount;
+    private int semanticErrorCount;
+    private BufferedWriter sinWriter, semWriter;
     private boolean firstRun;
     private SymbolTable top;
     private Symbol.Type currentType;
@@ -36,29 +37,40 @@ public class Parser {
      */
     public void parse(List<Token> tokens, String outputPath) throws IOException {
         firstRun = true;
-        errorCount = 0;
+        syntaxErrorCount = 0;
+        semanticErrorCount = 0;
         tokenList = tokens;
         index = -1;
-        writer = new BufferedWriter(new FileWriter(new File(outputPath)));
+        String sinOut = "output" + File.separator + "sin_" +  outputPath;
+        String semOut = "output" + File.separator + "sem_" + outputPath;
+        sinWriter = new BufferedWriter(new FileWriter(new File(sinOut)));
+        semWriter = new BufferedWriter(new FileWriter(new File(semOut)));
 
-        System.out.println("Passo 2: Analise Sintatica");
+        System.out.println("Passo 2: Analise Sintatica e Indexacao de Simbolos Globais");
         programa();
-        System.out.println(String.format("\t%d erros sintáticos foram encontrados", errorCount));
-        writer.write(String.format("%d erros sintáticos foram encontrados", errorCount));
-        writer.newLine();
-        if (errorCount == 0) {
+        System.out.println(String.format("\t%d erros sintáticos foram encontrados", syntaxErrorCount));
+        sinWriter.write(String.format("%d erros sintáticos foram encontrados", syntaxErrorCount));
+        sinWriter.newLine();
+        if (syntaxErrorCount == 0) {
             System.out.println("\tAnalise Sintatica concluida com sucesso.");
-            writer.write("Analise Sintatica concluida com sucesso.");
-            writer.newLine();
+            sinWriter.write("Analise Sintatica concluida com sucesso.");
+            sinWriter.newLine();
         }
-        writer.close();
-        System.out.println("O status da analise foi salvo no arquivo " + outputPath);
-        System.out.println(top.toString());
+        sinWriter.close();
+        System.out.println("O status da analise sintatica foi salvo no arquivo " + sinOut);
 
         // segunda leitura
         firstRun = false;
         index = -1;
+        System.out.println("Passo 3: Analise Semantica");
+        System.out.println("Simbolos globais encontrados" + top.toString());
         programa();
+        System.out.printf("\t%d erros semanticos foram encontrados.\n", semanticErrorCount);
+        if (semanticErrorCount == 0) {
+            logSemanticAnalysis("\tAnalise semantica concluida com sucesso.");
+        }
+        semWriter.close();
+        System.out.println("O status da analise semantica foi salvo no arquivo " + semOut);
     }
 
     /**
@@ -121,25 +133,27 @@ public class Parser {
     }
 
     private void syntaxError(TokenType... expected) {
-        if (expected.length == 0)
-            throw new IllegalArgumentException("informe pelo menos um TokenType esperado");
-        errorCount++;
-        String expectedTokenNames = "";
+        if (firstRun) {
+            if (expected.length == 0)
+                throw new IllegalArgumentException("informe pelo menos um TokenType esperado");
+            syntaxErrorCount++;
+            String expectedTokenNames = "";
 
-        for (int i = 0; i < expected.length; i++) {
-            expectedTokenNames += expected[i].toString();
-            if (i < expected.length-1)
-                expectedTokenNames += ", ";
-        }
-        String errorMsg = String.format("Erro na linha %d. Esperava: %s. Obteve: %s.",
-                currentToken.getLine(), expectedTokenNames, currentToken.getLexeme()
-                        + " " + currentToken.getType());
-        System.out.println(errorMsg);
-        if (firstRun) try {
-            writer.write(errorMsg);
-            writer.newLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            for (int i = 0; i < expected.length; i++) {
+                expectedTokenNames += expected[i].toString();
+                if (i < expected.length - 1)
+                    expectedTokenNames += ", ";
+            }
+            String errorMsg = String.format("Erro na linha %d. Esperava: %s. Obteve: %s.",
+                    currentToken.getLine(), expectedTokenNames, currentToken.getLexeme()
+                            + " " + currentToken.getType());
+            System.out.println(errorMsg);
+            try {
+                sinWriter.write(errorMsg);
+                sinWriter.newLine();
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
+            }
         }
     }
 
@@ -155,22 +169,34 @@ public class Parser {
     	}
 	}
 
+    private void logSemanticAnalysis(String message) {
+        semanticErrorCount++;
+        System.out.println(message);
+        try {
+            semWriter.write(message);
+            semWriter.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void mismatchedTypeError(int line, Symbol.Type expected, Symbol.Type actual) {
-        System.out.println("Erro! Tipo invalido na linha " + line + ": " +
+        String s = "Erro! Tipo invalido na linha " + line + ": " +
                 "\n\tEsperava " + expected.name() +
-                "\n\tObteve " + actual.name());
-        //TODO salvar em arquivo
+                "\n\tObteve " + actual.name();
+        logSemanticAnalysis(s);
     }
 
     private void variableAlreadyDefinedError(Token token) {
         String s = String.format("Erro na linha %d: \"%s\" ja foi definido no escopo.",
                 token.getLine(), token.getLexeme());
-        System.out.println(s);
+        logSemanticAnalysis(s);
     }
 
     private void symbolNotFoundError(Token t) {
-        System.out.printf("Erro na linha %d: nao foi possivel encontrar o simbolo \"%s\".\n",
+        String s = String.format("Erro na linha %d: nao foi possivel encontrar o simbolo \"%s\".",
                 t.getLine(), t.getLexeme());
+        logSemanticAnalysis(s);
     }
 
     private void putSymbol(Symbol s) {
@@ -647,7 +673,8 @@ public class Parser {
             accept(Token.TokenType.PAREN_R);
         }
 
-        bloco(args.toArray(new Symbol[args.size()]));
+        if (!firstRun) bloco(args.toArray(new Symbol[args.size()]));
+        else bloco();
 
         Function f = new Function(identifier, t, args.toArray(new Symbol[args.size()]));
         if (firstRun) putSymbol(f);

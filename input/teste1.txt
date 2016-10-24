@@ -23,7 +23,7 @@ programa inicio
     z << umaFuncao() / 2;
     outraFuncao(4,3.14,'a',falso);
 
-    leia(x,y,  z);
+    leia(X,yy,  z);
 fim
 
 funcao umaFuncao() inicio

@@ -37,6 +37,6 @@ public class Main {
         Parser parser = new Parser();
 
         System.out.println("Analisando o Arquivo: " + input.getName());
-        parser.parse(lexer.createTokens(input), "output" + File.separator + "sin_" + input.getName());
+        parser.parse(lexer.createTokens(input), input.getName());
     }
 }

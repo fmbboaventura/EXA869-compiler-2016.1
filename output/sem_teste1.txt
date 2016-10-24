@@ -1,0 +1,4 @@
+Erro na linha 26: nao foi possivel encontrar o simbolo "yy".
+Erro na linha 38: "i" ja foi definido no escopo.
+Erro na linha 39: "j" ja foi definido no escopo.
+Erro na linha 40: "k" ja foi definido no escopo.
