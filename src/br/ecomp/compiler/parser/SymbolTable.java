@@ -31,8 +31,23 @@ public class SymbolTable {
         return null;
     }
 
+    public boolean containsSymbol(Token t) {
+        for (SymbolTable env = this; env != null; env = env.previous) {
+            if (env.table.containsKey(t.getLexeme())) return true;
+        }
+        return false;
+    }
+
     public boolean containsSymbol(Symbol s) {
-        return table.containsKey(s.getToken().getLexeme());
+        return containsSymbol(s.getToken());
+    }
+
+    public boolean containsSymbolLocal(Token t) {
+        return table.containsKey(t.getLexeme());
+    }
+
+    public boolean containsSymbolLocal(Symbol s) {
+        return this.containsSymbolLocal(s.getToken());
     }
 
     public boolean isRoot() {

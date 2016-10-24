@@ -22,18 +22,8 @@ programa inicio
     y << (2 + 1) * 1; 
     z << umaFuncao() / 2;
     outraFuncao(4,3.14,'a',falso);
-    
-    enquanto (a < b) faca inicio
-         escreva("loop",100,'p');  
-    fim
-    
+
     leia(x,y,  z);
-    
-    se (a <= funcaoFalso()) entao inicio
-        funcaoVerdadeiro();
-    fim senao inicio
-        funcaoFalso();
-    fim
 fim
 
 funcao umaFuncao() inicio

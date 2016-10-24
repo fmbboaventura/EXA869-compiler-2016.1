@@ -43,7 +43,6 @@ public class Parser {
 
         System.out.println("Passo 2: Analise Sintatica");
         programa();
-        firstRun = false;
         System.out.println(String.format("\t%d erros sintáticos foram encontrados", errorCount));
         writer.write(String.format("%d erros sintáticos foram encontrados", errorCount));
         writer.newLine();
@@ -55,6 +54,11 @@ public class Parser {
         writer.close();
         System.out.println("O status da analise foi salvo no arquivo " + outputPath);
         System.out.println(top.toString());
+
+        // segunda leitura
+        firstRun = false;
+        index = -1;
+        programa();
     }
 
     /**
@@ -164,14 +168,37 @@ public class Parser {
         System.out.println(s);
     }
 
-	/******************************************
+    private void symbolNotFoundError(Token t) {
+        System.out.printf("Erro na linha %d: nao foi possivel encontrar o simbolo \"%s\".\n",
+                t.getLine(), t.getLexeme());
+    }
+
+    private void putSymbol(Symbol s) {
+        if (top.containsSymbolLocal(s)) variableAlreadyDefinedError(s.getToken());
+        else top.put(s);
+    }
+
+    private Symbol getSymbol(Token t) {
+        if (top.containsSymbol(t)) return top.get(t);
+        else {
+            symbolNotFoundError(t);
+            return null;
+        }
+    }
+
+    private void constantAssignmentError(Token t) {
+        System.out.printf("Erro na linha %d: nao eh possivel atribuir valores a constante \"%s\".\n",
+                t.getLine(), t.getLexeme());
+    }
+
+    /******************************************
      *            Nao-Terminais
      *****************************************/
 
     // <Programa> ::= <Variaveis><C>|<C>
     private void programa() {
         nextToken();
-        top = new SymbolTable(null);
+        if (firstRun) top = new SymbolTable(null);
         variaveis();
         c();
     }
@@ -325,11 +352,6 @@ public class Parser {
         }
     }
 
-    private void putSymbol(Symbol s) {
-        if (top.containsSymbol(s)) variableAlreadyDefinedError(s.getToken());
-        else top.put(s);
-    }
-
     // <Id_Vetor> ::= id<Vetor>
     private Symbol idvetor() {
         if(!expect(Token.TokenType.IDENTIFIER)){
@@ -418,7 +440,7 @@ public class Parser {
         		atribuicao();
         		corpoBloco();
         	}
-            
+
         } // abaixo são os comandos
         // <Se> ::= 'se''('<Exp_Logica>')''entao'<Bloco><Senao>
         else if (accept(TokenType.SE)) {
@@ -427,9 +449,9 @@ public class Parser {
             			Token.TokenType.NUMBER);
             	accept(Token.TokenType.PAREN_L);
             }
-            
+
             expLogica();
-            
+
             if(!expect(TokenType.PAREN_R)){
             	panicMode(Token.TokenType.PAREN_R, Token.TokenType.ENTAO);
             	accept(Token.TokenType.PAREN_R);
@@ -438,14 +460,14 @@ public class Parser {
             	panicMode(Token.TokenType.ENTAO, Token.TokenType.INICIO);
             	accept(Token.TokenType.ENTAO);
             }
-            
+
             bloco();
-            
+
             // <Senao> ::= 'senao'<Bloco> | <>
             if (accept(TokenType.SENAO)) {
                 bloco();
             }
-            
+
             corpoBloco();
         }
         // <Enquanto> ::= 'enquanto''('booleano_t')''faca'<Bloco>
@@ -455,19 +477,19 @@ public class Parser {
             			Token.TokenType.NUMBER);
             	accept(Token.TokenType.PAREN_L);
             }
-        	
+
             expLogica();
-            
+
             if(!expect(TokenType.PAREN_R)){
             	panicMode(Token.TokenType.PAREN_R, Token.TokenType.FACA);
             	accept(Token.TokenType.PAREN_R);
             }
-            
+
             if(!expect(TokenType.FACA)){
             	panicMode(Token.TokenType.FACA, Token.TokenType.INICIO);
             	accept(Token.TokenType.FACA);
             }
-            
+
             bloco();
             corpoBloco();
         }
@@ -479,47 +501,47 @@ public class Parser {
             			Token.TokenType.CARACTERE);
             	accept(Token.TokenType.PAREN_L);
             }
-            
+
             escrevaParams();
             if(!expect(TokenType.PAREN_R)){
             	panicMode(Token.TokenType.PAREN_R, Token.TokenType.SEMICOLON);
             	accept(Token.TokenType.PAREN_R);
             }
-            
+
             if(!expect(TokenType.SEMICOLON)){
             	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.FIM,
             			Token.TokenType.IDENTIFIER, Token.TokenType.SE,
             			Token.TokenType.ENQUANTO, Token.TokenType.ESCREVA,
             			Token.TokenType.LEIA);
             }
-            
+
             corpoBloco();
         }
         // <Leia> ::= 'leia''('<Leia_Params>')'';'
         else if (accept(TokenType.LEIA)) {
-        	
+
         	if(!expect(TokenType.PAREN_L)){
             	panicMode(Token.TokenType.PAREN_L, Token.TokenType.IDENTIFIER);
             	accept(Token.TokenType.PAREN_L);
             }
-        	
+
             leiaParams();
-            
+
             if(!expect(TokenType.PAREN_R)){
             	panicMode(Token.TokenType.PAREN_R, Token.TokenType.SEMICOLON);
             	accept(Token.TokenType.PAREN_R);
             }
-            
+
             if(!expect(TokenType.SEMICOLON)){
             	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.FIM,
             			Token.TokenType.IDENTIFIER, Token.TokenType.SE,
             			Token.TokenType.ENQUANTO, Token.TokenType.ESCREVA,
             			Token.TokenType.LEIA);
             }
-            
+
             corpoBloco();
         } // Se não cair em nenhuma das condições acima, significa que corpobloco derivou vazio
-        
+
         else if(currentToken.getType() != Token.TokenType.FIM){ //se nao for vazio entra aqui
         	syntaxError(currentToken.getType()); //nao podia usar o accept pq nao pode consumir o FIM
         	panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.SE,
@@ -548,7 +570,12 @@ public class Parser {
 
     // <Leia_Params> ::= <Id_Vetor><Leia_Param2>
     private void leiaParams() {
-        idvetor();
+        Token t = idvetor().getToken();
+        // gets so ocorrem depois da primeira leitura
+        if (!firstRun) {
+            Variable v = (Variable) getSymbol(t);
+            if (v != null && v.isConstant()) constantAssignmentError(t);
+        }
         leiaParam2();
     }
 
