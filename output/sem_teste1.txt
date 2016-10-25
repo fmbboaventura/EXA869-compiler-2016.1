@@ -1,4 +1,32 @@
-Erro na linha 26: nao foi possivel encontrar o simbolo "yy".
-Erro na linha 38: "i" ja foi definido no escopo.
-Erro na linha 39: "j" ja foi definido no escopo.
-Erro na linha 40: "k" ja foi definido no escopo.
+Erro! Tipo invalido na linha 21: 
+	Esperava CADEIA
+	Obteve CARACTERE
+Erro! Tipo invalido na linha 23: 
+	Esperava CADEIA
+	Obteve CARACTERE
+Erro! Tipo invalido na linha 25: 
+	Esperava CADEIA
+	Obteve CARACTERE
+Erro! Tipo invalido na linha 27: 
+	Esperava CADEIA
+	Obteve CARACTERE
+Erro! Tipo invalido na linha 23: 
+	Esperava BOOLEANO
+	Obteve CARACTERE
+Erro! Tipo invalido na linha 24: 
+	Esperava REAL
+	Obteve CADEIA
+Erro! Tipo invalido na linha 25: 
+	Esperava INTEIRO
+	Obteve CARACTERE
+Erro! Tipo invalido na linha 26: 
+	Esperava CARACTERE
+	Obteve CADEIA
+Erro! Tipo invalido na linha 27: 
+	Esperava CADEIA
+	Obteve CARACTERE
+Erro na linha 29: nao foi possivel encontrar o simbolo "yy".
+Erro na linha 33: nao foi possivel encontrar o simbolo "yy".
+Erro na linha 45: "i" ja foi definido no escopo.
+Erro na linha 46: "j" ja foi definido no escopo.
+Erro na linha 47: "k" ja foi definido no escopo.

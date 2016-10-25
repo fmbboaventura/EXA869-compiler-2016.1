@@ -3,7 +3,7 @@ var inicio
     caractere a, b;
     real c;
     booleano eF,g,H;
-    cadeia um4Str1ng;
+    cadeia um4Str1ng, outraString;
     inteiro vet<<<2,3,4>>>;
 fim
 
@@ -18,8 +18,15 @@ const inicio
 fim
 
 programa inicio
-    x << 1;
-    y << (2 + 1) * 1; 
+    a << 'a';
+    um4Str1ng << "abc";
+    eF << 'a';
+    c << "c";
+    x << 's';
+    b << "b";
+    outraString << 'm';
+    X << a;
+    yy << (2 + 1) * 1;
     z << umaFuncao() / 2;
     outraFuncao(4,3.14,'a',falso);
 

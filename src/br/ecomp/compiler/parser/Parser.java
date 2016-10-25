@@ -614,7 +614,16 @@ public class Parser {
 
     // <Atribuicao> ::= <Id_Vetor>'<<'<Valor>';'
     private void atribuicao() {
-        idvetor();
+        Token t = idvetor().getToken();
+
+        if (!firstRun) {
+            Variable v = (Variable) getSymbol(t);
+            if (v != null) {
+                if (v.isConstant()) constantAssignmentError(t);
+                // currentType vai conter o tipo esperado para atribuição
+                currentType = v.getType();
+            }
+        }
         if(!expect(TokenType.ATRIB)){
         	panicMode(Token.TokenType.ATRIB, Token.TokenType.NUMBER,
         			Token.TokenType.IDENTIFIER, Token.TokenType.PAREN_L,
@@ -751,9 +760,13 @@ public class Parser {
 
     // <Valor> ::= <Exp_Aritmetica> | <Exp_Logica> | caractere_t | cadeia_t
     private void valor() {
-        if (accept(TokenType.CHAR_STRING));
-        else if (accept(TokenType.CHARACTER));
-        else {
+        if (accept(TokenType.CHAR_STRING)){
+            if (currentType != Symbol.Type.CADEIA)
+                mismatchedTypeError(previousToken.getLine(), currentType, Symbol.Type.CADEIA);
+        } else if (accept(TokenType.CHARACTER)){
+            if (currentType != Symbol.Type.CARACTERE)
+                mismatchedTypeError(previousToken.getLine(), currentType, Symbol.Type.CARACTERE);
+        } else {
             // Procura por um operador lógico. Se encontrar, chama expressão lógica
             boolean logOpFound = false;
 
