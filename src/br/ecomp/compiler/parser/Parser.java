@@ -28,6 +28,7 @@ public class Parser {
     private boolean firstRun;
     private SymbolTable top;
     private Symbol.Type currentType;
+    private boolean vecAtrib;
 
     /**
      * Inicia a análise sintática sobre a coleção de
@@ -624,11 +625,11 @@ public class Parser {
     private void atribuicao() {
         // simbolo que contém o token atual. Pode não estar na tabela
         Symbol tokenSymbol = idvetor();
-        boolean vecAtrib = false;
+        Symbol tableSymbol = getSymbol(tokenSymbol.getToken());
+        vecAtrib = false;
 
         if (!firstRun) {
             // vê se o tokenSymbol existe na tabela
-            Symbol tableSymbol = getSymbol(tokenSymbol.getToken());
             if (tableSymbol != null) {
                 if ( tableSymbol instanceof  Variable && ((Variable)tableSymbol).isConstant())
                     // tem que ser o tokenSymbol aqui, pois ele contém as informações da linha atual
@@ -652,7 +653,33 @@ public class Parser {
         	accept(Token.TokenType.ATRIB);
         }
 
-        valor();
+        if (vecAtrib) {
+            int i;
+
+            for (i = 0; !lookAheadToken(i, TokenType.SEMICOLON); i++);
+
+            if (i > 1) {
+                logSemanticAnalysis(String.format("Erro na linha %d: nao eh possivel atribuir expressoes a um vetor.",
+                        tokenSymbol.getToken().getLine()));
+                vecAtrib = false;
+            }
+        }
+
+        Symbol.Type actual = valor();
+
+        if (vecAtrib) {
+            Symbol vec = getSymbol(previousToken);
+
+            if (vec != null) {
+                if (currentType != actual) mismatchedTypeError(previousToken.getLine(), currentType, actual);
+                else if (!(vec instanceof Vector) || ((vec instanceof Vector) &&
+                        (((Vector)tableSymbol).getDimensions() != ((Vector)vec).getDimensions())))
+                    logSemanticAnalysis(String.format(
+                            "Erro na linha %d: a variavel \"%s\" nao eh um vetor %d-dimensional.",
+                            previousToken.getLine(), previousToken.getLexeme(), ((Vector)tableSymbol).getDimensions())
+                    );
+            }
+        }
 
         if(!expect(TokenType.SEMICOLON)){
         	panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.SEMICOLON,
@@ -779,13 +806,19 @@ public class Parser {
     }
 
     // <Valor> ::= <Exp_Aritmetica> | <Exp_Logica> | caractere_t | cadeia_t
-    private void valor() {
+    private Symbol.Type valor() {
         if (accept(TokenType.CHAR_STRING)){
-            if (currentType != Symbol.Type.CADEIA)
+            if (vecAtrib) logSemanticAnalysis(String.format(
+                    "Erro na linha %d: nao eh possivel atribuir uma cadeia a um vetor.", previousToken.getLine()));
+            else if (currentType != Symbol.Type.CADEIA)
                 mismatchedTypeError(previousToken.getLine(), currentType, Symbol.Type.CADEIA);
+            return Symbol.Type.CADEIA;
         } else if (accept(TokenType.CHARACTER)){
-            if (currentType != Symbol.Type.CARACTERE)
+            if (vecAtrib) logSemanticAnalysis(String.format(
+                    "Erro na linha %d: nao eh possivel atribuir um caractere a um vetor.", previousToken.getLine()));
+            else if (currentType != Symbol.Type.CARACTERE)
                 mismatchedTypeError(previousToken.getLine(), currentType, Symbol.Type.CARACTERE);
+            return Symbol.Type.CARACTERE;
         } else {
             // Procura por um operador lógico. Se encontrar, chama expressão lógica
             boolean logOpFound = false;
@@ -801,8 +834,13 @@ public class Parser {
 
             logOpFound = searchForTokens(logRelOpList, stopToken);
 
-            if (logOpFound) expLogica();
-            else expAritimetica();
+            if (logOpFound) {
+                expLogica();
+                return Symbol.Type.BOOLEANO;
+            } else {
+                expAritimetica();
+                return Symbol.Type.INTEIRO;
+            }
         }
     }
 

@@ -19,7 +19,7 @@ const inicio
 fim
 
 programa inicio
-    vet << 'a';
+    vet << vet2;
     a << 'a';
     um4Str1ng << "abc";
     eF << 'a';

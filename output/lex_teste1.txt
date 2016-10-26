@@ -94,7 +94,7 @@ Linha 21 programa Palavra Reservada
 Linha 21 inicio Palavra Reservada
 Linha 22 vet Identificador
 Linha 22 << Atribuicao
-Linha 22 'a' Caractere
+Linha 22 vet2 Identificador
 Linha 22 ; Delimitador
 Linha 23 a Identificador
 Linha 23 << Atribuicao
