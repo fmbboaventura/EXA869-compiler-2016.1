@@ -37,176 +37,188 @@ Linha 07 , Delimitador
 Linha 07 4 Numero
 Linha 07 >>> Delimitador
 Linha 07 ; Delimitador
-Linha 08 fim Palavra Reservada
-Linha 10 const Palavra Reservada
-Linha 10 inicio Palavra Reservada
-Linha 11 inteiro Tipo de Dados
-Linha 11 X Identificador
-Linha 11 << Atribuicao
-Linha 11 3 Numero
-Linha 11 , Delimitador
-Linha 12 Y Identificador
+Linha 08 inteiro Tipo de Dados
+Linha 08 vet2 Identificador
+Linha 08 <<< Delimitador
+Linha 08 2 Numero
+Linha 08 , Delimitador
+Linha 08 3 Numero
+Linha 08 >>> Delimitador
+Linha 08 ; Delimitador
+Linha 09 fim Palavra Reservada
+Linha 11 const Palavra Reservada
+Linha 11 inicio Palavra Reservada
+Linha 12 inteiro Tipo de Dados
+Linha 12 X Identificador
 Linha 12 << Atribuicao
-Linha 12 45 Numero
+Linha 12 3 Numero
 Linha 12 , Delimitador
-Linha 12 Z Identificador
-Linha 12 << Atribuicao
-Linha 12 1000 Numero
-Linha 12 ; Delimitador
-Linha 13 caractere Tipo de Dados
-Linha 13 C Identificador
+Linha 13 Y Identificador
 Linha 13 << Atribuicao
-Linha 13 'c' Caractere
+Linha 13 45 Numero
+Linha 13 , Delimitador
+Linha 13 Z Identificador
+Linha 13 << Atribuicao
+Linha 13 1000 Numero
 Linha 13 ; Delimitador
-Linha 14 real Tipo de Dados
-Linha 14 aBc Identificador
+Linha 14 caractere Tipo de Dados
+Linha 14 C Identificador
 Linha 14 << Atribuicao
-Linha 14 3.14 Numero
-Linha 14 , Delimitador
-Linha 15 DeF Identificador
+Linha 14 'c' Caractere
+Linha 14 ; Delimitador
+Linha 15 real Tipo de Dados
+Linha 15 aBc Identificador
 Linha 15 << Atribuicao
-Linha 15 3.1415926535897932384626433832795 Numero
-Linha 15 ; Delimitador
-Linha 16 booleano Tipo de Dados
-Linha 16 taSerto Identificador
+Linha 15 3.14 Numero
+Linha 15 , Delimitador
+Linha 16 DeF Identificador
 Linha 16 << Atribuicao
-Linha 16 falso Valor Booleano
-Linha 16 , Delimitador
-Linha 16 TaCerto Identificador
-Linha 16 << Atribuicao
-Linha 16 verdadeiro Valor Booleano
+Linha 16 3.1415926535897932384626433832795 Numero
 Linha 16 ; Delimitador
-Linha 17 cadeia Tipo de Dados
-Linha 17 hue Identificador
+Linha 17 booleano Tipo de Dados
+Linha 17 taSerto Identificador
 Linha 17 << Atribuicao
-Linha 17 "heuheuheuheuh" Cadeia de Caracteres
+Linha 17 falso Valor Booleano
+Linha 17 , Delimitador
+Linha 17 TaCerto Identificador
+Linha 17 << Atribuicao
+Linha 17 verdadeiro Valor Booleano
 Linha 17 ; Delimitador
-Linha 18 fim Palavra Reservada
-Linha 20 programa Palavra Reservada
-Linha 20 inicio Palavra Reservada
-Linha 21 a Identificador
-Linha 21 << Atribuicao
-Linha 21 'a' Caractere
-Linha 21 ; Delimitador
-Linha 22 um4Str1ng Identificador
+Linha 18 cadeia Tipo de Dados
+Linha 18 hue Identificador
+Linha 18 << Atribuicao
+Linha 18 "heuheuheuheuh" Cadeia de Caracteres
+Linha 18 ; Delimitador
+Linha 19 fim Palavra Reservada
+Linha 21 programa Palavra Reservada
+Linha 21 inicio Palavra Reservada
+Linha 22 vet Identificador
 Linha 22 << Atribuicao
-Linha 22 "abc" Cadeia de Caracteres
+Linha 22 'a' Caractere
 Linha 22 ; Delimitador
-Linha 23 eF Identificador
+Linha 23 a Identificador
 Linha 23 << Atribuicao
 Linha 23 'a' Caractere
 Linha 23 ; Delimitador
-Linha 24 c Identificador
+Linha 24 um4Str1ng Identificador
 Linha 24 << Atribuicao
-Linha 24 "c" Cadeia de Caracteres
+Linha 24 "abc" Cadeia de Caracteres
 Linha 24 ; Delimitador
-Linha 25 x Identificador
+Linha 25 eF Identificador
 Linha 25 << Atribuicao
-Linha 25 's' Caractere
+Linha 25 'a' Caractere
 Linha 25 ; Delimitador
-Linha 26 b Identificador
+Linha 26 c Identificador
 Linha 26 << Atribuicao
-Linha 26 "b" Cadeia de Caracteres
+Linha 26 "c" Cadeia de Caracteres
 Linha 26 ; Delimitador
-Linha 27 outraString Identificador
+Linha 27 x Identificador
 Linha 27 << Atribuicao
-Linha 27 'm' Caractere
+Linha 27 's' Caractere
 Linha 27 ; Delimitador
-Linha 28 X Identificador
+Linha 28 b Identificador
 Linha 28 << Atribuicao
-Linha 28 a Identificador
+Linha 28 "b" Cadeia de Caracteres
 Linha 28 ; Delimitador
-Linha 29 yy Identificador
+Linha 29 outraString Identificador
 Linha 29 << Atribuicao
-Linha 29 ( Delimitador
-Linha 29 2 Numero
-Linha 29 + Operador Aritmetico
-Linha 29 1 Numero
-Linha 29 ) Delimitador
-Linha 29 * Operador Aritmetico
-Linha 29 1 Numero
+Linha 29 'm' Caractere
 Linha 29 ; Delimitador
-Linha 30 z Identificador
+Linha 30 X Identificador
 Linha 30 << Atribuicao
-Linha 30 umaFuncao Identificador
-Linha 30 ( Delimitador
-Linha 30 ) Delimitador
-Linha 30 / Operador Aritmetico
-Linha 30 2 Numero
+Linha 30 a Identificador
 Linha 30 ; Delimitador
-Linha 31 outraFuncao Identificador
+Linha 31 yy Identificador
+Linha 31 << Atribuicao
 Linha 31 ( Delimitador
-Linha 31 4 Numero
-Linha 31 , Delimitador
-Linha 31 3.14 Numero
-Linha 31 , Delimitador
-Linha 31 'a' Caractere
-Linha 31 , Delimitador
-Linha 31 falso Valor Booleano
+Linha 31 2 Numero
+Linha 31 + Operador Aritmetico
+Linha 31 1 Numero
 Linha 31 ) Delimitador
+Linha 31 * Operador Aritmetico
+Linha 31 1 Numero
 Linha 31 ; Delimitador
-Linha 33 leia Palavra Reservada
+Linha 32 z Identificador
+Linha 32 << Atribuicao
+Linha 32 umaFuncao Identificador
+Linha 32 ( Delimitador
+Linha 32 ) Delimitador
+Linha 32 / Operador Aritmetico
+Linha 32 2 Numero
+Linha 32 ; Delimitador
+Linha 33 outraFuncao Identificador
 Linha 33 ( Delimitador
-Linha 33 X Identificador
+Linha 33 4 Numero
 Linha 33 , Delimitador
-Linha 33 yy Identificador
+Linha 33 3.14 Numero
 Linha 33 , Delimitador
-Linha 33 z Identificador
+Linha 33 'a' Caractere
+Linha 33 , Delimitador
+Linha 33 falso Valor Booleano
 Linha 33 ) Delimitador
 Linha 33 ; Delimitador
-Linha 34 fim Palavra Reservada
-Linha 36 funcao Palavra Reservada
-Linha 36 umaFuncao Identificador
-Linha 36 ( Delimitador
-Linha 36 ) Delimitador
-Linha 36 inicio Palavra Reservada
-Linha 37 inteiro Tipo de Dados
-Linha 37 x Identificador
-Linha 37 , Delimitador
-Linha 37 y Identificador
-Linha 37 , Delimitador
-Linha 37 z Identificador
-Linha 37 ; Delimitador
-Linha 38 caractere Tipo de Dados
-Linha 38 a Identificador
-Linha 38 , Delimitador
-Linha 38 b Identificador
-Linha 38 ; Delimitador
-Linha 39 real Tipo de Dados
-Linha 39 c Identificador
+Linha 35 leia Palavra Reservada
+Linha 35 ( Delimitador
+Linha 35 X Identificador
+Linha 35 , Delimitador
+Linha 35 yy Identificador
+Linha 35 , Delimitador
+Linha 35 z Identificador
+Linha 35 ) Delimitador
+Linha 35 ; Delimitador
+Linha 36 fim Palavra Reservada
+Linha 38 funcao Palavra Reservada
+Linha 38 umaFuncao Identificador
+Linha 38 ( Delimitador
+Linha 38 ) Delimitador
+Linha 38 inicio Palavra Reservada
+Linha 39 inteiro Tipo de Dados
+Linha 39 x Identificador
+Linha 39 , Delimitador
+Linha 39 y Identificador
+Linha 39 , Delimitador
+Linha 39 z Identificador
 Linha 39 ; Delimitador
-Linha 40 booleano Tipo de Dados
-Linha 40 eF Identificador
+Linha 40 caractere Tipo de Dados
+Linha 40 a Identificador
 Linha 40 , Delimitador
-Linha 40 g Identificador
-Linha 40 , Delimitador
-Linha 40 H Identificador
+Linha 40 b Identificador
 Linha 40 ; Delimitador
-Linha 41 cadeia Tipo de Dados
-Linha 41 um4Str1ng Identificador
+Linha 41 real Tipo de Dados
+Linha 41 c Identificador
 Linha 41 ; Delimitador
-Linha 42 fim Palavra Reservada
-Linha 44 funcao Palavra Reservada
-Linha 44 cadeia Tipo de Dados
-Linha 44 outraFuncao Identificador
-Linha 44 ( Delimitador
-Linha 44 inteiro Tipo de Dados
-Linha 44 i Identificador
-Linha 44 , Delimitador
-Linha 44 real Tipo de Dados
-Linha 44 j Identificador
-Linha 44 , Delimitador
-Linha 44 booleano Tipo de Dados
-Linha 44 k Identificador
-Linha 44 ) Delimitador
-Linha 44 inicio Palavra Reservada
-Linha 45 caractere Tipo de Dados
-Linha 45 i Identificador
-Linha 45 ; Delimitador
+Linha 42 booleano Tipo de Dados
+Linha 42 eF Identificador
+Linha 42 , Delimitador
+Linha 42 g Identificador
+Linha 42 , Delimitador
+Linha 42 H Identificador
+Linha 42 ; Delimitador
+Linha 43 cadeia Tipo de Dados
+Linha 43 um4Str1ng Identificador
+Linha 43 ; Delimitador
+Linha 44 fim Palavra Reservada
+Linha 46 funcao Palavra Reservada
+Linha 46 cadeia Tipo de Dados
+Linha 46 outraFuncao Identificador
+Linha 46 ( Delimitador
 Linha 46 inteiro Tipo de Dados
+Linha 46 i Identificador
+Linha 46 , Delimitador
+Linha 46 real Tipo de Dados
 Linha 46 j Identificador
-Linha 46 ; Delimitador
-Linha 47 real Tipo de Dados
-Linha 47 k Identificador
+Linha 46 , Delimitador
+Linha 46 booleano Tipo de Dados
+Linha 46 k Identificador
+Linha 46 ) Delimitador
+Linha 46 inicio Palavra Reservada
+Linha 47 caractere Tipo de Dados
+Linha 47 i Identificador
 Linha 47 ; Delimitador
-Linha 48 fim Palavra Reservada
+Linha 48 inteiro Tipo de Dados
+Linha 48 j Identificador
+Linha 48 ; Delimitador
+Linha 49 real Tipo de Dados
+Linha 49 k Identificador
+Linha 49 ; Delimitador
+Linha 50 fim Palavra Reservada

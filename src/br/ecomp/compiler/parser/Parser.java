@@ -217,6 +217,14 @@ public class Parser {
                 t.getLine(), t.getLexeme());
     }
 
+    private void vectDimensionError(Vector expected, Vector actual) {
+        String msg = String.format("Erro na linha %d: O vetor %d-dimensional \"%s\" " +
+                        "nao pode ser usado como um vetor %d-dimensional.",
+                actual.getToken().getLine(), expected.getDimensions(),
+                expected.getToken().getLexeme(), actual.getDimensions());
+        logSemanticAnalysis(msg);
+    }
+
     /******************************************
      *            Nao-Terminais
      *****************************************/
@@ -614,14 +622,26 @@ public class Parser {
 
     // <Atribuicao> ::= <Id_Vetor>'<<'<Valor>';'
     private void atribuicao() {
-        Token t = idvetor().getToken();
+        // simbolo que contém o token atual. Pode não estar na tabela
+        Symbol tokenSymbol = idvetor();
+        boolean vecAtrib = false;
 
         if (!firstRun) {
-            Variable v = (Variable) getSymbol(t);
-            if (v != null) {
-                if (v.isConstant()) constantAssignmentError(t);
+            // vê se o tokenSymbol existe na tabela
+            Symbol tableSymbol = getSymbol(tokenSymbol.getToken());
+            if (tableSymbol != null) {
+                if ( tableSymbol instanceof  Variable && ((Variable)tableSymbol).isConstant())
+                    // tem que ser o tokenSymbol aqui, pois ele contém as informações da linha atual
+                    constantAssignmentError(tokenSymbol.getToken());
+                else if (tableSymbol instanceof Vector) {
+                    if (!(tokenSymbol instanceof Vector)) vecAtrib = true;
+                    else if (((Vector)tableSymbol).getDimensions() != ((Vector)tokenSymbol).getDimensions())
+                        vectDimensionError((Vector)tableSymbol, (Vector)tokenSymbol);
+                }
+
                 // currentType vai conter o tipo esperado para atribuição
-                currentType = v.getType();
+                currentType = tableSymbol.getType();
+                // TODO tratar atribuição de vetores do tipo vet1 << vet2. Ambos tem que ter as mesmas dimensões
             }
         }
         if(!expect(TokenType.ATRIB)){
@@ -631,9 +651,9 @@ public class Parser {
         			Token.TokenType.CHARACTER);
         	accept(Token.TokenType.ATRIB);
         }
-        
+
         valor();
-        
+
         if(!expect(TokenType.SEMICOLON)){
         	panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.SEMICOLON,
         			Token.TokenType.ENQUANTO, Token.TokenType.SE,
@@ -882,7 +902,9 @@ public class Parser {
     // primeiro(<Vetor_Funcao>) = {id}
     private void vetorFuncao() {
         if (lookAheadToken(1, TokenType.PAREN_L)) chamadaFuncao();
-        else idvetor();
+        else {
+            idvetor();
+        }
     }
 
     /* <Exp_Logica> ::= <Vetor_Funcao><Operador_L1><Vetor_Funcao><Exp_Logica2> |
