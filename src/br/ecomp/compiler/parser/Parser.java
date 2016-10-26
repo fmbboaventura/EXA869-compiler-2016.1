@@ -659,7 +659,8 @@ public class Parser {
             for (i = 0; !lookAheadToken(i, TokenType.SEMICOLON); i++);
 
             if (i > 1) {
-                logSemanticAnalysis(String.format("Erro na linha %d: nao eh possivel atribuir expressoes a um vetor.",
+                logSemanticAnalysis(String.format(
+                        "Erro na linha %d: valores soh podem ser atribuidos a posicoes especificas de um vetor.",
                         tokenSymbol.getToken().getLine()));
                 vecAtrib = false;
             }
@@ -678,7 +679,11 @@ public class Parser {
                             "Erro na linha %d: a variavel \"%s\" nao eh um vetor %d-dimensional.",
                             previousToken.getLine(), previousToken.getLexeme(), ((Vector)tableSymbol).getDimensions())
                     );
-            }
+            } else if (previousToken.getType() == TokenType.NUMBER || previousToken.getType() == TokenType.BOOL_V)
+                logSemanticAnalysis(String.format(
+                    "Erro na linha %d: valores soh podem ser atribuidos a posicoes especificas de um vetor.",
+                    previousToken.getLine())
+                );
         }
 
         if(!expect(TokenType.SEMICOLON)){
@@ -809,13 +814,17 @@ public class Parser {
     private Symbol.Type valor() {
         if (accept(TokenType.CHAR_STRING)){
             if (vecAtrib) logSemanticAnalysis(String.format(
-                    "Erro na linha %d: nao eh possivel atribuir uma cadeia a um vetor.", previousToken.getLine()));
+                    "Erro na linha %d: valores soh podem ser atribuidos a posicoes especificas de um vetor.",
+                    previousToken.getLine())
+            );
             else if (currentType != Symbol.Type.CADEIA)
                 mismatchedTypeError(previousToken.getLine(), currentType, Symbol.Type.CADEIA);
             return Symbol.Type.CADEIA;
         } else if (accept(TokenType.CHARACTER)){
             if (vecAtrib) logSemanticAnalysis(String.format(
-                    "Erro na linha %d: nao eh possivel atribuir um caractere a um vetor.", previousToken.getLine()));
+                    "Erro na linha %d: valores soh podem ser atribuidos a posicoes especificas de um vetor.",
+                    previousToken.getLine())
+            );
             else if (currentType != Symbol.Type.CARACTERE)
                 mismatchedTypeError(previousToken.getLine(), currentType, Symbol.Type.CARACTERE);
             return Symbol.Type.CARACTERE;
