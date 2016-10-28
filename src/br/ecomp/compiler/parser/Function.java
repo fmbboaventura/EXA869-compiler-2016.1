@@ -24,4 +24,13 @@ public class Function extends Symbol {
         s += "\t}";
         return s;
     }
+
+    public int getArgCount() {
+        if (args == null) return 0;
+        return args.length;
+    }
+
+    public Symbol getArg(int index) {
+        return args[index];
+    }
 }

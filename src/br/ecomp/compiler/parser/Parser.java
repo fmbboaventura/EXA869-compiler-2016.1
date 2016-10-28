@@ -625,10 +625,11 @@ public class Parser {
     private void atribuicao() {
         // simbolo que contém o token atual. Pode não estar na tabela
         Symbol tokenSymbol = idvetor();
-        Symbol tableSymbol = getSymbol(tokenSymbol.getToken());
+        Symbol tableSymbol = null;
         vecAtrib = false;
 
         if (!firstRun) {
+            tableSymbol = getSymbol(tokenSymbol.getToken());
             // vê se o tokenSymbol existe na tabela
             if (tableSymbol != null) {
                 if ( tableSymbol instanceof  Variable && ((Variable)tableSymbol).isConstant())
@@ -642,7 +643,6 @@ public class Parser {
 
                 // currentType vai conter o tipo esperado para atribuição
                 currentType = tableSymbol.getType();
-                // TODO tratar atribuição de vetores do tipo vet1 << vet2. Ambos tem que ter as mesmas dimensões
             }
         }
         if(!expect(TokenType.ATRIB)){
@@ -817,7 +817,7 @@ public class Parser {
                     "Erro na linha %d: valores soh podem ser atribuidos a posicoes especificas de um vetor.",
                     previousToken.getLine())
             );
-            else if (currentType != Symbol.Type.CADEIA)
+            else if (!firstRun && currentType != Symbol.Type.CADEIA)
                 mismatchedTypeError(previousToken.getLine(), currentType, Symbol.Type.CADEIA);
             return Symbol.Type.CADEIA;
         } else if (accept(TokenType.CHARACTER)){
@@ -825,7 +825,7 @@ public class Parser {
                     "Erro na linha %d: valores soh podem ser atribuidos a posicoes especificas de um vetor.",
                     previousToken.getLine())
             );
-            else if (currentType != Symbol.Type.CARACTERE)
+            else if (!firstRun && currentType != Symbol.Type.CARACTERE)
                 mismatchedTypeError(previousToken.getLine(), currentType, Symbol.Type.CARACTERE);
             return Symbol.Type.CARACTERE;
         } else {
