@@ -24,16 +24,26 @@ public class SymbolTable {
     }
 
     public Symbol get(Token t) {
+        return get(t, false);
+    }
+
+    public Symbol get(Token t, boolean isFunction) {
+        String key = (isFunction) ? "f_" + t.getLexeme() : t.getLexeme();
         for (SymbolTable env = this; env != null; env = env.previous) {
-            if (env.table.containsKey(t.getLexeme()))
-                return env.table.get(t.getLexeme());
+            if (env.table.containsKey(key))
+                return env.table.get(key);
         }
         return null;
     }
 
     public boolean containsSymbol(Token t) {
+        return containsSymbol(t, false);
+    }
+
+    public boolean containsSymbol(Token t, boolean isFunction) {
+        String key = (isFunction) ? "f_" + t.getLexeme() : t.getLexeme();
         for (SymbolTable env = this; env != null; env = env.previous) {
-            if (env.table.containsKey(t.getLexeme())) return true;
+            if (env.table.containsKey(key)) return true;
         }
         return false;
     }

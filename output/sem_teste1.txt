@@ -15,6 +15,12 @@ Erro! Tipo invalido na linha 29:
 	Esperava CADEIA
 	Obteve CARACTERE
 Erro na linha 31: nao foi possivel encontrar o simbolo "yy".
+Erro na linha 46: a funcao outraFuncao nao pode ser aplicada aos seguintes argumentos:
+Parametros Esperados	Argumentos Obtidos
+INTEIRO	INTEIRO
+REAL	REAL
+BOOLEANO
+
 Erro na linha 35: nao foi possivel encontrar o simbolo "yy".
 Erro na linha 47: "i" ja foi definido no escopo.
 Erro na linha 48: "j" ja foi definido no escopo.

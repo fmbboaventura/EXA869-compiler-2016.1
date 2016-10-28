@@ -206,7 +206,11 @@ public class Parser {
     }
 
     private Symbol getSymbol(Token t) {
-        if (top.containsSymbol(t)) return top.get(t);
+        return getSymbol(t, false);
+    }
+
+    private Symbol getSymbol(Token t, boolean isFunction) {
+        if (top.containsSymbol(t, isFunction)) return top.get(t, isFunction);
         else {
             symbolNotFoundError(t);
             return null;
@@ -771,43 +775,108 @@ public class Parser {
     // <Chamada_Funcao>::= id '(' <Chamada_Funcao2>
     private void chamadaFuncao() {
         if(!expect(TokenType.IDENTIFIER)){
-        	panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.PAREN_L);
-        	accept(Token.TokenType.IDENTIFIER);
+            panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.PAREN_L);
+            accept(Token.TokenType.IDENTIFIER);
         }
-        if(!expect(TokenType.PAREN_L)){
-        	panicMode(Token.TokenType.PAREN_L, Token.TokenType.IDENTIFIER,
-        			Token.TokenType.NUMBER, Token.TokenType.CARACTERE,
-        			Token.TokenType.BOOL_V, Token.TokenType.CHAR_STRING);
-        	accept(Token.TokenType.PAREN_L);
-        }
-        chamadaFuncao2();
-    }
+        Function f = null;
+        if (!firstRun) {
+            Symbol s = getSymbol(previousToken, true);
 
-    // <Chamada_Funcao2>::=<Param_Cham>')' |  ')'
-    private void chamadaFuncao2() {
-        if (!accept(TokenType.PAREN_R)) {
-            paramCham();
-            if(!expect(TokenType.PAREN_R)){
-            	panicMode(Token.TokenType.PAREN_R, Token.TokenType.SEMICOLON,
-            			Token.TokenType.MINUS, Token.TokenType.DIV,
-            			Token.TokenType.PLUS, Token.TokenType.TIMES);
-            	accept(Token.TokenType.PAREN_R);
+            if (s != null) {
+                if (!(s instanceof Function))
+                    logSemanticAnalysis(String.format("Erro na linha %d: nao foi possivel encontrar a funcao %s.",
+                            previousToken.getLine(), previousToken.getLexeme()));
+                else f = (Function) s;
             }
         }
+        if(!expect(TokenType.PAREN_L)){
+            panicMode(Token.TokenType.PAREN_L, Token.TokenType.IDENTIFIER,
+                    Token.TokenType.NUMBER, Token.TokenType.CARACTERE,
+                    Token.TokenType.BOOL_V, Token.TokenType.CHAR_STRING);
+            accept(Token.TokenType.PAREN_L);
+        }
+
+        LinkedList<Symbol.Type> argTypes = chamadaFuncao2();
+
+        if (f != null) {
+
+            if (f.getArgCount() == 0 && f.getArgCount() != argTypes.size()) {
+                logSemanticAnalysis(String.format("Erro na linha %d: a funcao %s nao recebe argumentos.",
+                        f.getToken().getLine(), f.getToken().getLexeme()));
+                return;
+            }
+
+            boolean error = false;
+            int i;
+            String msg =
+                    String.format("Erro na linha %d: a funcao %s nao pode ser aplicada aos seguintes argumentos:\n" +
+                                    "Parametros Esperados\tArgumentos Obtidos\n",
+                            f.getToken().getLine(), f.getToken().getLexeme());
+
+            for (i = 0; i < f.getArgCount(); i++) {
+                msg += (i < argTypes.size()) ? f.getArg(i).getType().name() + "\t" + argTypes.get(i).name() + "\n"
+                        : f.getArg(i).getType().name() + "\n";
+                error = error ||
+                        ((i >= argTypes.size()) || ((i < argTypes.size()) && f.getArg(i).getType() != argTypes.get(i)));
+            }
+
+            // se entrar aqui, o cara passou mais argumentos que devia
+            for (int j = i; j < argTypes.size(); j++) {
+                msg += "\t\t" + argTypes.get(j).name();
+                error = true;
+            }
+
+            if (error) logSemanticAnalysis(msg);
+        }
     }
 
-    // <Param_Cham> ::= <Literal> <Param_Cham2>
+    void a(int a, int b){}
+
+    // <Chamada_Funcao2>::=<Param_Cham>')' |  ')'
+    private LinkedList<Symbol.Type> chamadaFuncao2() {
+        LinkedList<Symbol.Type> argTypes = new LinkedList<>();
+        if (!accept(TokenType.PAREN_R)) {
+            if (!firstRun) argTypes.addAll(paramCham()); else paramCham();
+            if(!expect(TokenType.PAREN_R)){
+                panicMode(Token.TokenType.PAREN_R, Token.TokenType.SEMICOLON,
+                        Token.TokenType.MINUS, Token.TokenType.DIV,
+                        Token.TokenType.PLUS, Token.TokenType.TIMES);
+                accept(Token.TokenType.PAREN_R);
+            }
+        }
+        return argTypes;
+    }
+
+    // <Param_Cham> ::= <Literal> <Param_Cham2> | <ID_Vetor> <Param_Cham2>
     // simplificado
-    private void paramCham() {
-        literal();
-        paramCham2();
+    private LinkedList<Symbol.Type> paramCham() {
+        LinkedList<Symbol.Type> argTypes = new LinkedList<>();
+
+        Token t = null;
+        Symbol.Type type = null;
+        if (currentToken.getType() == TokenType.IDENTIFIER) {
+            t = idvetor().getToken();
+        } else type = literal();
+        LinkedList<Symbol.Type> types = paramCham2();
+
+        if (!firstRun) {
+            if (t != null) {
+                Symbol s = getSymbol(t);
+                if (s != null) argTypes.add(s.getType());
+            } else argTypes.add(type);
+
+            argTypes.addAll(types);
+        }
+        return argTypes;
     }
 
     // <Param_Cham2>::= ','<Param_Cham>|<>
-    private void paramCham2() {
+    private LinkedList<Symbol.Type> paramCham2() {
+        LinkedList<Symbol.Type> argTypes = new LinkedList<>();
         if (accept(TokenType.COMMA)) {
-            paramCham();
+            if (!firstRun) argTypes.addAll(paramCham()); else paramCham();
         }
+        return argTypes;
     }
 
     // <Valor> ::= <Exp_Aritmetica> | <Exp_Logica> | caractere_t | cadeia_t

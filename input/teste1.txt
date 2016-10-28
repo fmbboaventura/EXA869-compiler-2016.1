@@ -30,7 +30,7 @@ programa inicio
     X << a;
     yy << (2 + 1) * 1;
     z << umaFuncao() / 2;
-    outraFuncao(4,3.14,'a',falso);
+    outraFuncao(4,3.14);
 
     leia(X,yy,  z);
 fim

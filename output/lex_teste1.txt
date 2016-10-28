@@ -151,10 +151,6 @@ Linha 33 ( Delimitador
 Linha 33 4 Numero
 Linha 33 , Delimitador
 Linha 33 3.14 Numero
-Linha 33 , Delimitador
-Linha 33 'a' Caractere
-Linha 33 , Delimitador
-Linha 33 falso Valor Booleano
 Linha 33 ) Delimitador
 Linha 33 ; Delimitador
 Linha 35 leia Palavra Reservada
