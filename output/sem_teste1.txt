@@ -4,24 +4,30 @@ Erro! Tipo invalido na linha 25:
 	Obteve CARACTERE
 Erro! Tipo invalido na linha 26: 
 	Esperava REAL
-	Obteve CADEIA
+	Obteve BOOLEANO
 Erro! Tipo invalido na linha 27: 
 	Esperava INTEIRO
 	Obteve CARACTERE
 Erro! Tipo invalido na linha 28: 
-	Esperava CARACTERE
-	Obteve CADEIA
-Erro! Tipo invalido na linha 29: 
-	Esperava CADEIA
+	Esperava INTEIRO
 	Obteve CARACTERE
-Erro na linha 31: nao foi possivel encontrar o simbolo "yy".
-Erro na linha 46: a funcao outraFuncao nao pode ser aplicada aos seguintes argumentos:
+Erro! Tipo invalido na linha 29: 
+	Esperava CARACTERE
+	Obteve INTEIRO
+Erro! Tipo invalido na linha 30: 
+	Esperava CADEIA
+	Obteve BOOLEANO
+Erro na linha 32: nao foi possivel encontrar o simbolo "yy".
+Erro na linha 32: Operador Aritmetico "*" nao pode ser usado com o tipo CADEIA.
+Erro na linha 32: Operador Aritmetico "*" nao pode ser usado com o tipo CADEIA.
+Erro na linha 33: Operador Aritmetico "\" nao pode ser usado com o tipo VOID.
+Erro na linha 47: a funcao outraFuncao nao pode ser aplicada aos seguintes argumentos:
 Parametros Esperados	Argumentos Obtidos
 INTEIRO	INTEIRO
 REAL	REAL
 BOOLEANO
 
-Erro na linha 35: nao foi possivel encontrar o simbolo "yy".
-Erro na linha 47: "i" ja foi definido no escopo.
-Erro na linha 48: "j" ja foi definido no escopo.
-Erro na linha 49: "k" ja foi definido no escopo.
+Erro na linha 36: nao foi possivel encontrar o simbolo "yy".
+Erro na linha 48: "i" ja foi definido no escopo.
+Erro na linha 49: "j" ja foi definido no escopo.
+Erro na linha 50: "k" ja foi definido no escopo.

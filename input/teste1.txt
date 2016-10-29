@@ -22,13 +22,14 @@ programa inicio
     vet << vet2;
     a << 'a';
     um4Str1ng << "abc";
-    eF << 'a';
-    c << "c";
-    x << 's';
-    b << "b";
-    outraString << 'm';
+    eF << a;
+    c << H;
+    x << b;
+    vet2<<<2,3>>> << b;
+    b << vet2<<<2,3>>>;
+    outraString << eF;
     X << a;
-    yy << (2 + 1) * 1;
+    yy << (2 + 1) * outraString;
     z << umaFuncao() / 2;
     outraFuncao(4,3.14);
 
@@ -43,8 +44,10 @@ funcao umaFuncao() inicio
     cadeia um4Str1ng;
 fim
 
-funcao cadeia outraFuncao(inteiro i, real j, booleano k) inicio
+funcao inteiro outraFuncao(inteiro i, real j, booleano k) inicio
     caractere i;
-    inteiro j;
+    inteiro j, X;
     real k;
+
+    X << x + outraFuncao(1,2.0,falso);
 fim

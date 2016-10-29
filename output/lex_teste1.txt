@@ -106,115 +106,144 @@ Linha 24 "abc" Cadeia de Caracteres
 Linha 24 ; Delimitador
 Linha 25 eF Identificador
 Linha 25 << Atribuicao
-Linha 25 'a' Caractere
+Linha 25 a Identificador
 Linha 25 ; Delimitador
 Linha 26 c Identificador
 Linha 26 << Atribuicao
-Linha 26 "c" Cadeia de Caracteres
+Linha 26 H Identificador
 Linha 26 ; Delimitador
 Linha 27 x Identificador
 Linha 27 << Atribuicao
-Linha 27 's' Caractere
+Linha 27 b Identificador
 Linha 27 ; Delimitador
-Linha 28 b Identificador
+Linha 28 vet2 Identificador
+Linha 28 <<< Delimitador
+Linha 28 2 Numero
+Linha 28 , Delimitador
+Linha 28 3 Numero
+Linha 28 >>> Delimitador
 Linha 28 << Atribuicao
-Linha 28 "b" Cadeia de Caracteres
+Linha 28 b Identificador
 Linha 28 ; Delimitador
-Linha 29 outraString Identificador
+Linha 29 b Identificador
 Linha 29 << Atribuicao
-Linha 29 'm' Caractere
+Linha 29 vet2 Identificador
+Linha 29 <<< Delimitador
+Linha 29 2 Numero
+Linha 29 , Delimitador
+Linha 29 3 Numero
+Linha 29 >>> Delimitador
 Linha 29 ; Delimitador
-Linha 30 X Identificador
+Linha 30 outraString Identificador
 Linha 30 << Atribuicao
-Linha 30 a Identificador
+Linha 30 eF Identificador
 Linha 30 ; Delimitador
-Linha 31 yy Identificador
+Linha 31 X Identificador
 Linha 31 << Atribuicao
-Linha 31 ( Delimitador
-Linha 31 2 Numero
-Linha 31 + Operador Aritmetico
-Linha 31 1 Numero
-Linha 31 ) Delimitador
-Linha 31 * Operador Aritmetico
-Linha 31 1 Numero
+Linha 31 a Identificador
 Linha 31 ; Delimitador
-Linha 32 z Identificador
+Linha 32 yy Identificador
 Linha 32 << Atribuicao
-Linha 32 umaFuncao Identificador
 Linha 32 ( Delimitador
-Linha 32 ) Delimitador
-Linha 32 / Operador Aritmetico
 Linha 32 2 Numero
+Linha 32 + Operador Aritmetico
+Linha 32 1 Numero
+Linha 32 ) Delimitador
+Linha 32 * Operador Aritmetico
+Linha 32 outraString Identificador
 Linha 32 ; Delimitador
-Linha 33 outraFuncao Identificador
+Linha 33 z Identificador
+Linha 33 << Atribuicao
+Linha 33 umaFuncao Identificador
 Linha 33 ( Delimitador
-Linha 33 4 Numero
-Linha 33 , Delimitador
-Linha 33 3.14 Numero
 Linha 33 ) Delimitador
+Linha 33 / Operador Aritmetico
+Linha 33 2 Numero
 Linha 33 ; Delimitador
-Linha 35 leia Palavra Reservada
-Linha 35 ( Delimitador
-Linha 35 X Identificador
-Linha 35 , Delimitador
-Linha 35 yy Identificador
-Linha 35 , Delimitador
-Linha 35 z Identificador
-Linha 35 ) Delimitador
-Linha 35 ; Delimitador
-Linha 36 fim Palavra Reservada
-Linha 38 funcao Palavra Reservada
-Linha 38 umaFuncao Identificador
-Linha 38 ( Delimitador
-Linha 38 ) Delimitador
-Linha 38 inicio Palavra Reservada
-Linha 39 inteiro Tipo de Dados
-Linha 39 x Identificador
-Linha 39 , Delimitador
-Linha 39 y Identificador
-Linha 39 , Delimitador
-Linha 39 z Identificador
-Linha 39 ; Delimitador
-Linha 40 caractere Tipo de Dados
-Linha 40 a Identificador
+Linha 34 outraFuncao Identificador
+Linha 34 ( Delimitador
+Linha 34 4 Numero
+Linha 34 , Delimitador
+Linha 34 3.14 Numero
+Linha 34 ) Delimitador
+Linha 34 ; Delimitador
+Linha 36 leia Palavra Reservada
+Linha 36 ( Delimitador
+Linha 36 X Identificador
+Linha 36 , Delimitador
+Linha 36 yy Identificador
+Linha 36 , Delimitador
+Linha 36 z Identificador
+Linha 36 ) Delimitador
+Linha 36 ; Delimitador
+Linha 37 fim Palavra Reservada
+Linha 39 funcao Palavra Reservada
+Linha 39 umaFuncao Identificador
+Linha 39 ( Delimitador
+Linha 39 ) Delimitador
+Linha 39 inicio Palavra Reservada
+Linha 40 inteiro Tipo de Dados
+Linha 40 x Identificador
 Linha 40 , Delimitador
-Linha 40 b Identificador
+Linha 40 y Identificador
+Linha 40 , Delimitador
+Linha 40 z Identificador
 Linha 40 ; Delimitador
-Linha 41 real Tipo de Dados
-Linha 41 c Identificador
+Linha 41 caractere Tipo de Dados
+Linha 41 a Identificador
+Linha 41 , Delimitador
+Linha 41 b Identificador
 Linha 41 ; Delimitador
-Linha 42 booleano Tipo de Dados
-Linha 42 eF Identificador
-Linha 42 , Delimitador
-Linha 42 g Identificador
-Linha 42 , Delimitador
-Linha 42 H Identificador
+Linha 42 real Tipo de Dados
+Linha 42 c Identificador
 Linha 42 ; Delimitador
-Linha 43 cadeia Tipo de Dados
-Linha 43 um4Str1ng Identificador
+Linha 43 booleano Tipo de Dados
+Linha 43 eF Identificador
+Linha 43 , Delimitador
+Linha 43 g Identificador
+Linha 43 , Delimitador
+Linha 43 H Identificador
 Linha 43 ; Delimitador
-Linha 44 fim Palavra Reservada
-Linha 46 funcao Palavra Reservada
-Linha 46 cadeia Tipo de Dados
-Linha 46 outraFuncao Identificador
-Linha 46 ( Delimitador
-Linha 46 inteiro Tipo de Dados
-Linha 46 i Identificador
-Linha 46 , Delimitador
-Linha 46 real Tipo de Dados
-Linha 46 j Identificador
-Linha 46 , Delimitador
-Linha 46 booleano Tipo de Dados
-Linha 46 k Identificador
-Linha 46 ) Delimitador
-Linha 46 inicio Palavra Reservada
-Linha 47 caractere Tipo de Dados
+Linha 44 cadeia Tipo de Dados
+Linha 44 um4Str1ng Identificador
+Linha 44 ; Delimitador
+Linha 45 fim Palavra Reservada
+Linha 47 funcao Palavra Reservada
+Linha 47 inteiro Tipo de Dados
+Linha 47 outraFuncao Identificador
+Linha 47 ( Delimitador
+Linha 47 inteiro Tipo de Dados
 Linha 47 i Identificador
-Linha 47 ; Delimitador
-Linha 48 inteiro Tipo de Dados
-Linha 48 j Identificador
+Linha 47 , Delimitador
+Linha 47 real Tipo de Dados
+Linha 47 j Identificador
+Linha 47 , Delimitador
+Linha 47 booleano Tipo de Dados
+Linha 47 k Identificador
+Linha 47 ) Delimitador
+Linha 47 inicio Palavra Reservada
+Linha 48 caractere Tipo de Dados
+Linha 48 i Identificador
 Linha 48 ; Delimitador
-Linha 49 real Tipo de Dados
-Linha 49 k Identificador
+Linha 49 inteiro Tipo de Dados
+Linha 49 j Identificador
+Linha 49 , Delimitador
+Linha 49 X Identificador
 Linha 49 ; Delimitador
-Linha 50 fim Palavra Reservada
+Linha 50 real Tipo de Dados
+Linha 50 k Identificador
+Linha 50 ; Delimitador
+Linha 52 X Identificador
+Linha 52 << Atribuicao
+Linha 52 x Identificador
+Linha 52 + Operador Aritmetico
+Linha 52 outraFuncao Identificador
+Linha 52 ( Delimitador
+Linha 52 1 Numero
+Linha 52 , Delimitador
+Linha 52 2.0 Numero
+Linha 52 , Delimitador
+Linha 52 falso Valor Booleano
+Linha 52 ) Delimitador
+Linha 52 ; Delimitador
+Linha 53 fim Palavra Reservada

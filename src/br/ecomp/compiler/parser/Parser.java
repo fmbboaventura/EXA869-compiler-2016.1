@@ -431,7 +431,6 @@ public class Parser {
     }
 
     // <Bloco> ::= 'inicio'<Corpo_Bloco>'fim'
-    // bloco simplificado por agora
     private void bloco(Symbol... args) {
         if(!expect(Token.TokenType.INICIO)){
         	 panicMode(Token.TokenType.INICIO, Token.TokenType.FIM,
@@ -631,15 +630,17 @@ public class Parser {
         Symbol tokenSymbol = idvetor();
         Symbol tableSymbol = null;
         vecAtrib = false;
+        boolean isConstant = false;
 
         if (!firstRun) {
             tableSymbol = getSymbol(tokenSymbol.getToken());
             // vê se o tokenSymbol existe na tabela
             if (tableSymbol != null) {
-                if ( tableSymbol instanceof  Variable && ((Variable)tableSymbol).isConstant())
+                if ( tableSymbol instanceof  Variable && ((Variable)tableSymbol).isConstant()) {
                     // tem que ser o tokenSymbol aqui, pois ele contém as informações da linha atual
+                    isConstant = true;
                     constantAssignmentError(tokenSymbol.getToken());
-                else if (tableSymbol instanceof Vector) {
+                } else if (tableSymbol instanceof Vector) {
                     if (!(tokenSymbol instanceof Vector)) vecAtrib = true;
                     else if (((Vector)tableSymbol).getDimensions() != ((Vector)tokenSymbol).getDimensions())
                         vectDimensionError((Vector)tableSymbol, (Vector)tokenSymbol);
@@ -671,13 +672,13 @@ public class Parser {
         }
 
         Symbol.Type actual = valor();
+        if (!firstRun && !isConstant && currentType != actual) mismatchedTypeError(previousToken.getLine(), currentType, actual);
 
         if (vecAtrib) {
             Symbol vec = getSymbol(previousToken);
 
             if (vec != null) {
-                if (currentType != actual) mismatchedTypeError(previousToken.getLine(), currentType, actual);
-                else if (!(vec instanceof Vector) || ((vec instanceof Vector) &&
+                if (!(vec instanceof Vector) || ((vec instanceof Vector) &&
                         (((Vector)tableSymbol).getDimensions() != ((Vector)vec).getDimensions())))
                     logSemanticAnalysis(String.format(
                             "Erro na linha %d: a variavel \"%s\" nao eh um vetor %d-dimensional.",
@@ -773,7 +774,7 @@ public class Parser {
     }
 
     // <Chamada_Funcao>::= id '(' <Chamada_Funcao2>
-    private void chamadaFuncao() {
+    private Symbol.Type chamadaFuncao() {
         if(!expect(TokenType.IDENTIFIER)){
             panicMode(Token.TokenType.IDENTIFIER, Token.TokenType.PAREN_L);
             accept(Token.TokenType.IDENTIFIER);
@@ -803,7 +804,7 @@ public class Parser {
             if (f.getArgCount() == 0 && f.getArgCount() != argTypes.size()) {
                 logSemanticAnalysis(String.format("Erro na linha %d: a funcao %s nao recebe argumentos.",
                         f.getToken().getLine(), f.getToken().getLexeme()));
-                return;
+                return Symbol.Type.VOID;
             }
 
             boolean error = false;
@@ -827,7 +828,9 @@ public class Parser {
             }
 
             if (error) logSemanticAnalysis(msg);
+            return f.getType();
         }
+        return Symbol.Type.VOID;
     }
 
     void a(int a, int b){}
@@ -916,8 +919,7 @@ public class Parser {
                 expLogica();
                 return Symbol.Type.BOOLEANO;
             } else {
-                expAritimetica();
-                return Symbol.Type.INTEIRO;
+                return expAritimetica();
             }
         }
     }
@@ -938,88 +940,123 @@ public class Parser {
 
     // <Exp_Aritmetica> ::= <Exp_A1> | <Exp_A1><Exp_SomSub>
     // primeiro(<Exp_Aritmetica>) = {'(', numero_t, id}
-    private void expAritimetica() {
-        expA1();
+    private Symbol.Type expAritimetica() {
+        Symbol.Type t1 = expA1();
         if (currentToken.getType() == TokenType.PLUS ||
-                currentToken.getType() == TokenType.MINUS)
-            expSomaSub();
+                currentToken.getType() == TokenType.MINUS) {
+            Token op = currentToken;
+            if (!firstRun) typeCheckArithmeticOperator(op, t1);
+            Symbol.Type t2 = expSomaSub();
+            if (!firstRun && typeCheckArithmeticOperator(op, t2))
+                return realOrInteger(t1, t2);
+        }
+        return t1;
     }
 
     // <Exp_A1> ::= <Numerico_Funcao> | <Numerico_Funcao><Exp_MulDiv>
     // primeiro(<Exp_A1>) = primeiro(<Numerico_Funcao>) = {'(', numero_t, id}
-    private void expA1() {
-        numericoFuncao();
+    private Symbol.Type expA1() {
+        Symbol.Type t1 = numericoFuncao();
         if (currentToken.getType() == TokenType.TIMES ||
-                currentToken.getType() == TokenType.DIV)
-            expMulDiv();
+                currentToken.getType() == TokenType.DIV) {
+            Token op = currentToken;
+            if (!firstRun) typeCheckArithmeticOperator(op, t1);
+            Symbol.Type t2 = expMulDiv();
+            if (!firstRun && typeCheckArithmeticOperator(op, t2))
+                return realOrInteger(t1, t2);
+        }
+        return t1;
+    }
+
+    private Symbol.Type realOrInteger(Symbol.Type t1, Symbol.Type t2) {
+        return (t1 == Symbol.Type.REAL || t2 == Symbol.Type.REAL) ? Symbol.Type.REAL : Symbol.Type.INTEIRO;
     }
 
     // <Exp_SomSub> ::= <Operador_A1><Exp_A1> | <Operador_A1><Exp_A1><Exp_SomSub>
     // Primeiro(<Exp_SomSub>) = {'+', '-'}
-    private void expSomaSub() {
-        operadorA1();
-        expA1();
+    private Symbol.Type expSomaSub() {
+        Token op = operadorA1();
+        Symbol.Type t1 = expA1();
+        if (!firstRun) typeCheckArithmeticOperator(op, t1);
         if (currentToken.getType() == TokenType.PLUS ||
                 currentToken.getType() == TokenType.MINUS)
-            expSomaSub();
+            return expSomaSub();
+        return t1;
     }
 
     // <Operador_A1> ::= '+' | '-'
-    private void operadorA1() {
-        if (accept(TokenType.PLUS));
-        else if (accept(TokenType.MINUS));
+    private Token operadorA1() {
+        if (accept(TokenType.PLUS)) return previousToken;
+        else if (accept(TokenType.MINUS)) return previousToken;
         else syntaxError(TokenType.PLUS, TokenType.MINUS);
+        return null;
     }
 
     // <Exp_MulDiv> ::= <Operador_A2><Numerico_Funcao>| <Operador_A2><Numerico_Funcao><Exp_MulDiv>
     // Primeiro(<Exp_MulDiv>) = {'*' | '/'}
-    private void expMulDiv() {
-        operadorA2();
-        numericoFuncao();
+    private Symbol.Type expMulDiv() {
+        Token op = operadorA2();
+        Symbol.Type t1 = numericoFuncao();
+        if (!firstRun) typeCheckArithmeticOperator(op, t1);
+
         if (currentToken.getType() == TokenType.TIMES ||
                 currentToken.getType() == TokenType.DIV)
-            expMulDiv();
+            return expMulDiv();
+       return t1;
+    }
+
+    private boolean typeCheckArithmeticOperator(Token op, Symbol.Type t1) {
+        if (t1 != Symbol.Type.REAL && t1 != Symbol.Type.INTEIRO) {
+            logSemanticAnalysis(String.format("Erro na linha %d: %s nao pode ser usado com o tipo %s.",
+                    op.getLine(), op.getType().toString(), t1.name()));
+            return false;
+        } return true;
     }
 
     // <Operador_A2> ::= '*' | '/'
-    private void operadorA2() {
-        if (accept(TokenType.TIMES));
-        else if (accept(TokenType.DIV));
+    private Token operadorA2() {
+        if (accept(TokenType.TIMES)) return previousToken;
+        else if (accept(TokenType.DIV)) return previousToken;
         else syntaxError(TokenType.TIMES, TokenType.DIV);
+        return null;
     }
 
     // <Numerico_Funcao> ::= <Valor_Numerico> | <Vetor_Funcao>
     // Primeiro(<Numerico_Funcao>) = {'(', numero_t, id}
-    private void numericoFuncao() {
+    private Symbol.Type numericoFuncao() {
         if (currentToken.getType() == TokenType.NUMBER ||
                 currentToken.getType() == TokenType.PAREN_L) {
-            valorNumerico();
-        } else vetorFuncao();
+            return valorNumerico();
+        } else return vetorFuncao();
     }
 
     // <Valor_Numerico> ::= '('<Exp_Aritmetica>')' | numero_t
     // primeiro(<Valor_Numerico>) = {'(', numero_t}
-    private void valorNumerico() {
+    private Symbol.Type valorNumerico() {
         if (accept(TokenType.PAREN_L)) {
-            expAritimetica();
+            Symbol.Type t = expAritimetica();
             if(!expect(TokenType.PAREN_R)){
             	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.PLUS,
             			Token.TokenType.MINUS, Token.TokenType.DIV,
             			Token.TokenType.TIMES);
             }
+            return t;
         } else if(!expect(TokenType.NUMBER)){
         	panicMode(Token.TokenType.SEMICOLON, Token.TokenType.PLUS,
         			Token.TokenType.MINUS, Token.TokenType.DIV,
         			Token.TokenType.TIMES);
-        }
+            return Symbol.Type.VOID;
+        }  else return (previousToken.getLexeme().contains(".")) ? Symbol.Type.REAL : Symbol.Type.INTEIRO;
     }
 
     // <Vetor_Funcao> ::= <Id_Vetor> | <Chamada_Funcao>
     // primeiro(<Vetor_Funcao>) = {id}
-    private void vetorFuncao() {
-        if (lookAheadToken(1, TokenType.PAREN_L)) chamadaFuncao();
+    private Symbol.Type vetorFuncao() {
+        if (lookAheadToken(1, TokenType.PAREN_L)) return chamadaFuncao();
         else {
-            idvetor();
+            Token t = idvetor().getToken();
+            Symbol s;
+            return (!firstRun && (s = getSymbol(t)) != null) ? s.getType() : null;
         }
     }
 
