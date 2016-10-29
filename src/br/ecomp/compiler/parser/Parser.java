@@ -917,8 +917,7 @@ public class Parser {
             logOpFound = searchForTokens(logRelOpList, stopToken);
 
             if (logOpFound) {
-                expLogica();
-                return Symbol.Type.BOOLEANO;
+                return expLogica();
             } else {
                 return expAritimetica();
             }
@@ -1068,78 +1067,102 @@ public class Parser {
      *                  <Valor_Booleano>
      *  primeiro(<Exp_Logica>) = {'nao', '(', numero_t, id, caractere_t, cadeia_t, booleano_t}
      */
-    private void expLogica() {
+    private Symbol.Type expLogica() {
         if (currentToken.getType() == TokenType.NAO) {
+            Token op = currentToken;
             operadorL2();
-            x4();
-            expLogica2();
+            Symbol.Type t1 = x4();
+            typeCheckBoolOperator(op, t1);
+            return (expLogica2() && t1 == Symbol.Type.BOOLEANO)? Symbol.Type.BOOLEANO : Symbol.Type.VOID;
         } else {
             if (lookAheadToken(1, TokenType.PAREN_L) || lookAheadToken(1, TokenType.VEC_DELIM_L)) {
-                vetorFuncao();
-                operadorL1();
+                Symbol.Type t2, t1 = vetorFuncao();
+                Token op = operadorL1();
+                boolean ok = typeCheckBoolOperator(op, t1);
 
                 if (currentToken.getType() == TokenType.IDENTIFIER) {
-                    vetorFuncao();
-                    expLogica2();
-                } else valorBooleano();
+                    t2 = vetorFuncao();
+                    return (expLogica2() && ok && t2 == Symbol.Type.BOOLEANO) ? Symbol.Type.BOOLEANO : Symbol.Type.VOID;
+                } else {
+                    t2 = valorBooleano();
+                    return (ok && t2 == Symbol.Type.BOOLEANO) ? Symbol.Type.BOOLEANO : Symbol.Type.VOID;
+                }
             } else {
-                valorBooleano();
+                Symbol.Type t1 = valorBooleano();
                 if (currentToken.getType() == TokenType.E ||
                         currentToken.getType() == TokenType.OU) {
-                    operadorL1();
-                    expLogica();
+                    Token op = operadorL1();
+                    boolean ok = typeCheckBoolOperator(op, t1);
+                    Symbol.Type t2 = expLogica();
+                    return (ok && typeCheckBoolOperator(op, t2)) ? Symbol.Type.BOOLEANO : Symbol.Type.VOID;
                 }
+                return t1;
             }
         }
     }
 
+    private boolean typeCheckBoolOperator(Token op, Symbol.Type t1) {
+        if (t1 != Symbol.Type.BOOLEANO) {
+            if (!firstRun)logSemanticAnalysis(String.format("Erro na linha %d: %s nao pode ser usado com o tipo %s.",
+                    op.getLine(), op.getType().toString(), t1.name()));
+            return false;
+        } return true;
+    }
+
     // <Exp_Logica2> ::= <Operador_L1><Exp_Logica3> | <>
-    private void expLogica2() {
+    private boolean expLogica2() {
         if (currentToken.getType() == TokenType.E ||
                 currentToken.getType() == TokenType.OU) {
-            operadorL1();
-            expLogica3();
+            Token op = operadorL1();
+            Symbol.Type t1 = expLogica3();
+            return typeCheckBoolOperator(op, t1);
         } // vazio
+        return true;
     }
 
     // <Exp_Logica3> ::= <X5><Exp_Logica2> | <Operador_L2><X4><Exp_Logica2>
-    private void expLogica3() {
+    private Symbol.Type expLogica3() {
         if (currentToken.getType() == TokenType.NAO) {
+            Token op = currentToken;
             operadorL2();
-            x4();
-            expLogica2();
+            Symbol.Type t1 = x4();
+            boolean ok = typeCheckBoolOperator(op, t1);
+
+            return (expLogica2() && ok) ? t1 : Symbol.Type.VOID;
         } else {
-            x5();
-            expLogica2();
+            Symbol.Type t1 = x5();
+            return (expLogica2() && t1 == Symbol.Type.BOOLEANO) ? Symbol.Type.BOOLEANO: Symbol.Type.VOID;
         }
     }
 
     // <X4> ::= '('<Vetor_Funcao>')' | <Valor_Booleano>
     // primeiro(<X4>) = {'(', numero_t, id, caractere_t, cadeia_t, booleano_t}
-    private void x4() {
+    private Symbol.Type x4() {
         if (currentToken.getType() == TokenType.PAREN_L){
             if (lookAheadToken(2, TokenType.VEC_DELIM_L) ||
                     lookAheadToken(2, TokenType.PAREN_L)){
                 expect(TokenType.PAREN_L);
-                vetorFuncao();
+                Symbol.Type t1 = vetorFuncao();
                 expect(TokenType.PAREN_R);
+                return t1;
             }
-        } else valorBooleano();
+            return null;
+        } else return valorBooleano();
     }
 
     // <X5> ::= <X4> | <Vetor_Funcao>
     // primeiro(<X5>) = {'(', numero_t, id, caractere_t, cadeia_t, booleano_t, id}
-    private void x5() {
+    private Symbol.Type x5() {
         if (accept(TokenType.IDENTIFIER)) {
-            vetorFuncao();
-        } else x4();
+            return vetorFuncao();
+        } else return x4();
     }
 
     // <Operador_L1> ::= 'e' | 'ou'
-    private void operadorL1() {
-        if (accept(TokenType.E));
-        else if (accept(TokenType.OU));
-        else syntaxError(TokenType.E, TokenType.OU);
+    private Token operadorL1() {
+        if (accept(TokenType.E)) return previousToken;
+        else if (accept(TokenType.OU)) return previousToken;
+        else syntaxError(TokenType.E, TokenType.OU); return null;
     }
 
     // <Operador_L2> ::= 'nao'
@@ -1149,65 +1172,87 @@ public class Parser {
 
     // <Valor_Booleano> ::= '('<Exp_Logica>')' | <Exp_Relacional> |  booleano_t
     // primeiro(<Valor_Booleano>) = {'(', numero_t, id, caractere_t, cadeia_t, booleano_t}
-    private void valorBooleano() {
+    private Symbol.Type valorBooleano() {
         // Como decidir entre as produções?
         if (!accept(TokenType.BOOL_V)){
             // Ambas as produções restantes podem começar com varios (
             if (accept(TokenType.PAREN_L)) {
-                expLogica();
+                Symbol.Type t1 = expLogica();
                 expect(TokenType.PAREN_R);
-            } else if (accept(TokenType.BOOL_V));
-            else expRelacional();
-        }
+                return t1;
+            } else if (accept(TokenType.BOOL_V))return Symbol.Type.BOOLEANO;
+            else return expRelacional();
+        } else return Symbol.Type.BOOLEANO;
     }
 
     /* <Exp_Relacional> ::= <Numerico_Funcao><Operador_R1><Numerico_Funcao> |
      *                      <Literal_Numero><Operador_R2><Literal_Numero>
      * primeiro(<Exp_Relacional>) = {'(', numero_t, id, caractere_t, cadeia_t, booleano_t}
      */
-    private void expRelacional() {
+    private Symbol.Type expRelacional() {
         if (currentToken.getType() == TokenType.NUMBER ||
                 currentToken.getType() == TokenType.PAREN_L ||
                 currentToken.getType() == TokenType.IDENTIFIER) {
-            numericoFuncao();
-            operadorR1();
-            numericoFuncao();
+            Symbol.Type t1 = numericoFuncao();
+            Token op = operadorR1();
+            Symbol.Type t2 = numericoFuncao();
+            return (!firstRun && typeCheckRelop(op, t1, t2)) ? Symbol.Type.BOOLEANO : Symbol.Type.VOID;
         } else {
-            literalNumero();
-            operadorR2();
-            literalNumero();
+            Symbol.Type t1 = literalNumero();
+            Token op = operadorR2();
+            Symbol.Type t2 = literalNumero();
+            return (!firstRun && typeCheckRelop(op, t1, t2)) ? Symbol.Type.BOOLEANO : Symbol.Type.VOID;
         }
+    }
+
+    private boolean typeCheckRelop(Token op, Symbol.Type t1, Symbol.Type t2) {
+        if (t1 == t2) {
+            if (t1 == Symbol.Type.CADEIA || t1 == Symbol.Type.CARACTERE || t1 == Symbol.Type.BOOLEANO)
+                return (op.getType() == TokenType.EQ || op.getType() == TokenType.NEQ);
+            else logSemanticAnalysis(String.format("Erro na linha %d: %s nao pode ser usado com o tipo %s.",
+                    op.getLine(), op.getType().toString(), t1.name()));
+            return true;
+        } else if (((t1 == Symbol.Type.REAL && t2 == Symbol.Type.INTEIRO) ||
+                (t1 == Symbol.Type.INTEIRO && t2 == Symbol.Type.REAL))) {
+            return true;
+        }
+        logSemanticAnalysis(String.format("Erro na linha %d: nao eh possivel comparar %s com %s.",
+                op.getLine(), t1.name(), t2.name()));
+        return false;
     }
 
     // <Operador_R1> ::= <Operador_R2> | '<' | '<=' | '>' | '>='
     // Primeiro(<Operador_R1>) = {'=', '<>', '<', '<=', '>', '>='}
-    private void operadorR1() {
-        if (accept(TokenType.NEQ));
-        else if (accept(TokenType.EQ));
-        else if (accept(TokenType.LT));
-        else if (accept(TokenType.LE));
-        else if (accept(TokenType.GT));
-        else if (accept(TokenType.GE));
+    private Token operadorR1() {
+        if (accept(TokenType.NEQ)) return previousToken;
+        else if (accept(TokenType.EQ)) return previousToken;
+        else if (accept(TokenType.LT)) return previousToken;
+        else if (accept(TokenType.LE)) return previousToken;
+        else if (accept(TokenType.GT)) return previousToken;
+        else if (accept(TokenType.GE)) return previousToken;
         else syntaxError(TokenType.NEQ, TokenType.EQ, TokenType.LT,
                     TokenType.LE, TokenType.GE, TokenType.GT);
+        return null;
     }
 
     // <Operador_R2> ::= '<>' | '='
     // Primeiro(<Operador_R2>) = {'=', '<>'}
-    private void operadorR2() {
-        if (accept(TokenType.NEQ));
-        else if (accept(TokenType.EQ));
+    private Token operadorR2() {
+        if (accept(TokenType.NEQ)) return previousToken;
+        else if (accept(TokenType.EQ)) return previousToken;
         else syntaxError(TokenType.NEQ, TokenType.EQ);
+        return null;
     }
 
     // <Literal_Numero> ::= caractere_t | cadeia_t | booleano_t
     // literal menos numero?
     // primeiro(<Literal_Numero>) = {caractere_t, cadeia_t, booleano_t}
-    private void literalNumero() {
-        if (accept(TokenType.CHARACTER));
-        else if (accept(TokenType.CHAR_STRING));
-        else if (accept(TokenType.BOOL_V));
+    private Symbol.Type literalNumero() {
+        if (accept(TokenType.CHARACTER)) return Symbol.Type.CARACTERE;
+        else if (accept(TokenType.CHAR_STRING)) return Symbol.Type.CADEIA;
+        else if (accept(TokenType.BOOL_V)) return Symbol.Type.BOOLEANO;
         else syntaxError(TokenType.CHAR_STRING, TokenType.CHARACTER, TokenType.BOOL_V);
+        return null;
     }
 
     // <Tipo> ::= 'inteiro' | 'real' | 'booleano' | 'cadeia' | 'caractere'

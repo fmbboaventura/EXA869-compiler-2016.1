@@ -34,6 +34,16 @@ programa inicio
     outraFuncao(4,3.14);
 
     leia(X,yy,  z);
+
+    enquanto (x > c) faca inicio
+        inteiro int1;
+        int1 << x;
+    fim
+
+    int1 << 5;
+
+    se (c < a) inicio
+    fim
 fim
 
 funcao umaFuncao() inicio

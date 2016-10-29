@@ -28,6 +28,8 @@ REAL	REAL
 BOOLEANO
 
 Erro na linha 36: nao foi possivel encontrar o simbolo "yy".
-Erro na linha 48: "i" ja foi definido no escopo.
-Erro na linha 49: "j" ja foi definido no escopo.
-Erro na linha 50: "k" ja foi definido no escopo.
+Erro na linha 43: nao foi possivel encontrar o simbolo "int1".
+Erro na linha 45: nao eh possivel comparar REAL com CARACTERE.
+Erro na linha 58: "i" ja foi definido no escopo.
+Erro na linha 59: "j" ja foi definido no escopo.
+Erro na linha 60: "k" ja foi definido no escopo.
