@@ -482,13 +482,16 @@ public class Parser {
         } // abaixo são os comandos
         // <Se> ::= 'se''('<Exp_Logica>')''entao'<Bloco><Senao>
         else if (accept(TokenType.SE)) {
+            int line = previousToken.getLine();
             if(!expect(TokenType.PAREN_L)){
             	panicMode(Token.TokenType.PAREN_L, Token.TokenType.IDENTIFIER,
             			Token.TokenType.NUMBER);
             	accept(Token.TokenType.PAREN_L);
             }
 
-            expLogica();
+            Symbol.Type type = expLogica();
+            if (!firstRun && type != Symbol.Type.BOOLEANO)
+                mismatchedTypeError(line, Symbol.Type.BOOLEANO, type);
 
             if(!expect(TokenType.PAREN_R)){
             	panicMode(Token.TokenType.PAREN_R, Token.TokenType.ENTAO);
@@ -510,13 +513,16 @@ public class Parser {
         }
         // <Enquanto> ::= 'enquanto''('booleano_t')''faca'<Bloco>
         else if (accept(TokenType.ENQUANTO)) {
+            int line = previousToken.getLine();
         	if(!expect(TokenType.PAREN_L)){
             	panicMode(Token.TokenType.PAREN_L, Token.TokenType.IDENTIFIER,
             			Token.TokenType.NUMBER);
             	accept(Token.TokenType.PAREN_L);
             }
 
-            expLogica();
+            Symbol.Type type = expLogica();
+            if (!firstRun && type != Symbol.Type.BOOLEANO)
+                mismatchedTypeError(line, Symbol.Type.BOOLEANO, type);
 
             if(!expect(TokenType.PAREN_R)){
             	panicMode(Token.TokenType.PAREN_R, Token.TokenType.FACA);

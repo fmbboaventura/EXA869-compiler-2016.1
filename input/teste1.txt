@@ -37,12 +37,12 @@ programa inicio
 
     enquanto (x > c) faca inicio
         inteiro int1;
-        int1 << x;
+        int1 << outraFuncao(1,2.0,falso);
     fim
 
     int1 << 5;
 
-    se (c < a) inicio
+    se (c < a) entao inicio
     fim
 fim
 

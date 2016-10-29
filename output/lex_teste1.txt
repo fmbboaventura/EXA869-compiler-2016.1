@@ -189,7 +189,14 @@ Linha 39 int1 Identificador
 Linha 39 ; Delimitador
 Linha 40 int1 Identificador
 Linha 40 << Atribuicao
-Linha 40 x Identificador
+Linha 40 outraFuncao Identificador
+Linha 40 ( Delimitador
+Linha 40 1 Numero
+Linha 40 , Delimitador
+Linha 40 2.0 Numero
+Linha 40 , Delimitador
+Linha 40 falso Valor Booleano
+Linha 40 ) Delimitador
 Linha 40 ; Delimitador
 Linha 41 fim Palavra Reservada
 Linha 43 int1 Identificador
@@ -202,6 +209,7 @@ Linha 45 c Identificador
 Linha 45 < Operador Relacional
 Linha 45 a Identificador
 Linha 45 ) Delimitador
+Linha 45 entao Palavra Reservada
 Linha 45 inicio Palavra Reservada
 Linha 46 fim Palavra Reservada
 Linha 47 fim Palavra Reservada

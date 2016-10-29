@@ -1,2 +1,2 @@
-Erro na linha 45. Esperava: Palavra Reservada "entao". Obteve: inicio Palavra Reservada "inicio".
-1 erros sintáticos foram encontrados
+0 erros sintáticos foram encontrados
+Analise Sintatica concluida com sucesso.
