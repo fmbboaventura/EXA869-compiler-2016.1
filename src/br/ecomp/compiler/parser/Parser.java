@@ -780,13 +780,14 @@ public class Parser {
             accept(Token.TokenType.IDENTIFIER);
         }
         Function f = null;
+        int line = previousToken.getLine();
         if (!firstRun) {
             Symbol s = getSymbol(previousToken, true);
 
             if (s != null) {
                 if (!(s instanceof Function))
                     logSemanticAnalysis(String.format("Erro na linha %d: nao foi possivel encontrar a funcao %s.",
-                            previousToken.getLine(), previousToken.getLexeme()));
+                            line, previousToken.getLexeme()));
                 else f = (Function) s;
             }
         }
@@ -803,7 +804,7 @@ public class Parser {
 
             if (f.getArgCount() == 0 && f.getArgCount() != argTypes.size()) {
                 logSemanticAnalysis(String.format("Erro na linha %d: a funcao %s nao recebe argumentos.",
-                        f.getToken().getLine(), f.getToken().getLexeme()));
+                        line, f.getToken().getLexeme()));
                 return Symbol.Type.VOID;
             }
 
@@ -812,7 +813,7 @@ public class Parser {
             String msg =
                     String.format("Erro na linha %d: a funcao %s nao pode ser aplicada aos seguintes argumentos:\n" +
                                     "Parametros Esperados\tArgumentos Obtidos\n",
-                            f.getToken().getLine(), f.getToken().getLexeme());
+                            line, f.getToken().getLexeme());
 
             for (i = 0; i < f.getArgCount(); i++) {
                 msg += (i < argTypes.size()) ? f.getArg(i).getType().name() + "\t" + argTypes.get(i).name() + "\n"

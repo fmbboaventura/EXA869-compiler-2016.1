@@ -21,7 +21,7 @@ Erro na linha 32: nao foi possivel encontrar o simbolo "yy".
 Erro na linha 32: Operador Aritmetico "*" nao pode ser usado com o tipo CADEIA.
 Erro na linha 32: Operador Aritmetico "*" nao pode ser usado com o tipo CADEIA.
 Erro na linha 33: Operador Aritmetico "\" nao pode ser usado com o tipo VOID.
-Erro na linha 47: a funcao outraFuncao nao pode ser aplicada aos seguintes argumentos:
+Erro na linha 34: a funcao outraFuncao nao pode ser aplicada aos seguintes argumentos:
 Parametros Esperados	Argumentos Obtidos
 INTEIRO	INTEIRO
 REAL	REAL
