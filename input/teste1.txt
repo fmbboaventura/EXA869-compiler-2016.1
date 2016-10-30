@@ -25,8 +25,8 @@ programa inicio
     eF << a;
     c << H;
     x << b;
-    vet2<<<2,3>>> << b;
-    b << vet2<<<2,3>>>;
+    vet2<<<2,3,4>>> << b;
+    z << vet<<<2,3,4.0>>>;
     outraString << eF;
     X << a;
     yy << (2 + 1) * outraString;

@@ -8,12 +8,13 @@ Erro! Tipo invalido na linha 26:
 Erro! Tipo invalido na linha 27: 
 	Esperava INTEIRO
 	Obteve CARACTERE
+Erro na linha 28: O vetor 2-dimensional "vet2" nao pode ser usado como um vetor 3-dimensional.
 Erro! Tipo invalido na linha 28: 
 	Esperava INTEIRO
 	Obteve CARACTERE
 Erro! Tipo invalido na linha 29: 
-	Esperava CARACTERE
-	Obteve INTEIRO
+	Esperava INTEIRO
+	Obteve REAL
 Erro! Tipo invalido na linha 30: 
 	Esperava CADEIA
 	Obteve BOOLEANO

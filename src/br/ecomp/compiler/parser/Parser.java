@@ -410,7 +410,9 @@ public class Parser {
         Token identifier = previousToken;
         Symbol s;
         if (accept(Token.TokenType.VEC_DELIM_L)) {//se encontrou <<<
-            expAritimetica(); // TODO implementar as expressoes
+            Symbol.Type t = expAritimetica();
+            if ((!firstRun) && t != Symbol.Type.INTEIRO)
+                mismatchedTypeError(identifier.getLine(), Symbol.Type.INTEIRO, t);
             int dimensions = 1 + vetor2();
             if(!expect(Token.TokenType.VEC_DELIM_R)){ // espera que feche o vetor com >>>
             	panicMode(Token.TokenType.VEC_DELIM_R, Token.TokenType.IDENTIFIER,
@@ -425,7 +427,9 @@ public class Parser {
     // <Vetor2> ::= ','<Exp_Aritmetica><Vetor2> | <>
     private int vetor2() {
         if (accept(Token.TokenType.COMMA)) { // se encontrou uma virgula
-            expAritimetica();
+            Symbol.Type t = expAritimetica();
+            if ((!firstRun) && t != Symbol.Type.INTEIRO)
+                mismatchedTypeError(previousToken.getLine(), Symbol.Type.INTEIRO, t);
             return 1 + vetor2(); // pode se repetir
         } return 0;
     }
