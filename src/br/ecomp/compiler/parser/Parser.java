@@ -636,7 +636,7 @@ public class Parser {
         Symbol tokenSymbol = idvetor();
         Symbol tableSymbol = null;
         vecAtrib = false;
-        boolean isConstant = false;
+        boolean atribAllowed = true;
 
         if (!firstRun) {
             tableSymbol = getSymbol(tokenSymbol.getToken());
@@ -644,7 +644,7 @@ public class Parser {
             if (tableSymbol != null) {
                 if ( tableSymbol instanceof  Variable && ((Variable)tableSymbol).isConstant()) {
                     // tem que ser o tokenSymbol aqui, pois ele contém as informações da linha atual
-                    isConstant = true;
+                    atribAllowed = false;
                     constantAssignmentError(tokenSymbol.getToken());
                 } else if (tableSymbol instanceof Vector) {
                     if (!(tokenSymbol instanceof Vector)) vecAtrib = true;
@@ -654,7 +654,7 @@ public class Parser {
 
                 // currentType vai conter o tipo esperado para atribuição
                 currentType = tableSymbol.getType();
-            }
+            } else atribAllowed = false;
         }
         if(!expect(TokenType.ATRIB)){
         	panicMode(Token.TokenType.ATRIB, Token.TokenType.NUMBER,
@@ -678,7 +678,7 @@ public class Parser {
         }
 
         Symbol.Type actual = valor();
-        if (!firstRun && !isConstant && currentType != actual) mismatchedTypeError(previousToken.getLine(), currentType, actual);
+        if (!firstRun && atribAllowed && currentType != actual) mismatchedTypeError(previousToken.getLine(), currentType, actual);
 
         if (vecAtrib) {
             Symbol vec = getSymbol(previousToken);
@@ -738,16 +738,24 @@ public class Parser {
                     Token.TokenType.REAL, Token.TokenType.CARACTERE);
         }
 
+        // Argumentos serão adcionados ao escopo do bloco que segue a declaração de uma função
         LinkedList<Symbol> args = paramDecl();
+        // Se a função tiver tipo de retorno, adciona a variável de retorno ao escopo
+        if (t != Symbol.Type.VOID) args.add(new Variable(identifier, t));
 
         if(!expect(TokenType.PAREN_R)){
             panicMode(Token.TokenType.PAREN_R, Token.TokenType.INICIO);
             accept(Token.TokenType.PAREN_R);
         }
 
+        // adiciona os parametros e a variável de retorno ao escopo do bloco
         if (!firstRun) bloco(args.toArray(new Symbol[args.size()]));
         else bloco();
 
+        // remove a variavel de retorno da lista. Sobram apenas os argumentos da função
+        if (t != Symbol.Type.VOID) args.removeLast();
+
+        // adciona os argumentos da função ao objeto Function
         Function f = new Function(identifier, t, args.toArray(new Symbol[args.size()]));
         if (firstRun) putSymbol(f);
     }

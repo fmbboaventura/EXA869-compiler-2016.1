@@ -52,6 +52,8 @@ funcao umaFuncao() inicio
     real c;
     booleano eF,g,H;
     cadeia um4Str1ng;
+
+    umaFuncao << 2;
 fim
 
 funcao inteiro outraFuncao(inteiro i, real j, booleano k) inicio
@@ -60,4 +62,5 @@ funcao inteiro outraFuncao(inteiro i, real j, booleano k) inicio
     real k;
 
     X << x + outraFuncao(1,2.0,falso);
+    outraFuncao << X;
 fim

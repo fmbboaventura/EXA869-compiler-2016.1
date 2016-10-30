@@ -33,6 +33,7 @@ Erro na linha 45: nao eh possivel comparar REAL com CARACTERE.
 Erro! Tipo invalido na linha 45: 
 	Esperava BOOLEANO
 	Obteve VOID
-Erro na linha 58: "i" ja foi definido no escopo.
-Erro na linha 59: "j" ja foi definido no escopo.
-Erro na linha 60: "k" ja foi definido no escopo.
+Erro na linha 56: nao foi possivel encontrar o simbolo "umaFuncao".
+Erro na linha 60: "i" ja foi definido no escopo.
+Erro na linha 61: "j" ja foi definido no escopo.
+Erro na linha 62: "k" ja foi definido no escopo.

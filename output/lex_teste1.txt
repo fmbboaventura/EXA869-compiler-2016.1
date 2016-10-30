@@ -243,43 +243,51 @@ Linha 53 ; Delimitador
 Linha 54 cadeia Tipo de Dados
 Linha 54 um4Str1ng Identificador
 Linha 54 ; Delimitador
-Linha 55 fim Palavra Reservada
-Linha 57 funcao Palavra Reservada
-Linha 57 inteiro Tipo de Dados
-Linha 57 outraFuncao Identificador
-Linha 57 ( Delimitador
-Linha 57 inteiro Tipo de Dados
-Linha 57 i Identificador
-Linha 57 , Delimitador
-Linha 57 real Tipo de Dados
-Linha 57 j Identificador
-Linha 57 , Delimitador
-Linha 57 booleano Tipo de Dados
-Linha 57 k Identificador
-Linha 57 ) Delimitador
-Linha 57 inicio Palavra Reservada
-Linha 58 caractere Tipo de Dados
-Linha 58 i Identificador
-Linha 58 ; Delimitador
+Linha 56 umaFuncao Identificador
+Linha 56 << Atribuicao
+Linha 56 2 Numero
+Linha 56 ; Delimitador
+Linha 57 fim Palavra Reservada
+Linha 59 funcao Palavra Reservada
 Linha 59 inteiro Tipo de Dados
+Linha 59 outraFuncao Identificador
+Linha 59 ( Delimitador
+Linha 59 inteiro Tipo de Dados
+Linha 59 i Identificador
+Linha 59 , Delimitador
+Linha 59 real Tipo de Dados
 Linha 59 j Identificador
 Linha 59 , Delimitador
-Linha 59 X Identificador
-Linha 59 ; Delimitador
-Linha 60 real Tipo de Dados
-Linha 60 k Identificador
+Linha 59 booleano Tipo de Dados
+Linha 59 k Identificador
+Linha 59 ) Delimitador
+Linha 59 inicio Palavra Reservada
+Linha 60 caractere Tipo de Dados
+Linha 60 i Identificador
 Linha 60 ; Delimitador
-Linha 62 X Identificador
-Linha 62 << Atribuicao
-Linha 62 x Identificador
-Linha 62 + Operador Aritmetico
-Linha 62 outraFuncao Identificador
-Linha 62 ( Delimitador
-Linha 62 1 Numero
-Linha 62 , Delimitador
-Linha 62 2.0 Numero
-Linha 62 , Delimitador
-Linha 62 falso Valor Booleano
-Linha 62 ) Delimitador
+Linha 61 inteiro Tipo de Dados
+Linha 61 j Identificador
+Linha 61 , Delimitador
+Linha 61 X Identificador
+Linha 61 ; Delimitador
+Linha 62 real Tipo de Dados
+Linha 62 k Identificador
 Linha 62 ; Delimitador
-Linha 63 fim Palavra Reservada
+Linha 64 X Identificador
+Linha 64 << Atribuicao
+Linha 64 x Identificador
+Linha 64 + Operador Aritmetico
+Linha 64 outraFuncao Identificador
+Linha 64 ( Delimitador
+Linha 64 1 Numero
+Linha 64 , Delimitador
+Linha 64 2.0 Numero
+Linha 64 , Delimitador
+Linha 64 falso Valor Booleano
+Linha 64 ) Delimitador
+Linha 64 ; Delimitador
+Linha 65 outraFuncao Identificador
+Linha 65 << Atribuicao
+Linha 65 X Identificador
+Linha 65 ; Delimitador
+Linha 66 fim Palavra Reservada
